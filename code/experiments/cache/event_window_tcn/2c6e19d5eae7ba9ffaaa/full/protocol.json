@@ -1,0 +1,88 @@
+{
+  "active_window_bars": 12,
+  "admissible_trades_per_day": [
+    2.0,
+    5.0
+  ],
+  "bootstrap_draws": 2000,
+  "bootstrap_seed": 42,
+  "cost_bps": 10.0,
+  "cross_window_capacity": "unlimited",
+  "decision_cadence": "5min",
+  "desired_trades_per_day": [
+    3.0,
+    5.0
+  ],
+  "dev_end_exclusive": "2025-07-01",
+  "dev_start": "2021-01-01",
+  "development_end_exclusive": "2025-07-01",
+  "development_start": "2021-01-01",
+  "effective_bootstrap_draws": 2000,
+  "effective_epochs": 40,
+  "effective_read_intervals": [
+    [
+      "2021-01-01 00:00:00+00:00",
+      "2025-07-01 00:00:00+00:00"
+    ]
+  ],
+  "entry": "next 1m open at each 5m decision boundary",
+  "execution_cadence": "1min",
+  "expected_full_dev_windows": 14510,
+  "forward_or_lockbox_loaded": false,
+  "high_correlation_abs_spearman": 0.9,
+  "input_hash": "71f73acbd5a9e7a648fecfcf65bda6db5a3d506c421a718d64cf7a7092ac1636",
+  "max_hold_minutes": 120,
+  "max_loaded_timestamp": "2025-06-30 23:59:00+00:00",
+  "max_trades_per_window": 1,
+  "mode": "full",
+  "model_config": {
+    "active_bars": 12,
+    "batch_size": 128,
+    "channels": 32,
+    "dilations": [
+      1,
+      2
+    ],
+    "dropout": 0.2,
+    "epochs": 40,
+    "kernel_size": 3,
+    "learning_rate": 0.001,
+    "patience": 5,
+    "pre_window_bars": 24,
+    "random_seed": 42,
+    "rank_weight": 0.2,
+    "weight_decay": 0.0001
+  },
+  "pre_window_bars": 24,
+  "primary_score_threshold": 0.0,
+  "protocol_hash": "f5a0a4eb72f52de88f781b7dcc93c09d08747994f7e2f5294f88e0b6f118b0f6",
+  "read_end_exclusive": "2025-07-01 00:00:00+00:00",
+  "read_start": "2021-01-01 00:00:00+00:00",
+  "risk_pct_fixed_initial_equity": 1.0,
+  "run_hash": "2c6e19d5eae7ba9ffaaa",
+  "selection_rr": 2.0,
+  "sensitivity_can_select": false,
+  "sensitivity_rr": 3.0,
+  "side_dataset": "pooled",
+  "source_hash": "665a2d45ff7b31d4a1030635c13cba0d0757b492601b1c1720d97bc22bd3ec14",
+  "stage": "dev",
+  "stop": "12 completed 5m bars plus 5 bps buffer",
+  "symbol": "BTCUSDT",
+  "threshold_frontier": "exploratory OOF diagnostic only",
+  "window_config": {
+    "active_bars": 12,
+    "activity_floor": 0.8,
+    "activity_long_bars": 288,
+    "activity_short_bars": 12,
+    "bar": "5min",
+    "channel_half": 0.5,
+    "channel_quantile": 0.1,
+    "channel_windows": [
+      60,
+      90,
+      120
+    ],
+    "pre_context_bars": 24,
+    "primary_channel_window": 60
+  }
+}

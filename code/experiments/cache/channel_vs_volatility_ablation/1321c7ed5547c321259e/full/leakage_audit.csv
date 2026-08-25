@@ -1,0 +1,13 @@
+check,passed,detail
+development-only bounded raw reads,True,dd432770b6eb7fb6207f932fa754a440dc1236a9cbbdba867dbab7193132fbfb
+frozen V foldwise activation counts,True,"{'2022H2': 236, '2023H1': 541, '2023H2': 305, '2024H1': 910, '2024H2': 532, '2025H1': 415}"
+shared models and OOF scores,True,one model/head/fold scored both candidate universes
+strict prior-label purge,True,120m label interval ends before validation
+channel-free feature allow-list,True,20 opportunity + 17 direction
+channel used only as candidate-universe restriction,True,in_channel_window excluded from both model matrices
+exact matched frequency and global cooldown,True,2939 per arm/model; 2.681569/day
+label-blind matched top-k,True,ranking uses only OOF opportunity_score and decision_time
+native RR2/120m stop-first replay,True,both directions replayed at every selected native 1m Open
+uniform 5+5 costs,True,"10 bps on TP, SL and timeout"
+complete selected paths,True,11756 chosen paths
+forward and Q2 remain sealed,True,2025-06-30 23:59:00+00:00

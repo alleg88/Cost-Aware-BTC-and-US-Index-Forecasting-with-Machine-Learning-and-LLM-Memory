@@ -1,0 +1,8 @@
+scenario,activations,unique_activation_keys,calendar_days,activations_per_day,keys_equal_frozen,timing_owned_by_frozen_u
+logreg,2939,2939,1096,2.6815693430656933,True,True
+xgboost,2939,2939,1096,2.6815693430656933,True,True
+channel_side,2939,2939,1096,2.6815693430656933,True,True
+always_long,2939,2939,1096,2.6815693430656933,True,True
+always_short,2939,2939,1096,2.6815693430656933,True,True
+random_50,2939,2939,1096,2.6815693430656933,True,True
+oracle,2939,2939,1096,2.6815693430656933,True,True

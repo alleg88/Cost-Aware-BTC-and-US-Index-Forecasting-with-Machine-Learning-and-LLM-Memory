@@ -1,0 +1,7 @@
+{
+  "audit_sha256": "005f0f51585dd8ef236422a93236f0460d20c4372736bec8c224df32f8701895",
+  "candidate_id": "usa500_best_single_deberta_svm",
+  "ledger_sha256": "80995c21cbd9539dab1fd48401a6e6d6dc7cf5e2a8b409a162a8a516c2024356",
+  "prediction_index_name": "timestamp",
+  "prediction_sha256": "62c162e49aea23c6e9844e205f4cd7c449d9748bc9917679cc49aa15d719309b"
+}

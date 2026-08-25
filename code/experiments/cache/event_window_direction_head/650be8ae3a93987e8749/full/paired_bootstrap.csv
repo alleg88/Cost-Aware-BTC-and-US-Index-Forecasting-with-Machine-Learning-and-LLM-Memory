@@ -1,0 +1,11 @@
+comparison,candidate,baseline,point_mean_net_r,ci_low,ci_high,draws,bootstrap_unit
+absolute::logreg,logreg,,-0.06943265695135618,-0.100010120809205,-0.03985666381960395,2000,channel_episode_id
+absolute::xgboost,xgboost,,-0.08747390056184659,-0.11238975535319688,-0.06338962244867641,2000,channel_episode_id
+absolute::channel_side,channel_side,,-0.06990396227216678,-0.10134693530614701,-0.03972654359397758,2000,channel_episode_id
+absolute::always_long,always_long,,-0.06790095942044018,-0.09711768448810615,-0.03828645853915121,2000,channel_episode_id
+absolute::always_short,always_short,,-0.083282238681585,-0.11289612461239427,-0.052692058860457774,2000,channel_episode_id
+absolute::random_50,random_50,,-0.08487253771526569,-0.1125107797277005,-0.05711207146850893,2000,channel_episode_id
+absolute::oracle,oracle,,0.4764793626673061,0.4539029489134533,0.5004564507000083,2000,channel_episode_id
+logreg_minus_channel_side,logreg,channel_side,0.0004713053208105848,-0.03444596231884924,0.03524492482141302,2000,channel_episode_id
+xgboost_minus_channel_side,xgboost,channel_side,-0.017569938289679836,-0.05213374980404701,0.01807595365065247,2000,channel_episode_id
+xgboost_minus_logreg,xgboost,logreg,-0.018041243610490428,-0.04649228008343695,0.009076505841859987,2000,channel_episode_id

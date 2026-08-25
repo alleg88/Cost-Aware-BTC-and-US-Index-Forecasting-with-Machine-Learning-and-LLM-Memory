@@ -1,0 +1,21 @@
+{
+  "effective_bootstrap_draws": 2000,
+  "effective_xgb_estimators": 300,
+  "forward_or_lockbox_loaded": false,
+  "frozen_j_manifest_sha256": "b177a497f3850d37b9970e8b720203cefec1c354376e40a272a31529de34e883",
+  "frozen_j_run_hash": "2c6e19d5eae7ba9ffaaa",
+  "frozen_timing_arm": "xgboost_base",
+  "frozen_u_activation_ledger_sha256": "01d724865e634aab225131d8f9fe53ee48d549d90cb011cd2f0368c4094a21ce",
+  "frozen_u_economic_paths_sha256": "605140bf3e75ad5eb8403ddf6cf06e124f22b0c9873b86e037f2f0dc00684b4f",
+  "frozen_u_input_hash": "0160f50e3cdc982d67c1353cabfbf461d3a69b555c8f0034b49908d252a18a33",
+  "frozen_u_manifest_sha256": "137ca48502422a3ac30ff07c54d429517364a39fb872622bfeca3d0104979897",
+  "frozen_u_oof_sha256": "be81821aae9847369fcd1644116e059c714e9a531ea83042cdb3177eecb4554d",
+  "frozen_u_protocol_hash": "9791d63148e6249045897865323b480c2770fbe4d049b8cd3c07d3b874f29f1d",
+  "frozen_u_run_hash": "ad36396ae54e17571e81",
+  "frozen_u_source_hash": "f9283d11ffd0757c155be8b81076567315e8e3ea1bec20b5bd1f31fe2ccb7073",
+  "path_source": "native_1m_replay_brackets",
+  "registered_bootstrap_draws": 2000,
+  "registered_xgb_estimators": 300,
+  "timing_frequency_changed": false,
+  "timing_model_refit": false
+}

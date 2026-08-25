@@ -1,0 +1,172 @@
+{
+  "artifacts": {
+    "combined_policy_ledger.parquet": {
+      "sha256": "cf096561875e1de17fe52eade34d37af7a7cad2671fe36a6a89dd5a00335b275",
+      "size": 394412
+    },
+    "concurrency_audit.csv": {
+      "sha256": "ff62b78ce902e6799ab48d6fe6331a96bec6a295f84991d0af0c45c7f8942867",
+      "size": 185
+    },
+    "correlation_audit.csv": {
+      "sha256": "b3d6f52d596774c0775f0f80974ecd87f6cea8e172bfe21b40168b520be45c70",
+      "size": 32235
+    },
+    "direction_dataset.parquet": {
+      "sha256": "024933c5841ebaaedf99ad02f11fc7cc94bce503df0a3aa5ca90d39d0c7573b5",
+      "size": 850258
+    },
+    "economic_metrics.csv": {
+      "sha256": "ce0f0d76b192193a9ca92017952cd0a00259bc9b294538e5dd45d9e91220f9db",
+      "size": 2507
+    },
+    "economic_paths.parquet": {
+      "sha256": "5349c0a9993d31b5f21a5cf89a7833920fd0576def1b88bb3d9229cda756d700",
+      "size": 1052850
+    },
+    "feature_audit.csv": {
+      "sha256": "5036c70318ee3f214c3e4c9538904c8b7aff9d279f9cb8254e8c571e1c6e69c0",
+      "size": 1591
+    },
+    "fold_audit.csv": {
+      "sha256": "433b567e48a398849f3470e9e35fc75b77db719e12c2fed32ce4343c36897e50",
+      "size": 976
+    },
+    "frequency_audit.csv": {
+      "sha256": "c2d330fcfe3a552b6477eaf9caa1f776eef0050cab4d055cce2ef3a92cf74531",
+      "size": 507
+    },
+    "frozen_protocol.json": {
+      "sha256": "435153d96f7fbce5597c1fb4f55f7916a2e8c4fce3335520a6dfe3d20647e6ac",
+      "size": 2827
+    },
+    "geometry_audit.csv": {
+      "sha256": "5a11afad2df27532fdd637dc93a7dee9c0ca83af31de3e56d8485cdf000301ae",
+      "size": 515
+    },
+    "leakage_audit.csv": {
+      "sha256": "30792d8e9ea16801c216e29c1de835e5549edda0a43da15d20c001d578f4590c",
+      "size": 1908
+    },
+    "oof_direction_predictions.parquet": {
+      "sha256": "358259cf3217fe346d821ca56c222dffcc3c1296cde1d8e8532ae692eee80ded",
+      "size": 194013
+    },
+    "paired_bootstrap.csv": {
+      "sha256": "669de9a827e03991a51b36aac788d22e1f7822036099e4fc36b2e5c7a6fd9427",
+      "size": 1302
+    },
+    "policy_paths.parquet": {
+      "sha256": "6de937990f502deeeea28be8a1e978c7a11e6eebb892305cc1d0d27aee4dd178",
+      "size": 795330
+    },
+    "predictive_metrics.csv": {
+      "sha256": "8a36f2d207ae1954ed4e59a2fd30f42966a385185b45b3edf4e09da38cd09c20",
+      "size": 342
+    },
+    "protocol.json": {
+      "sha256": "acbf8c59478243b258f08f4e2760454467e7d9fed9dcd132c9c193fc99326c8f",
+      "size": 5474
+    },
+    "summary.json": {
+      "sha256": "4458b2422adbad1e7c9e6992379bff92072d4e842d0fb04080f93e6255534f97",
+      "size": 3073
+    }
+  },
+  "input_hash": "9eadc67d36440d6ce47c79f5f7f9fa1c8fce3544a7b12a2b1b9bfa9e6e2f4ea5",
+  "protocol_hash": "b0bf45379d015f3a0505a5c7caf13233eee74be6a743e38c8de300874a437269",
+  "run_hash": "650be8ae3a93987e8749",
+  "source_hash": "8c685ce00319489626b9208c35760ff9b0627a397f80e57505b65729aed3c6fe",
+  "status": "complete",
+  "summary": {
+    "bounded_development_input_identity": {
+      "absolute_paths_hashed": false,
+      "aggregate_sha256": "f69c6402e8a0b0af1ce3d2c8d12c1df175f3c668c64a8907e8a66d2870b2ef6a",
+      "applicable": true,
+      "applies_to_full_run": true,
+      "detail": "four raw roles filtered to DEVELOPMENT before pandas",
+      "development_end_exclusive": "2025-07-01T00:00:00+00:00",
+      "development_start": "2021-01-01T00:00:00+00:00",
+      "file_metadata_hashed": false,
+      "method": "pyarrow_filtered_canonical_ipc_sha256_v1",
+      "passed": true,
+      "pyarrow_filter_before_pandas": true,
+      "source_fingerprints": {
+        "five_minute": {
+          "content_sha256": "0b4039dc0933e65fe4010e8d8543e5944855bf86e23a199cbd715834c07e9e69",
+          "max_timestamp": "2025-06-30T23:55:00+00:00",
+          "rows": 472683
+        },
+        "hourly": {
+          "content_sha256": "37d515e3871688fb2d5b64792811df2184fff59eb720044b60754ed54f46778c",
+          "max_timestamp": "2025-06-30T23:00:00+00:00",
+          "rows": 39394
+        },
+        "minute": {
+          "content_sha256": "fe7811a710e8e4ccefa75cd471fa125ac69dad5bdffcbe2b6b4a79e8e260e2ac",
+          "max_timestamp": "2025-06-30T23:59:00+00:00",
+          "rows": 2363407
+        },
+        "positioning": {
+          "content_sha256": "34014e21b68e630a570ee7aeee0aab2e3a73910b1cce1e393667dc58b8b9241e",
+          "max_timestamp": "2025-06-30T23:45:00+00:00",
+          "rows": 157562
+        }
+      },
+      "source_roles": [
+        "minute",
+        "five_minute",
+        "hourly",
+        "positioning"
+      ],
+      "whole_file_bytes_hashed": false
+    },
+    "combined_rows_per_model": {
+      "logreg": 2939,
+      "xgboost": 2939
+    },
+    "decision": "negative direction result; add no trade gate",
+    "direction_feature_count": 28,
+    "effective_bootstrap_draws": 2000,
+    "effective_xgb_estimators": 300,
+    "entry_cost_bps": 5.0,
+    "exit_cost_bps": 5.0,
+    "forced_direction": true,
+    "forward_or_lockbox_loaded": false,
+    "frozen_timing_arm": "xgboost_base",
+    "frozen_u_run_hash": "ad36396ae54e17571e81",
+    "input_hash": "9eadc67d36440d6ce47c79f5f7f9fa1c8fce3544a7b12a2b1b9bfa9e6e2f4ea5",
+    "max_loaded_timestamp": "2025-06-30 23:59:00+00:00",
+    "model_viability": {
+      "logreg": false,
+      "xgboost": false
+    },
+    "oof_rows_per_model": {
+      "logreg": 2939,
+      "xgboost": 2939
+    },
+    "path_completeness": 1.0,
+    "protocol_hash": "b0bf45379d015f3a0505a5c7caf13233eee74be6a743e38c8de300874a437269",
+    "registered_bootstrap_draws": 2000,
+    "registered_xgb_estimators": 300,
+    "research_claim": "development_result",
+    "round_trip_cost_bps": 10.0,
+    "run_hash": "650be8ae3a93987e8749",
+    "scored_activations": 2939,
+    "scored_folds": [
+      "2022H2",
+      "2023H1",
+      "2023H2",
+      "2024H1",
+      "2024H2",
+      "2025H1"
+    ],
+    "selected_model": null,
+    "source_activations": 3431,
+    "source_hash": "8c685ce00319489626b9208c35760ff9b0627a397f80e57505b65729aed3c6fe",
+    "timing_frequency_changed": false,
+    "timing_model_refit": false,
+    "trade_gate_included": false,
+    "warmup_activations": 492
+  }
+}

@@ -1,0 +1,152 @@
+{
+  "schema_version": 1,
+  "rules": [
+    {
+      "id": "binance_archives",
+      "class": "public_raw",
+      "glob": "data/raw/binance/**/*.zip",
+      "provider": "Binance public data",
+      "stage": "data/raw/binance"
+    },
+    {
+      "id": "binance_checksums",
+      "class": "public_raw",
+      "glob": "data/raw/binance/**/*.zip.CHECKSUM",
+      "provider": "Binance public data",
+      "stage": "data/raw/binance"
+    },
+    {
+      "id": "jforex_indices",
+      "class": "snapshot_raw",
+      "glob": "data/raw/dukascopy/*.csv",
+      "provider": "JForex/Dukascopy",
+      "stage": "data/raw/dukascopy"
+    },
+    {
+      "id": "jforex_vix",
+      "class": "snapshot_raw",
+      "glob": "data/raw/VOLIDXUSD_*.csv",
+      "provider": "JForex/Dukascopy",
+      "stage": "data/raw"
+    },
+    {
+      "id": "jforex_index_minutes",
+      "class": "snapshot_raw",
+      "glob": "data/raw/{USA500IDXUSD,USATECHIDXUSD}_1 Min_*.csv",
+      "provider": "JForex/Dukascopy",
+      "stage": "data/raw"
+    },
+    {
+      "id": "gdelt_pre_q2",
+      "class": "snapshot_raw",
+      "glob": "sentiment/raw/gdelt_bq/bq-results-*.zip",
+      "provider": "GDELT GKG via BigQuery",
+      "stage": "sentiment/raw/gdelt_bq"
+    },
+    {
+      "id": "gdelt_q2",
+      "class": "snapshot_raw",
+      "glob": "sentiment/raw/gdelt_bq/q2_staging/*",
+      "provider": "GDELT GKG via BigQuery",
+      "stage": "sentiment/raw/gdelt_bq/q2_staging"
+    },
+    {
+      "id": "truth_social_pre_q2",
+      "class": "snapshot_raw",
+      "glob": "sentiment/raw/trump_truth_posts.csv",
+      "provider": "Truth Social public archive",
+      "stage": "sentiment/raw"
+    },
+    {
+      "id": "direct_events_pre_q2",
+      "class": "snapshot_raw",
+      "glob": "sentiment/raw/direct_events.parquet",
+      "provider": "Federal Reserve and Truth Social",
+      "stage": "sentiment/raw"
+    },
+    {
+      "id": "direct_events_q2",
+      "class": "snapshot_raw",
+      "glob": "sentiment/raw/direct_events_q2_staging/{direct_events.parquet,truth_social_q2_all.parquet,manifest.json}",
+      "provider": "Federal Reserve and Truth Social",
+      "stage": "sentiment/raw/direct_events_q2_staging"
+    },
+    {
+      "id": "fred",
+      "class": "snapshot_raw",
+      "glob": "sentiment/raw/fred_calendar.parquet",
+      "provider": "FRED",
+      "stage": "sentiment/raw"
+    },
+    {
+      "id": "fear_greed",
+      "class": "snapshot_raw",
+      "glob": "sentiment/raw/crypto_fear_greed.parquet",
+      "provider": "Alternative.me",
+      "stage": "sentiment/raw"
+    },
+    {
+      "id": "llm_scores",
+      "class": "frozen_nondeterministic",
+      "glob": "sentiment/raw/scores_llm_*.{parquet,json}",
+      "provider": "Ollama Cloud",
+      "stage": "sentiment/raw"
+    },
+    {
+      "id": "btc_agent_calls",
+      "class": "frozen_nondeterministic",
+      "glob": "experiments/cache/reflection_policy_router_v4/**/call_cache/*.json",
+      "provider": "Ollama Cloud",
+      "stage": "experiments/cache/reflection_policy_router_v4"
+    },
+    {
+      "id": "btc_agent_preflight",
+      "class": "frozen_nondeterministic",
+      "glob": "experiments/cache/reflection_policy_router_v4/{preflight.json,preflight_calls.jsonl}",
+      "provider": "Ollama Cloud",
+      "stage": "experiments/cache/reflection_policy_router_v4"
+    },
+    {
+      "id": "q2_llm_scores",
+      "class": "frozen_nondeterministic",
+      "glob": "experiments/cache/{final_q2_lockbox,q2_sentiment_sensitivity}/**/scores_llm_*.{parquet,json}",
+      "provider": "Ollama Cloud",
+      "stage": "experiments/cache"
+    },
+    {
+      "id": "channel_handoff_n",
+      "class": "frozen_handoff",
+      "glob": "experiments/cache/event_window_opportunity_head/b3b8086a3f156e5b84aa/full/*",
+      "provider": "Frozen dissertation development handoff",
+      "stage": "experiments/cache/event_window_opportunity_head"
+    },
+    {
+      "id": "channel_handoff_o",
+      "class": "frozen_handoff",
+      "glob": "experiments/cache/event_window_magnitude_timing/73bc742d288a5aabbeb0/full/*",
+      "provider": "Frozen dissertation development handoff",
+      "stage": "experiments/cache/event_window_magnitude_timing"
+    },
+    {
+      "id": "channel_handoff_p",
+      "class": "frozen_handoff",
+      "glob": "experiments/cache/event_window_conditional_opportunity/0474798f6d0eb56e64d3/full/*",
+      "provider": "Frozen dissertation development handoff",
+      "stage": "experiments/cache/event_window_conditional_opportunity"
+    },
+    {
+      "id": "channel_handoff_q",
+      "class": "frozen_handoff",
+      "glob": "experiments/cache/event_window_economic_feasibility/{latest_dev.json,acf3991689b66bcbf0d1/full/*}",
+      "provider": "Frozen dissertation development handoff",
+      "stage": "experiments/cache/event_window_economic_feasibility"
+    },
+    {
+      "id": "channel_handoff_r",
+      "class": "frozen_handoff",
+      "glob": "experiments/cache/event_window_timing_policy_repair/{latest_dev.json,f8de389583c836f48140/full/*}",
+      "provider": "Frozen dissertation development handoff",
+      "stage": "experiments/cache/event_window_timing_policy_repair"
+    }
+  ]
+}

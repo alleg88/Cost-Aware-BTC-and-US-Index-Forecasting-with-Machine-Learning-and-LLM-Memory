@@ -1,0 +1,7 @@
+{
+  "audit_sha256": "33171d8df86b82c802295641c83179bfcc146f1f91d7681297b3d94b0df2aa65",
+  "candidate_id": "usatech_best_single_deepseek_lstm",
+  "ledger_sha256": "c8a43f7d73b5b7d9fc4a39ba6ca6e7b1375c9554a150b39044fa6847fbb4d767",
+  "prediction_index_name": "timestamp",
+  "prediction_sha256": "d065e9cff2205164c1a924546878e6788d4e6599d4348709ec9a4524a1d9038b"
+}

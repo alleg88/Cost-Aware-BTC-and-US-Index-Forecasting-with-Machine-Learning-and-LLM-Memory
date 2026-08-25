@@ -1,0 +1,59 @@
+protocol_version: reflection-ensemble-agent-v1
+schema_version: "1.0"
+model: glm-5.2:cloud
+think: high
+output_mode: probe
+stream: false
+timeout_seconds: 300
+retry_delays_seconds: [5, 15, 45]
+repair_attempts: 2
+temperatures:
+  actor: 0.2
+  refiner: 0.0
+  reflector: 0.0
+models:
+  - logreg
+  - decision_tree
+  - random_forest
+  - svm_linear
+  - xgboost_balanced
+  - catboost_balanced
+  - mlp
+  - lstm
+  - gru
+primary_baseline: lstm
+ensemble_control: unanimity_consensus
+fee_bps_per_side: 5.0
+development_start_utc: "2025-07-01T00:00:00Z"
+development_end_utc: "2026-04-01T00:00:00Z"
+sealed_start_utc: "2026-04-01T00:00:00Z"
+sealed_end_utc: "2026-07-01T00:00:00Z"
+candidate_budget: 6
+beam_width: 3
+tree_depth: 2
+max_open_shadows: 2
+shadow_min_weeks: 2
+shadow_max_weeks: 4
+shadow_min_trades: 10
+shadow_min_trades_per_side: 3
+final_min_trades: 30
+final_min_trades_per_side: 10
+max_monthly_gain_concentration: 0.60
+sortino_noninferiority_margin: 0.10
+max_drawdown_ratio: 1.10
+weight_grid: [0.50, 0.75, 1.00, 1.25, 1.50]
+confidence_grid: [0.65, 0.70, 0.75, 0.80]
+agreement_grid: [0.55, 0.65, 0.75, 1.00]
+news:
+  max_items: 12
+  max_items_per_source_family: 3
+  max_summary_characters: 500
+memory:
+  max_retrieved: 8
+  semantic_min_independent_episodes: 2
+market:
+  recent_return_bars: 96
+  realized_volatility_bars: 672
+  volatility_reference_bars: 8640
+  trend_threshold: 0.005
+  news_lookback_bars: 96

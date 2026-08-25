@@ -1,0 +1,5 @@
+model,window_source,activations,calendar_days,activations_per_day,fold_counts_exact,minimum_global_gap_minutes,global_60m_refractory_passed,matching_used_outcome_labels
+logreg,channel,2939,1096,2.6815693430656933,True,60.0,True,False
+logreg,channel_blind,2939,1096,2.6815693430656933,True,60.0,True,False
+xgboost,channel,2939,1096,2.6815693430656933,True,60.0,True,False
+xgboost,channel_blind,2939,1096,2.6815693430656933,True,60.0,True,False

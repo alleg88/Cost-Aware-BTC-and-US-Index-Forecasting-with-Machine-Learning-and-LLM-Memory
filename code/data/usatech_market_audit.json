@@ -1,0 +1,49 @@
+{
+  "ask_repaired_ohlc_rows": 0,
+  "ask_source": "USATECHIDXUSD_1 Min_Ask_2021.01.01_2026.08.01.csv",
+  "bid_repaired_ohlc_rows": 0,
+  "bid_source": "USATECHIDXUSD_1 Min_Bid_2021.01.01_2026.08.01.csv",
+  "crossed_close_rows": 3877,
+  "cutoff_exclusive": "2026-04-01T00:00:00+00:00",
+  "duplicate_timestamps": 0,
+  "end_utc": "2026-03-31T23:59:00+00:00",
+  "grids": {
+    "15min": {
+      "complete_rows": 119832,
+      "end_utc": "2026-03-31T23:45:00+00:00",
+      "max_available_at": "2026-04-01T00:00:00+00:00",
+      "output_sha256": "430fce5325c6ecfb89c13bf89771adc4a5ad0a8dba01bb223c6919e5374a9d1f",
+      "rows": 119877,
+      "start_utc": "2021-01-03T23:00:00+00:00"
+    },
+    "1h": {
+      "complete_rows": 29614,
+      "end_utc": "2026-03-31T23:00:00+00:00",
+      "max_available_at": "2026-04-01T00:00:00+00:00",
+      "output_sha256": "e659604642a0fdd9b9ce5fd28aafe6f102e56fa3a64a3a6efc181511b1fc03a4",
+      "rows": 30959,
+      "start_utc": "2021-01-03T23:00:00+00:00"
+    },
+    "1m": {
+      "complete_rows": 1798110,
+      "end_utc": "2026-03-31T23:59:00+00:00",
+      "max_available_at": "2026-04-01T00:00:00+00:00",
+      "output_sha256": "c0d390a328b74f408e714e1046c38e085422e6cc64ab9c8c4a1b5cd156d9a129",
+      "rows": 1798110,
+      "start_utc": "2021-01-03T23:00:00+00:00"
+    },
+    "5min": {
+      "complete_rows": 359586,
+      "end_utc": "2026-03-31T23:55:00+00:00",
+      "max_available_at": "2026-04-01T00:00:00+00:00",
+      "output_sha256": "09f759da1622fae2738c3fb160cc5aa60c43a112adbbe4728d39bab9cc8fab83",
+      "rows": 359631,
+      "start_utc": "2021-01-03T23:00:00+00:00"
+    }
+  },
+  "instrument": "USATECHIDXUSD",
+  "midpoint_invalid_rows_after_repair": 0,
+  "rows_after_cutoff": 1798110,
+  "rows_removed_by_cutoff": 115436,
+  "start_utc": "2021-01-03T23:00:00+00:00"
+}

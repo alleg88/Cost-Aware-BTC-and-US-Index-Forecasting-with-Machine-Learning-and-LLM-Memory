@@ -1,0 +1,2 @@
+source,activations,hold_minutes,mean_active_at_entry,maximum_active_at_entry,overlap_fraction,capacity_suppression
+xgboost_base,2939,120,1.4617216740387886,3,0.4613814222524668,False

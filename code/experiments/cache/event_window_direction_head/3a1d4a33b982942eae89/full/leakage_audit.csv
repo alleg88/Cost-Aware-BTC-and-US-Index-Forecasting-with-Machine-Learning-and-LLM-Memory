@@ -1,0 +1,20 @@
+check,passed,detail
+exact frozen Notebook U run hash,True,ad36396ae54e17571e81
+valid frozen U SHA-256 manifest,True,137ca48502422a3ac30ff07c54d429517364a39fb872622bfeca3d0104979897
+frozen U timing arm exact,True,xgboost_base
+"3,431 frozen activation keys exact",True,3431
+"2,939 scored keys per model",True,"{'logreg': 2939, 'xgboost': 2939}"
+combined ledger preserves U timing bytes and keys,True,activation key/time/score/threshold/episode fields
+uniform 5+5 costs,True,10 bps every exit path
+native RR2/120m stop-first paths,True,native_1m_replay_brackets
+one forced side per model activation,True,no WAIT or confidence gate
+direction feature allow-list exact,True,"raw_log_return,raw_log_return_mean_3,raw_log_return_mean_12,raw_log_return_mean_24,raw_body_bps,lower_wick_fraction,upper_wick_fraction,raw_taker_imbalance,raw_taker_imbalance_mean_3,raw_taker_imbalance_mean_12,raw_taker_imbalance_delta,raw_channel_slope,channel_r2,channel_width_pct,raw_channel_position,raw_distance_mid_bps,raw_rsi_channel,raw_oi_chg_15m,raw_oi_chg_1h,raw_oi_chg_4h,raw_oi_accel_1h,raw_price_oi_interaction,raw_funding_z,positioning_stale,positioning_age_log,adaptive_barrier_bps,window_age_fraction,activation_margin"
+future columns denied,True,"future,outcome,move_code,bars_held,terminal,net_r,gross_r,delta_r,best_side"
+fold-local imputation and weights,True,Task 2 fold-local model interface
+120-minute training purge,True,strictly before validation
+training and validation episodes disjoint,True,6 scored folds
+activation timestamps bounded,True,2025-06-30 23:59:00+00:00
+bounded development raw-content identity,True,four raw roles filtered to DEVELOPMENT before pandas
+forward and Q2 remain sealed,True,bounded identity and max-timestamp guards passed
+timing head and threshold not refit,True,frozen U xgboost_base owns WHEN and frequency
+episode-cluster bootstrap,True,2000 registered draws

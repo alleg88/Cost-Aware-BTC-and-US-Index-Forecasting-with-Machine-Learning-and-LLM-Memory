@@ -1,0 +1,40 @@
+{
+  "activations_per_day": 2.6815693430656933,
+  "decision": "close the channel branch; matched-frequency evidence did not pass",
+  "decision_rows": 472682,
+  "direction_feature_count": 17,
+  "forward_or_lockbox_loaded": false,
+  "frequency_matched": true,
+  "hold_minutes": 120,
+  "input_hash": "ff9252d8621f5a2437e73193b45f76eaf5ce4654a807a60e356def0d2edc920c",
+  "leakage_checks": 12,
+  "leakage_passed": true,
+  "max_loaded_timestamp": "2025-06-30 23:59:00+00:00",
+  "models": [
+    "logreg",
+    "xgboost"
+  ],
+  "oof_rows": 631264,
+  "opportunity_feature_count": 20,
+  "protocol_hash": "0b0e82b8dc112e13fe87890003685cfe7908150eb63dc02d4bcee7607dbdeaff",
+  "research_claim": "development_matched_frequency_ablation",
+  "retain_channels": false,
+  "round_trip_cost_bps": 10.0,
+  "run_hash": "1321c7ed5547c321259e",
+  "selected_activations_per_arm_model": 2939,
+  "source_hash": "a73bec22ccf7f47f23bb5bde420ec80793b86f82a44268bd7031e56321b55223",
+  "target_multiple_b": 2.0,
+  "window_sources": [
+    "channel",
+    "channel_blind"
+  ],
+  "xgboost_channel_mean_net_r": -0.0241399500093143,
+  "xgboost_channel_mean_net_r_ci_high": -0.00015186413410506403,
+  "xgboost_channel_mean_net_r_ci_low": -0.04798424780546116,
+  "xgboost_channel_minus_blind_mean_net_r": -0.00347393504989809,
+  "xgboost_channel_minus_blind_net_ci_high": 0.02183166611262977,
+  "xgboost_channel_minus_blind_net_ci_low": -0.030780034504716513,
+  "xgboost_channel_minus_blind_opportunity_ci_high": -0.06746317853270131,
+  "xgboost_channel_minus_blind_opportunity_ci_low": -0.10265326183183404,
+  "xgboost_channel_minus_blind_opportunity_rate": -0.08540319836679144
+}

@@ -1,0 +1,3 @@
+model,scored_rows,tie_rows,raw_sign_accuracy,value_weighted_sign_accuracy,mae_delta_r,rmse_delta_r,value_weighted_mae_delta_r,value_weighted_rmse_delta_r
+logreg,2939,22,0.4823448748714433,0.4813484426532942,,,,
+xgboost,2939,22,0.5142269454919438,0.48456841664402966,1.105295590002103,1.40727092555538,1.7863266661182284,1.9823800628535815

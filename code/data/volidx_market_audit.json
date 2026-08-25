@@ -1,0 +1,49 @@
+{
+  "ask_repaired_ohlc_rows": 2845,
+  "ask_source": "VOLIDXUSD_1 Min_Ask_2022.10.05_2026.08.01.csv",
+  "bid_repaired_ohlc_rows": 1536,
+  "bid_source": "VOLIDXUSD_1 Min_Bid_2022.10.05_2026.08.01.csv",
+  "crossed_close_rows": 41685,
+  "cutoff_exclusive": "2026-04-01T00:00:00+00:00",
+  "duplicate_timestamps": 0,
+  "end_utc": "2026-03-31T23:59:00+00:00",
+  "grids": {
+    "15min": {
+      "complete_rows": 82063,
+      "end_utc": "2026-03-31T23:45:00+00:00",
+      "max_available_at": "2026-04-01T00:00:00+00:00",
+      "output_sha256": "9768b586e86447e5bd4d71ff6833756e8054caca749a32b868464411c7fc17a2",
+      "rows": 82113,
+      "start_utc": "2022-10-05T13:15:00+00:00"
+    },
+    "1h": {
+      "complete_rows": 20493,
+      "end_utc": "2026-03-31T23:00:00+00:00",
+      "max_available_at": "2026-04-01T00:00:00+00:00",
+      "output_sha256": "613007445f9f5b030533bcfb06b677788d01752940c60425e4c6005eb8571313",
+      "rows": 20548,
+      "start_utc": "2022-10-05T13:00:00+00:00"
+    },
+    "1m": {
+      "complete_rows": 1231581,
+      "end_utc": "2026-03-31T23:59:00+00:00",
+      "max_available_at": "2026-04-01T00:00:00+00:00",
+      "output_sha256": "1fc9acbff5f434eac72311ffd9ca086ac639df8ee03eb43ecdd73d9c30cd2d75",
+      "rows": 1231581,
+      "start_utc": "2022-10-05T13:16:00+00:00"
+    },
+    "5min": {
+      "complete_rows": 246289,
+      "end_utc": "2026-03-31T23:55:00+00:00",
+      "max_available_at": "2026-04-01T00:00:00+00:00",
+      "output_sha256": "cd9cc72099a79ca0193f7750381feb99f278e313e2a711450b919eb1768ec992",
+      "rows": 246323,
+      "start_utc": "2022-10-05T13:15:00+00:00"
+    }
+  },
+  "instrument": "VOLIDXUSD",
+  "midpoint_invalid_rows_after_repair": 0,
+  "rows_after_cutoff": 1231581,
+  "rows_removed_by_cutoff": 117851,
+  "start_utc": "2022-10-05T13:16:00+00:00"
+}

@@ -1,0 +1,102 @@
+# Single source of truth for the pipeline (PROJECT-PLAN §10).
+# Snapshot this file with each results run for reproducibility.
+# Three instruments at native M15: BTCUSD (Binance) + USA500/USATECH (Dukascopy CFD).
+# The top-level keys below are the BTC defaults the existing single-instrument BTC
+# pipeline reads unchanged; the `instruments:` registry at the bottom holds the
+# per-instrument overrides (label threshold + transaction cost + snapshot paths).
+
+instrument: BTCUSDT
+base_interval: 15m         # downloaded natively from Binance (15m is a native interval,
+target_interval: 15min     # so no M1 -> aggregation step is needed)
+
+# Study period (PROJECT-PLAN §4). Lockbox stays sealed until final evaluation.
+dates:
+  train: ["2024-01-01", "2024-12-31"]        # BlockingTimeSeriesSplit CV / tuning (unchanged)
+  walkforward: ["2025-01-01", "2026-03-31"]  # rolling OOS, extended forward through Q1-2026
+  lockbox: ["2026-04-01", "2026-06-30"]      # out-of-time (Q2-2026), touched once at the end
+  calibration_end: "2025-07-01"              # tau/brackets calibrated on 2025-H1 walk-forward OOS, then frozen
+                                             # (dev window = 2024 CV/tuning + 2025-H1 policy calibration;
+                                             #  forward evaluation starts 2025-07-01)
+  cache_suffix: "to2026"                     # walk-forward cache span tag (prior runs used "2025")
+
+label:
+  threshold_bps: 25        # dead-zone half-width in bps (1 bp = 0.01%). Futures round-trip
+                           # cost is ~0.10% (5 bps x2), so 25 bps is ~2.5x cost — a wide
+                           # safety margin so a labelled up/down clears fees + slippage +
+                           # funding with room to spare (min net ~0.15% per trade). Trade-off:
+                           # fewer directional samples. At M15: flat ~77%, up+down ~23%.
+                           # Swept economically at {20..50} bps (notebook 03); the frozen-tau
+                           # walk-forward Sortino/Sharpe confirms 25 bps as the final value.
+  horizon_bars: 1          # next-bar direction
+  # classes: down=0, flat=1, up=2
+
+split:
+  n_splits: 5
+  train_frac: 0.8          # each block: 80% train / 20% test (more training data; ~5.6k/1.4k per block)
+  embargo_bars: 4          # gap between train and test (>= label horizon; 4 M15 bars = 1h)
+
+model:
+  catboost:
+    iterations: 300
+    depth: 6
+    learning_rate: 0.1
+    random_seed: 42
+
+# Transaction-cost assumption for later economic metrics.
+# Binance spot klines carry NO bid/ask, so a fixed taker fee is used (not per-bar spread).
+# 5 bps = Binance USD-M Futures VIP-0 taker (0.05%/side) — the venue that can actually
+# short, which the two-sided up/down/flat strategy needs. (Spot VIP-0 taker is 10 bps but
+# spot can't short.) Maker is cheaper (2 bps) but NOT assumed: bar-close signals enter as
+# takers (market orders); maker fills would need an order-book fill-probability model.
+# Perpetual funding is a separate cost to model. Update to your actual VIP tier.
+taker_fee_bps: 5           # ~0.05% per side (futures VIP-0 taker; conservative vs maker)
+
+paths:
+  raw_binance: data/raw/binance
+  raw_dukascopy: data/raw/dukascopy
+  working_parquet: data/btcusdt_m15_2024_2025.parquet   # now spans 2024 .. 2026-Q1 (superset; 2024-25 bars unchanged)
+  lockbox_parquet: data/btcusdt_m15_lockbox_2026Q2.parquet
+
+# Per-instrument registry. Label threshold and transaction cost are instrument-specific:
+# a 25 bps move in 15 min is routine for BTC but rare for equity indices, so the BTC
+# dead-zone would leave the indices ~95% flat. Costs differ too — indices are far cheaper
+# to trade than BTC. threshold_bps is the dead-zone half-width; taker_fee_bps is the
+# modelled cost PER SIDE (round-trip = 2x) for the later net-of-cost Sharpe.
+instruments:
+  btc:
+    source: binance
+    symbol: BTCUSDT
+    working_parquet: data/btcusdt_m15_2024_2025.parquet   # spans 2024 .. 2026-Q1 (superset)
+    lockbox_parquet: data/btcusdt_m15_lockbox_2026Q2.parquet
+    threshold_bps: 25        # 0.25%; ~2.5x the 10 bps futures round-trip. flat ~77% / dir ~23%.
+    taker_fee_bps: 5         # 0.05%/side, Binance USDⓈ-M futures VIP-0 taker (can short).
+
+  usa500:
+    source: dukascopy
+    symbol: USA500IDXUSD
+    working_parquet: data/usa500_m15_2024_2025.parquet
+    lockbox_parquet: data/usa500_m15_lockbox_2026Q1.parquet
+    threshold_bps: 15        # 0.15%; ~5-7x round-trip cost. flat ~92% / dir ~8%.
+    taker_fee_bps: 1         # ~1 bps/side. Measured bid-ask spread is ~0.9 bps (median), i.e.
+                             # ~0.45 bps of half-spread per side; rounded up to 1 bps to absorb
+                             # Dukascopy's small tier-based commission + slippage. Round-trip ~2 bps.
+    round_trip_cost_bps: 2   # frozen all-in index replay cost
+
+  usatech:
+    source: dukascopy
+    symbol: USATECHIDXUSD
+    working_parquet: data/usatech_m15_2024_2025.parquet
+    lockbox_parquet: data/usatech_m15_lockbox_2026Q1.parquet
+    threshold_bps: 15        # 0.15%; ~4-5x round-trip cost. flat ~87% / dir ~13%.
+    taker_fee_bps: 1.5       # frozen all-in per-side equivalent, including spread/commission/slippage
+    round_trip_cost_bps: 3   # frozen all-in index replay cost
+
+# RQ3 reflection agent (notebook 05). Uses the same Ollama Cloud call pattern as the
+# notebook-04 LLM scorer, but with a weekly-report -> lesson schema instead of headline batches.
+reflection:
+  model: glm-5.2:cloud
+  prompt_version: "2"        # v2: output contract in-prompt (cloud models ignore format=)
+  max_lessons: 3
+  num_ctx: 16384
+  num_predict: 6000          # thinking models spend most of the budget on hidden reasoning
+

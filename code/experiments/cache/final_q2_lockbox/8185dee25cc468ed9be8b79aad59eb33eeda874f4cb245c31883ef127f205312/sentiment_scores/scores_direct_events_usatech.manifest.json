@@ -1,0 +1,15 @@
+{
+  "complete": true,
+  "cutoff_exclusive": "2026-07-01T00:00:00+00:00",
+  "local_files_only": true,
+  "model": "mrm8488/deberta-v3-ft-financial-news-sentiment-analysis",
+  "revision": "9e10915c245a80a89b18d1ac51350e093c7bb35a",
+  "rows_after_cutoff": 0,
+  "source_prefix": "direct_events",
+  "source_sha256": "94f43bab08739c11ffb787048bb449ea8b8313c1ea1f7ba421dfe65110a6b0ba",
+  "source_sha256_scope": "canonical_interval_scoring_rows",
+  "start_inclusive": "2026-04-01T00:00:00+00:00",
+  "stream": "usatech",
+  "unique_titles": 0,
+  "version": "1"
+}

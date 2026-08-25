@@ -1,0 +1,19 @@
+# Publish only the research package listed below. Local notes, manuscript working files,
+# source bundles, caches and credentials remain outside Git.
+
+/*
+
+!/.gitignore
+!/.gitattributes
+!/README.md
+!/REPRODUCIBILITY.md
+!/PROJECT-PLAN.md
+!/prepare_project.py
+!/run_zip.py
+!/.github/
+!/.github/workflows/
+!/.github/workflows/reproducibility.yml
+!/code/
+!/dissertation/
+/dissertation/*
+!/dissertation/research_questions.md

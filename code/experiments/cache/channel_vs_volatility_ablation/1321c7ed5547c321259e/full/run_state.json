@@ -1,0 +1,105 @@
+{
+  "artifacts": {
+    "economic_metrics.csv": {
+      "sha256": "16d5ff7054ea5d146300ced1fbcdf294c87ce01e66b0b92702f328de469a8c08",
+      "size": 1111
+    },
+    "economic_paths.parquet": {
+      "sha256": "ddd1bc2921c9178abee2ece45390454348a83707f2517c73782e6213f172b1a2",
+      "size": 1786447
+    },
+    "feature_audit.csv": {
+      "sha256": "0bd9ed1cfdb22f76d31b29fb3597f63da13b200f40e0f6cd48333f59072d4253",
+      "size": 1896
+    },
+    "fold_audit.csv": {
+      "sha256": "1f55b3104951e38c3c52235336ed4c4a577832c14bd1ba414369219daa538675",
+      "size": 1562
+    },
+    "frequency_audit.csv": {
+      "sha256": "b9144dbeb6da3013332ee18435808bf092785d6a8ca3a844c6f842d3cea9cbe1",
+      "size": 448
+    },
+    "frozen_protocol.json": {
+      "sha256": "dcf7513889eab6af13ed3c81e929c8a6a8fce42fafb8edd3d4e21e183057d0c1",
+      "size": 1673
+    },
+    "leakage_audit.csv": {
+      "sha256": "2a4eabc4890e584d68fb584322a182e24064746b1aea82d136ad5d21586f42e0",
+      "size": 1037
+    },
+    "matched_comparisons.csv": {
+      "sha256": "91eeac9f86f0c70b8feb3aec276f0d57718f008fa154f37bdd435bcce546f7ec",
+      "size": 587
+    },
+    "oof_predictions.parquet": {
+      "sha256": "3643e8939b302d4e96da53d2513522c6685102e45620aa10ad9ea5941db11e72",
+      "size": 22390106
+    },
+    "opportunity_metrics.csv": {
+      "sha256": "155c786f7d8d3aa4cfdca70f60a3f94993b61e9aa692ba4a7aaaa078f973f917",
+      "size": 855
+    },
+    "predictive_metrics.csv": {
+      "sha256": "e2f0fda83da28c03a9d190cc05f3a9930e7e76985bbbcd0e32b886547993693c",
+      "size": 382
+    },
+    "protocol.json": {
+      "sha256": "dc02fca7099f966e62a074892a7d03d48d5e5307855ed395474f248d8f0cc8f7",
+      "size": 4162
+    },
+    "selected_activations.parquet": {
+      "sha256": "8174b6fafe4c79e8792be19824630f87775ad2d919a86c8f0883fc946a743323",
+      "size": 565296
+    },
+    "summary.json": {
+      "sha256": "c5cb8e0bb898bd829ce5e116e6eb92c5637abfc1c4e385558b3165c5942823f9",
+      "size": 1678
+    }
+  },
+  "input_hash": "ff9252d8621f5a2437e73193b45f76eaf5ce4654a807a60e356def0d2edc920c",
+  "protocol_hash": "0b0e82b8dc112e13fe87890003685cfe7908150eb63dc02d4bcee7607dbdeaff",
+  "run_hash": "1321c7ed5547c321259e",
+  "source_hash": "a73bec22ccf7f47f23bb5bde420ec80793b86f82a44268bd7031e56321b55223",
+  "status": "complete",
+  "summary": {
+    "activations_per_day": 2.6815693430656933,
+    "decision": "close the channel branch; matched-frequency evidence did not pass",
+    "decision_rows": 472682,
+    "direction_feature_count": 17,
+    "forward_or_lockbox_loaded": false,
+    "frequency_matched": true,
+    "hold_minutes": 120,
+    "input_hash": "ff9252d8621f5a2437e73193b45f76eaf5ce4654a807a60e356def0d2edc920c",
+    "leakage_checks": 12,
+    "leakage_passed": true,
+    "max_loaded_timestamp": "2025-06-30 23:59:00+00:00",
+    "models": [
+      "logreg",
+      "xgboost"
+    ],
+    "oof_rows": 631264,
+    "opportunity_feature_count": 20,
+    "protocol_hash": "0b0e82b8dc112e13fe87890003685cfe7908150eb63dc02d4bcee7607dbdeaff",
+    "research_claim": "development_matched_frequency_ablation",
+    "retain_channels": false,
+    "round_trip_cost_bps": 10.0,
+    "run_hash": "1321c7ed5547c321259e",
+    "selected_activations_per_arm_model": 2939,
+    "source_hash": "a73bec22ccf7f47f23bb5bde420ec80793b86f82a44268bd7031e56321b55223",
+    "target_multiple_b": 2.0,
+    "window_sources": [
+      "channel",
+      "channel_blind"
+    ],
+    "xgboost_channel_mean_net_r": -0.0241399500093143,
+    "xgboost_channel_mean_net_r_ci_high": -0.00015186413410506403,
+    "xgboost_channel_mean_net_r_ci_low": -0.04798424780546116,
+    "xgboost_channel_minus_blind_mean_net_r": -0.00347393504989809,
+    "xgboost_channel_minus_blind_net_ci_high": 0.02183166611262977,
+    "xgboost_channel_minus_blind_net_ci_low": -0.030780034504716513,
+    "xgboost_channel_minus_blind_opportunity_ci_high": -0.06746317853270131,
+    "xgboost_channel_minus_blind_opportunity_ci_low": -0.10265326183183404,
+    "xgboost_channel_minus_blind_opportunity_rate": -0.08540319836679144
+  }
+}

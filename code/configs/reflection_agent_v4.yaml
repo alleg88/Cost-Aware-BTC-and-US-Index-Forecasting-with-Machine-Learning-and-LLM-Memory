@@ -1,0 +1,44 @@
+protocol_version: reflection-agent-v4.0
+schema_version: "4.0"
+protocol_scope: causal_full_information_policy_router
+model: deepseek-v4-flash:cloud
+required_model_digest: 5166728b9358990e5f6c34f87cbe48716be2f2cd2d3b98527dff27ea755bf3ba
+think: low
+stream: false
+temperature: 0.0
+num_predict: 4096
+timeout_seconds: 300
+repair_attempts: 1
+development_start_utc: "2021-01-01T00:00:00Z"
+development_end_utc: "2025-01-01T00:00:00Z"
+h1_start_utc: "2025-01-01T00:00:00Z"
+h1_end_utc: "2025-07-01T00:00:00Z"
+forward_start_utc: "2025-07-01T00:00:00Z"
+forward_end_utc: "2026-04-01T00:00:00Z"
+q2_start_utc: "2026-04-01T00:00:00Z"
+q2_end_utc: "2026-07-01T00:00:00Z"
+policy_ids:
+  - UNION_ONLY
+  - LSTM_HIGH
+  - LSTM_ALL
+  - FUNDING_CONTINUATION
+  - VOLATILITY_RESET
+  - CONTEXT_COMBINED
+  - FIRST_ONLY
+  - THIRD_PLUS_ONLY
+  - XGB_STRONG
+agent_variants:
+  - reflection_real_memory
+  - reflection_no_memory
+  - reflection_shuffled_memory
+max_memory_cards: 12
+hedge_eta: 0.5
+random_seed: 42
+minimum_trade_gain_fraction: 0.25
+minimum_side_gain_fraction: 0.10
+net_noninferiority_margin: 0.005
+side_noninferiority_margin: 0.0025
+sortino_noninferiority_margin: 0.10
+max_drawdown_absolute_margin: 0.01
+max_extra_trade_concentration: 0.60
+max_transport_failure_fraction: 0.05

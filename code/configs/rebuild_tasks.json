@@ -1,0 +1,899 @@
+{
+  "schema_version": 1,
+  "sources": [
+    ".source_evidence",
+    "source_evidence_manifest.json",
+    "configs/final_q2_lockbox_protocol.json",
+    "configs/final_q2_lockbox_manifest.json",
+    "experiments/cache/final_q2_lockbox/OPENED.json",
+    "experiments/cache/final_q2_lockbox/8185dee25cc468ed9be8b79aad59eb33eeda874f4cb245c31883ef127f205312",
+    "experiments/cache/q2_sentiment_sensitivity"
+  ],
+  "tasks": [
+    {
+      "id": "source.verify",
+      "depends_on": [],
+      "module": "experiments.rebuild_market_sentiment",
+      "args": ["verify_sources"],
+      "inputs": [".source_evidence", "source_evidence_manifest.json"],
+      "outputs": [".rebuild/source_verified.json"],
+      "profile": "canonical",
+      "comparison": "exact"
+    },
+    {
+      "id": "source.stage_snapshots",
+      "depends_on": ["source.verify"],
+      "module": "experiments.rebuild_market_sentiment",
+      "args": ["stage_snapshots"],
+      "inputs": [".source_evidence", "source_evidence_manifest.json", ".rebuild/source_verified.json"],
+      "outputs": [
+        ".rebuild/snapshots_staged.json",
+        "data/raw/USA500IDXUSD_1 Min_Ask_2021.01.01_2026.08.01.csv",
+        "data/raw/USA500IDXUSD_1 Min_Bid_2021.01.01_2026.08.01.csv",
+        "data/raw/USATECHIDXUSD_1 Min_Ask_2021.01.01_2026.08.01.csv",
+        "data/raw/USATECHIDXUSD_1 Min_Bid_2021.01.01_2026.08.01.csv",
+        "data/raw/VOLIDXUSD_1 Min_Ask_2022.10.05_2026.08.01.csv",
+        "data/raw/VOLIDXUSD_1 Min_Bid_2022.10.05_2026.08.01.csv",
+        "data/raw/dukascopy/USA500IDXUSD_15 Mins_Ask_2024.01.01_2026.03.31.csv",
+        "data/raw/dukascopy/USA500IDXUSD_15 Mins_Bid_2024.01.01_2026.03.31.csv",
+        "data/raw/dukascopy/USATECHIDXUSD_15 Mins_Ask_2024.01.01_2026.03.31.csv",
+        "data/raw/dukascopy/USATECHIDXUSD_15 Mins_Bid_2024.01.01_2026.03.31.csv",
+        "sentiment/raw/crypto_fear_greed.parquet",
+        "sentiment/raw/direct_events.parquet",
+        "sentiment/raw/direct_events_q2_staging/direct_events.parquet",
+        "sentiment/raw/direct_events_q2_staging/manifest.json",
+        "sentiment/raw/direct_events_q2_staging/truth_social_q2_all.parquet",
+        "sentiment/raw/fred_calendar.parquet",
+        "sentiment/raw/gdelt_bq/bq-results-20260630-200113-1782849721248-20260630T201246Z-3-001.zip",
+        "sentiment/raw/gdelt_bq/bq-results-20260630-200418-1782849938370-20260630T201200Z-3-001.zip",
+        "sentiment/raw/gdelt_bq/bq-results-20260630-200559-1782849973295-20260630T200842Z-3-001.zip",
+        "sentiment/raw/gdelt_bq/q2_staging/gdelt_q2_2026_english_whitelist.csv",
+        "sentiment/raw/gdelt_bq/q2_staging/gdelt_q2_2026_english_whitelist.manifest.json",
+        "sentiment/raw/trump_truth_posts.csv"
+      ],
+      "profile": "canonical",
+      "comparison": "exact"
+    },
+    {
+      "id": "market.binance.download_m15",
+      "depends_on": [],
+      "module": "experiments.rebuild_market_sentiment",
+      "args": ["download_m15", "--output-dir", ".rebuild/raw/binance/m15", "--receipt", ".rebuild/download_m15.json"],
+      "inputs": [],
+      "outputs": [".rebuild/raw/binance/m15", ".rebuild/download_m15.json"],
+      "profile": "canonical",
+      "comparison": "exact"
+    },
+    {
+      "id": "market.binance.download_m1",
+      "depends_on": [],
+      "module": "experiments.rebuild_market_sentiment",
+      "args": ["download_m1", "--output-dir", ".rebuild/raw/binance/m1", "--receipt", ".rebuild/download_m1.json"],
+      "inputs": [],
+      "outputs": [".rebuild/raw/binance/m1", ".rebuild/download_m1.json"],
+      "profile": "canonical",
+      "comparison": "exact"
+    },
+    {
+      "id": "market.binance.download_positioning",
+      "depends_on": [],
+      "module": "experiments.rebuild_market_sentiment",
+      "args": ["download_positioning", "--output-dir", ".rebuild/raw/binance/positioning", "--receipt", ".rebuild/download_positioning.json"],
+      "inputs": [],
+      "outputs": [".rebuild/raw/binance/positioning", ".rebuild/download_positioning.json"],
+      "profile": "canonical",
+      "comparison": "exact"
+    },
+    {
+      "id": "market.binance.build_m15",
+      "depends_on": ["market.binance.download_m15"],
+      "module": "experiments.rebuild_market_sentiment",
+      "args": ["build_m15", "--raw-dir", ".rebuild/raw/binance/m15", "--output-dir", "data"],
+      "inputs": [".rebuild/raw/binance/m15"],
+      "outputs": ["data/btcusdt_m15_2024_2025.parquet", "data/btcusdt_m15_lockbox_2026Q1.parquet"],
+      "profile": "canonical",
+      "comparison": "exact"
+    },
+    {
+      "id": "market.binance.build_m1",
+      "depends_on": ["market.binance.download_m1"],
+      "module": "experiments.rebuild_market_sentiment",
+      "args": ["build_m1", "--raw-dir", ".rebuild/raw/binance/m1", "--output-dir", "data"],
+      "inputs": [".rebuild/raw/binance/m1"],
+      "outputs": ["data/btcusdt_1m_2021_2026.parquet", "data/btcusdt_1m_2024_2026.parquet", "data/btcusdt_1m_2025_2026.parquet", "data/btcusdt_5min_2021_2026.parquet", "data/btcusdt_15min_2021_2026.parquet", "data/btcusdt_1h_2021_2026.parquet"],
+      "profile": "canonical",
+      "comparison": "exact"
+    },
+    {
+      "id": "market.binance.build_positioning",
+      "depends_on": ["market.binance.download_positioning", "market.binance.build_m15", "market.binance.build_m1"],
+      "module": "experiments.rebuild_market_sentiment",
+      "args": ["build_positioning", "--raw-dir", ".rebuild/raw/binance/positioning", "--output-dir", "data"],
+      "inputs": [".rebuild/raw/binance/positioning", "data/btcusdt_m15_2024_2025.parquet", "data/btcusdt_m15_lockbox_2026Q1.parquet", "data/btcusdt_15min_2021_2026.parquet"],
+      "outputs": ["data/btcusdt_positioning_m15_2024_2026.parquet", "data/btcusdt_positioning_15min_2021_2026.parquet"],
+      "profile": "canonical",
+      "comparison": "exact"
+    },
+    {
+      "id": "market.indices.build",
+      "depends_on": ["source.stage_snapshots"],
+      "module": "experiments.rebuild_market_sentiment",
+      "args": ["build_indices", "--raw-dir", "data/raw", "--output-dir", "data"],
+      "inputs": [
+        "data/raw/USA500IDXUSD_1 Min_Ask_2021.01.01_2026.08.01.csv",
+        "data/raw/USA500IDXUSD_1 Min_Bid_2021.01.01_2026.08.01.csv",
+        "data/raw/USATECHIDXUSD_1 Min_Ask_2021.01.01_2026.08.01.csv",
+        "data/raw/USATECHIDXUSD_1 Min_Bid_2021.01.01_2026.08.01.csv",
+        "data/raw/VOLIDXUSD_1 Min_Ask_2022.10.05_2026.08.01.csv",
+        "data/raw/VOLIDXUSD_1 Min_Bid_2022.10.05_2026.08.01.csv"
+      ],
+      "outputs": [
+        "data/usa500_1m_2021_2026.parquet", "data/usa500_5min_2021_2026.parquet", "data/usa500_15min_2021_2026.parquet", "data/usa500_1h_2021_2026.parquet", "data/usa500_market_audit.json",
+        "data/usatech_1m_2021_2026.parquet", "data/usatech_5min_2021_2026.parquet", "data/usatech_15min_2021_2026.parquet", "data/usatech_1h_2021_2026.parquet", "data/usatech_market_audit.json",
+        "data/volidx_1m_2021_2026.parquet", "data/volidx_5min_2021_2026.parquet", "data/volidx_15min_2021_2026.parquet", "data/volidx_1h_2021_2026.parquet", "data/volidx_market_audit.json"
+      ],
+      "profile": "canonical",
+      "comparison": "exact"
+    },
+    {
+      "id": "news.gdelt.normalise",
+      "depends_on": ["source.stage_snapshots"],
+      "module": "experiments.rebuild_market_sentiment",
+      "args": ["normalise_gdelt", "--raw-dir", "sentiment/raw/gdelt_bq", "--output-dir", "sentiment/raw"],
+      "inputs": [
+        "sentiment/raw/gdelt_bq/bq-results-20260630-200113-1782849721248-20260630T201246Z-3-001.zip",
+        "sentiment/raw/gdelt_bq/bq-results-20260630-200418-1782849938370-20260630T201200Z-3-001.zip",
+        "sentiment/raw/gdelt_bq/bq-results-20260630-200559-1782849973295-20260630T200842Z-3-001.zip"
+      ],
+      "outputs": ["sentiment/raw/gdelt_btc.parquet", "sentiment/raw/gdelt_usa500.parquet", "sentiment/raw/gdelt_usatech.parquet"],
+      "profile": "canonical",
+      "comparison": "row_exact"
+    },
+    {
+      "id": "news.direct_events.split",
+      "depends_on": ["source.stage_snapshots"],
+      "module": "experiments.rebuild_market_sentiment",
+      "args": ["split_direct", "--raw-dir", "sentiment/raw", "--output-dir", "sentiment/raw"],
+      "inputs": ["sentiment/raw/direct_events.parquet", "sentiment/raw/trump_truth_posts.csv"],
+      "outputs": ["sentiment/raw/direct_events_btc.parquet", "sentiment/raw/direct_events_usa500.parquet", "sentiment/raw/direct_events_usatech.parquet"],
+      "profile": "canonical",
+      "comparison": "row_exact"
+    },
+    {
+      "id": "news.deberta.score_gdelt",
+      "depends_on": ["news.gdelt.normalise"],
+      "module": "experiments.rebuild_market_sentiment",
+      "args": ["score_gdelt", "--raw-dir", "sentiment/raw"],
+      "inputs": ["sentiment/raw/gdelt_btc.parquet", "sentiment/raw/gdelt_usa500.parquet", "sentiment/raw/gdelt_usatech.parquet"],
+      "outputs": ["sentiment/raw/scores_btc.parquet", "sentiment/raw/scores_btc.manifest.json", "sentiment/raw/scores_usa500.parquet", "sentiment/raw/scores_usa500.manifest.json", "sentiment/raw/scores_usatech.parquet", "sentiment/raw/scores_usatech.manifest.json"],
+      "profile": "canonical",
+      "comparison": {"mode": "numeric", "exclude_columns": ["scored_at"], "atol": 1e-7, "rtol": 1e-6}
+    },
+    {
+      "id": "news.deberta.score_direct",
+      "depends_on": ["news.direct_events.split"],
+      "module": "experiments.rebuild_market_sentiment",
+      "args": ["score_direct", "--raw-dir", "sentiment/raw"],
+      "inputs": ["sentiment/raw/direct_events_btc.parquet", "sentiment/raw/direct_events_usa500.parquet", "sentiment/raw/direct_events_usatech.parquet"],
+      "outputs": ["sentiment/raw/scores_direct_events_btc.parquet", "sentiment/raw/scores_direct_events_btc.manifest.json", "sentiment/raw/scores_direct_events_usa500.parquet", "sentiment/raw/scores_direct_events_usa500.manifest.json", "sentiment/raw/scores_direct_events_usatech.parquet", "sentiment/raw/scores_direct_events_usatech.manifest.json"],
+      "profile": "canonical",
+      "comparison": {"mode": "numeric", "exclude_columns": ["scored_at"], "atol": 1e-7, "rtol": 1e-6}
+    },
+    {
+      "id": "news.llm.stage_frozen",
+      "depends_on": ["source.verify"],
+      "module": "experiments.rebuild_market_sentiment",
+      "args": ["stage_llm"],
+      "inputs": [".source_evidence", "source_evidence_manifest.json", ".rebuild/source_verified.json"],
+      "outputs": [
+        "experiments/cache/q2_sentiment_sensitivity/sentiment_scores/scores_llm_direct_events_usa500.manifest.json",
+        "experiments/cache/q2_sentiment_sensitivity/sentiment_scores/scores_llm_direct_events_usa500.parquet",
+        "experiments/cache/q2_sentiment_sensitivity/sentiment_scores/scores_llm_direct_events_usatech.manifest.json",
+        "experiments/cache/q2_sentiment_sensitivity/sentiment_scores/scores_llm_direct_events_usatech.parquet",
+        "experiments/cache/q2_sentiment_sensitivity/sentiment_scores/scores_llm_usa500.manifest.json",
+        "experiments/cache/q2_sentiment_sensitivity/sentiment_scores/scores_llm_usa500.parquet",
+        "experiments/cache/q2_sentiment_sensitivity/sentiment_scores/scores_llm_usatech.manifest.json",
+        "experiments/cache/q2_sentiment_sensitivity/sentiment_scores/scores_llm_usatech.parquet",
+        "sentiment/raw/scores_llm_btc.parquet",
+        "sentiment/raw/scores_llm_direct_events_btc.parquet",
+        "sentiment/raw/scores_llm_direct_events_usa500.manifest.json",
+        "sentiment/raw/scores_llm_direct_events_usa500.parquet",
+        "sentiment/raw/scores_llm_direct_events_usatech.manifest.json",
+        "sentiment/raw/scores_llm_direct_events_usatech.parquet",
+        "sentiment/raw/scores_llm_usa500.manifest.json",
+        "sentiment/raw/scores_llm_usa500.parquet",
+        "sentiment/raw/scores_llm_usatech.manifest.json",
+        "sentiment/raw/scores_llm_usatech.parquet"
+      ],
+      "profile": "canonical",
+      "comparison": "exact"
+    },
+    {
+      "id": "btc.baseline_handoff",
+      "depends_on": ["market.binance.build_m15", "market.binance.build_positioning"],
+      "module": "experiments.rebuild_btc",
+      "args": ["baseline_handoff"],
+      "inputs": [
+        "data/btcusdt_m15_2024_2025.parquet",
+        "data/btcusdt_positioning_m15_2024_2026.parquet"
+      ],
+      "outputs": [
+        "experiments/cache/tuning/notebook01_handoff/selected_widths.parquet",
+        "experiments/cache/tuning/notebook02_no_sentiment/handoff.json"
+      ],
+      "profile": "canonical",
+      "comparison": {"mode": "numeric", "atol": 1e-10, "rtol": 1e-8}
+    },
+    {
+      "id": "btc.positioning_ablation",
+      "depends_on": ["market.binance.build_m15", "market.binance.build_positioning"],
+      "module": "experiments.run_positioning_ablation",
+      "args": [],
+      "inputs": [
+        "data/btcusdt_m15_2024_2025.parquet",
+        "data/btcusdt_positioning_m15_2024_2026.parquet"
+      ],
+      "outputs": [
+        "experiments/cache/walkforward/btc_of-base_dz55_devwf.parquet",
+        "experiments/cache/walkforward/btc_of-pos_dz55_devwf.parquet",
+        "experiments/cache/walkforward/btc_of-placebo_dz55_devwf.parquet",
+        "experiments/cache/walkforward/btc_of-base_dz60_devwf.parquet",
+        "experiments/cache/walkforward/btc_of-pos_dz60_devwf.parquet",
+        "experiments/cache/walkforward/btc_of-placebo_dz60_devwf.parquet",
+        "experiments/cache/walkforward/btc_of-base_dz65_devwf.parquet",
+        "experiments/cache/walkforward/btc_of-pos_dz65_devwf.parquet",
+        "experiments/cache/walkforward/btc_of-placebo_dz65_devwf.parquet",
+        "experiments/cache/walkforward/btc_of-base_dz75_devwf.parquet",
+        "experiments/cache/walkforward/btc_of-pos_dz75_devwf.parquet",
+        "experiments/cache/walkforward/btc_of-placebo_dz75_devwf.parquet"
+      ],
+      "profile": "canonical",
+      "comparison": {"mode": "numeric", "atol": 1e-7, "rtol": 1e-6}
+    },
+    {
+      "id": "btc.catboost_matched",
+      "depends_on": ["btc.baseline_handoff", "market.binance.build_m1", "market.binance.build_positioning"],
+      "module": "experiments.run_catboost_matched_ablation",
+      "args": [
+        "--full",
+        "--output-root", "experiments/cache/tuning/notebook02_no_sentiment/matched_catboost_monthly_h1",
+        "--handoff", "experiments/cache/tuning/notebook02_no_sentiment/handoff.json"
+      ],
+      "inputs": [
+        "experiments/cache/tuning/notebook02_no_sentiment/handoff.json",
+        "data/btcusdt_m15_2024_2025.parquet",
+        "data/btcusdt_1m_2024_2026.parquet",
+        "data/btcusdt_positioning_m15_2024_2026.parquet"
+      ],
+      "outputs": ["experiments/cache/tuning/notebook02_no_sentiment/matched_catboost_monthly_h1"],
+      "profile": "canonical",
+      "comparison": {"mode": "numeric", "atol": 1e-7, "rtol": 1e-6}
+    },
+    {
+      "id": "btc.notebook02b_handoff",
+      "depends_on": ["btc.catboost_matched"],
+      "module": "experiments.notebook02b_handoff",
+      "args": [],
+      "inputs": [
+        "experiments/cache/tuning/notebook02_no_sentiment/handoff.json",
+        "experiments/cache/tuning/notebook02_no_sentiment/matched_catboost_monthly_h1"
+      ],
+      "outputs": ["experiments/cache/tuning/notebook02b_handoff/handoff.json"],
+      "profile": "canonical",
+      "comparison": "exact"
+    },
+    {
+      "id": "btc.all_model_raw",
+      "depends_on": [
+        "btc.notebook02b_handoff",
+        "news.deberta.score_gdelt",
+        "news.deberta.score_direct",
+        "news.llm.stage_frozen",
+        "market.binance.build_m1",
+        "market.binance.build_positioning"
+      ],
+      "module": "experiments.all_model_sentiment_raw",
+      "args": ["--full"],
+      "inputs": [
+        "experiments/cache/tuning/notebook02_no_sentiment/handoff.json",
+        "experiments/cache/tuning/notebook02b_handoff/handoff.json",
+        "data/btcusdt_m15_2024_2025.parquet",
+        "data/btcusdt_1m_2024_2026.parquet",
+        "data/btcusdt_positioning_m15_2024_2026.parquet",
+        "sentiment/raw/scores_btc.parquet",
+        "sentiment/raw/scores_direct_events_btc.parquet",
+        "sentiment/raw/scores_llm_btc.parquet",
+        "sentiment/raw/scores_llm_direct_events_btc.parquet"
+      ],
+      "outputs": ["experiments/cache/tuning/all_model_sentiment_raw_180d_fixed15_v3"],
+      "profile": "canonical",
+      "comparison": {"mode": "numeric", "atol": 1e-7, "rtol": 1e-6}
+    },
+    {
+      "id": "btc.all_model_policy",
+      "depends_on": ["btc.all_model_raw"],
+      "module": "experiments.all_model_sentiment_policy",
+      "args": ["--full"],
+      "inputs": [
+        "experiments/cache/tuning/all_model_sentiment_raw_180d_fixed15_v3",
+        "data/btcusdt_m15_2024_2025.parquet",
+        "data/btcusdt_1m_2024_2026.parquet"
+      ],
+      "outputs": ["experiments/cache/tuning/all_model_sentiment_policy_180d_fixed15_monthly_h1_v3"],
+      "profile": "canonical",
+      "comparison": {"mode": "numeric", "atol": 1e-7, "rtol": 1e-6}
+    },
+    {
+      "id": "btc.stacking",
+      "depends_on": ["btc.all_model_policy"],
+      "module": "experiments.all_model_stacking",
+      "args": [],
+      "inputs": [
+        "experiments/cache/tuning/all_model_sentiment_raw_180d_fixed15_v3",
+        "experiments/cache/tuning/all_model_sentiment_policy_180d_fixed15_monthly_h1_v3"
+      ],
+      "outputs": ["experiments/cache/tuning/all_model_stacking"],
+      "profile": "canonical",
+      "comparison": {"mode": "numeric", "atol": 1e-7, "rtol": 1e-6}
+    },
+    {
+      "id": "btc.legacy_layout",
+      "depends_on": ["btc.all_model_raw", "btc.all_model_policy"],
+      "module": "experiments.rebuild_btc",
+      "args": ["project_legacy"],
+      "inputs": [
+        "experiments/cache/tuning/all_model_sentiment_raw_180d_fixed15_v3",
+        "experiments/cache/tuning/all_model_sentiment_policy_180d_fixed15_monthly_h1_v3"
+      ],
+      "outputs": [
+        "experiments/cache/tuning/all_model_sentiment_raw_180d_fixed15/none",
+        "experiments/cache/tuning/all_model_sentiment_policy_180d_fixed15_monthly_h1/none"
+      ],
+      "profile": "canonical",
+      "comparison": "exact"
+    },
+    {
+      "id": "btc.qualified_union",
+      "depends_on": ["btc.legacy_layout", "market.binance.build_m15", "market.binance.build_m1"],
+      "module": "experiments.run_qualified_union",
+      "args": [],
+      "inputs": [
+        "experiments/cache/tuning/all_model_sentiment_raw_180d_fixed15/none",
+        "experiments/cache/tuning/all_model_sentiment_policy_180d_fixed15_monthly_h1/none",
+        "data/btcusdt_m15_2024_2025.parquet",
+        "data/btcusdt_1m_2025_2026.parquet"
+      ],
+      "outputs": ["experiments/cache/qualified_union_v1"],
+      "profile": "canonical",
+      "comparison": {"mode": "numeric", "atol": 1e-7, "rtol": 1e-6}
+    },
+    {
+      "id": "btc.svm_temperature",
+      "depends_on": ["btc.qualified_union"],
+      "module": "experiments.svm_temperature_calibration",
+      "args": [],
+      "inputs": [
+        "experiments/cache/tuning/all_model_sentiment_raw_180d_fixed15/none",
+        "experiments/cache/tuning/all_model_sentiment_policy_180d_fixed15_monthly_h1/none",
+        "experiments/cache/qualified_union_v1"
+      ],
+      "outputs": ["experiments/cache/svm_temperature_calibration"],
+      "profile": "canonical",
+      "comparison": {"mode": "numeric", "atol": 1e-10, "rtol": 1e-8}
+    },
+    {
+      "id": "btc.xgb_admission",
+      "depends_on": ["btc.svm_temperature"],
+      "module": "experiments.run_xgb_strong_move_admission",
+      "args": [],
+      "inputs": [
+        "experiments/cache/tuning/all_model_sentiment_raw_180d_fixed15/none",
+        "experiments/cache/tuning/all_model_sentiment_policy_180d_fixed15_monthly_h1/none",
+        "experiments/cache/qualified_union_v1",
+        "experiments/cache/svm_temperature_calibration",
+        "data/btcusdt_m15_2024_2025.parquet",
+        "data/btcusdt_1m_2025_2026.parquet"
+      ],
+      "outputs": ["experiments/cache/xgb_strong_move_admission"],
+      "profile": "canonical",
+      "comparison": {"mode": "numeric", "atol": 1e-7, "rtol": 1e-6}
+    },
+    {
+      "id": "btc.unified_ensemble",
+      "depends_on": ["btc.qualified_union", "market.binance.build_m1", "market.binance.build_positioning"],
+      "module": "experiments.run_unified_2021_ensemble",
+      "args": [],
+      "inputs": [
+        "experiments/cache/qualified_union_v1",
+        "data/btcusdt_15min_2021_2026.parquet",
+        "data/btcusdt_1m_2021_2026.parquet",
+        "data/btcusdt_positioning_15min_2021_2026.parquet"
+      ],
+      "outputs": ["experiments/cache/unified_2021_ensemble"],
+      "profile": "canonical",
+      "comparison": {"mode": "numeric", "atol": 1e-7, "rtol": 1e-6}
+    },
+    {
+      "id": "btc.expected_net_control",
+      "depends_on": ["btc.unified_ensemble"],
+      "module": "experiments.run_unified_expected_net_ensemble",
+      "args": [],
+      "inputs": [
+        "experiments/cache/qualified_union_v1",
+        "experiments/cache/unified_2021_ensemble",
+        "data/btcusdt_15min_2021_2026.parquet",
+        "data/btcusdt_1m_2021_2026.parquet",
+        "data/btcusdt_positioning_15min_2021_2026.parquet"
+      ],
+      "outputs": ["experiments/cache/unified_expected_net_ensemble"],
+      "profile": "canonical",
+      "comparison": {"mode": "numeric", "atol": 1e-7, "rtol": 1e-6}
+    },
+    {
+      "id": "btc.lstm_gmadl",
+      "depends_on": ["btc.expected_net_control"],
+      "module": "experiments.run_lstm_gmadl_shadow",
+      "args": [],
+      "inputs": [
+        "experiments/cache/qualified_union_v1",
+        "experiments/cache/unified_2021_ensemble",
+        "experiments/cache/unified_expected_net_ensemble"
+      ],
+      "outputs": ["experiments/cache/lstm_gmadl_shadow"],
+      "profile": "canonical",
+      "comparison": {"mode": "numeric", "atol": 1e-7, "rtol": 1e-6}
+    },
+    {
+      "id": "btc.union_reentry",
+      "depends_on": ["btc.unified_ensemble"],
+      "module": "experiments.run_union_v1_episode_reentry",
+      "args": [],
+      "inputs": [
+        "experiments/cache/qualified_union_v1",
+        "experiments/cache/unified_2021_ensemble",
+        "data/btcusdt_15min_2021_2026.parquet",
+        "data/btcusdt_1m_2021_2026.parquet",
+        "data/btcusdt_positioning_15min_2021_2026.parquet"
+      ],
+      "outputs": ["experiments/cache/union_v1_episode_reentry"],
+      "profile": "canonical",
+      "comparison": {"mode": "numeric", "atol": 1e-7, "rtol": 1e-6}
+    },
+    {
+      "id": "btc.agent.stage_frozen",
+      "depends_on": ["source.verify"],
+      "module": "experiments.rebuild_btc",
+      "args": ["stage_agent"],
+      "inputs": [".source_evidence", "source_evidence_manifest.json", ".rebuild/source_verified.json"],
+      "outputs": [
+        ".rebuild/btc_agent_calls_staged.json",
+        "experiments/cache/reflection_policy_router_v4/preflight.json",
+        "experiments/cache/reflection_policy_router_v4/preflight_calls.jsonl",
+        "experiments/cache/reflection_policy_router_v4/reflection_real_memory/call_cache",
+        "experiments/cache/reflection_policy_router_v4/reflection_no_memory/call_cache",
+        "experiments/cache/reflection_policy_router_v4/reflection_shuffled_memory/call_cache"
+      ],
+      "profile": "canonical",
+      "comparison": "exact",
+      "environment": {"MSC_CANONICAL_OFFLINE": "1"}
+    },
+    {
+      "id": "btc.agent_prepare",
+      "depends_on": ["btc.agent.stage_frozen", "btc.union_reentry", "btc.xgb_admission"],
+      "module": "experiments.replay_reflection_policy_router",
+      "args": ["--prepare"],
+      "inputs": [
+        ".rebuild/btc_agent_calls_staged.json",
+        "experiments/cache/reflection_policy_router_v4/preflight.json",
+        "experiments/cache/union_v1_episode_reentry",
+        "experiments/cache/qualified_union_v1",
+        "experiments/cache/xgb_strong_move_admission",
+        "experiments/cache/tuning/all_model_sentiment_raw_180d_fixed15/none",
+        "experiments/cache/tuning/all_model_sentiment_policy_180d_fixed15_monthly_h1/none",
+        "data/btcusdt_15min_2021_2026.parquet",
+        "data/btcusdt_1m_2021_2026.parquet",
+        "data/btcusdt_positioning_15min_2021_2026.parquet"
+      ],
+      "outputs": ["experiments/cache/reflection_policy_router_v4/common"],
+      "profile": "canonical",
+      "comparison": {"mode": "numeric", "atol": 1e-7, "rtol": 1e-6},
+      "environment": {"MSC_CANONICAL_OFFLINE": "1"}
+    },
+    {
+      "id": "btc.agent_real_memory",
+      "depends_on": ["btc.agent_prepare"],
+      "module": "experiments.replay_reflection_policy_router",
+      "args": ["--variant", "reflection_real_memory"],
+      "inputs": [
+        "experiments/cache/reflection_policy_router_v4/common",
+        "experiments/cache/reflection_policy_router_v4/preflight.json",
+        "experiments/cache/reflection_policy_router_v4/reflection_real_memory/call_cache"
+      ],
+      "outputs": ["experiments/cache/reflection_policy_router_v4/reflection_real_memory"],
+      "profile": "canonical",
+      "comparison": {"mode": "numeric", "atol": 1e-10, "rtol": 1e-8},
+      "environment": {"MSC_CANONICAL_OFFLINE": "1"}
+    },
+    {
+      "id": "btc.agent_no_memory",
+      "depends_on": ["btc.agent_prepare"],
+      "module": "experiments.replay_reflection_policy_router",
+      "args": ["--variant", "reflection_no_memory"],
+      "inputs": [
+        "experiments/cache/reflection_policy_router_v4/common",
+        "experiments/cache/reflection_policy_router_v4/preflight.json",
+        "experiments/cache/reflection_policy_router_v4/reflection_no_memory/call_cache"
+      ],
+      "outputs": ["experiments/cache/reflection_policy_router_v4/reflection_no_memory"],
+      "profile": "canonical",
+      "comparison": {"mode": "numeric", "atol": 1e-10, "rtol": 1e-8},
+      "environment": {"MSC_CANONICAL_OFFLINE": "1"}
+    },
+    {
+      "id": "btc.agent_shuffled",
+      "depends_on": ["btc.agent_prepare"],
+      "module": "experiments.replay_reflection_policy_router",
+      "args": ["--variant", "reflection_shuffled_memory"],
+      "inputs": [
+        "experiments/cache/reflection_policy_router_v4/common",
+        "experiments/cache/reflection_policy_router_v4/preflight.json",
+        "experiments/cache/reflection_policy_router_v4/reflection_shuffled_memory/call_cache"
+      ],
+      "outputs": ["experiments/cache/reflection_policy_router_v4/reflection_shuffled_memory"],
+      "profile": "canonical",
+      "comparison": {"mode": "numeric", "atol": 1e-10, "rtol": 1e-8},
+      "environment": {"MSC_CANONICAL_OFFLINE": "1"}
+    },
+    {
+      "id": "btc.agent_controls",
+      "depends_on": ["btc.agent_prepare"],
+      "module": "experiments.replay_reflection_policy_router",
+      "args": ["--run-controls"],
+      "inputs": ["experiments/cache/reflection_policy_router_v4/common"],
+      "outputs": [
+        "experiments/cache/reflection_policy_router_v4/hedge_router",
+        "experiments/cache/reflection_policy_router_v4/random_router",
+        "experiments/cache/reflection_policy_router_v4/static_union_only",
+        "experiments/cache/reflection_policy_router_v4/static_lstm_high",
+        "experiments/cache/reflection_policy_router_v4/static_lstm_all",
+        "experiments/cache/reflection_policy_router_v4/static_funding_continuation",
+        "experiments/cache/reflection_policy_router_v4/static_volatility_reset",
+        "experiments/cache/reflection_policy_router_v4/static_context_combined",
+        "experiments/cache/reflection_policy_router_v4/static_first_only",
+        "experiments/cache/reflection_policy_router_v4/static_third_plus_only",
+        "experiments/cache/reflection_policy_router_v4/static_xgb_strong"
+      ],
+      "profile": "canonical",
+      "comparison": {"mode": "numeric", "atol": 1e-10, "rtol": 1e-8},
+      "environment": {"MSC_CANONICAL_OFFLINE": "1"}
+    },
+    {
+      "id": "btc.agent_reconcile",
+      "depends_on": [
+        "btc.agent_real_memory",
+        "btc.agent_no_memory",
+        "btc.agent_shuffled",
+        "btc.agent_controls"
+      ],
+      "module": "experiments.reconcile_reflection_policy_router",
+      "args": [],
+      "inputs": [
+        "experiments/cache/reflection_policy_router_v4/common",
+        "experiments/cache/reflection_policy_router_v4/preflight.json",
+        "experiments/cache/reflection_policy_router_v4/reflection_real_memory",
+        "experiments/cache/reflection_policy_router_v4/reflection_no_memory",
+        "experiments/cache/reflection_policy_router_v4/reflection_shuffled_memory",
+        "experiments/cache/reflection_policy_router_v4/hedge_router",
+        "experiments/cache/reflection_policy_router_v4/random_router",
+        "experiments/cache/reflection_policy_router_v4/static_union_only",
+        "experiments/cache/reflection_policy_router_v4/static_lstm_high",
+        "experiments/cache/reflection_policy_router_v4/static_lstm_all",
+        "experiments/cache/reflection_policy_router_v4/static_funding_continuation",
+        "experiments/cache/reflection_policy_router_v4/static_volatility_reset",
+        "experiments/cache/reflection_policy_router_v4/static_context_combined",
+        "experiments/cache/reflection_policy_router_v4/static_first_only",
+        "experiments/cache/reflection_policy_router_v4/static_third_plus_only",
+        "experiments/cache/reflection_policy_router_v4/static_xgb_strong"
+      ],
+      "outputs": [
+        "experiments/cache/reflection_policy_router_v4/final_report.json",
+        "experiments/cache/reflection_policy_router_v4/final_report_manifest.json",
+        "experiments/cache/reflection_policy_router_v4/results_table.parquet",
+        "experiments/cache/reflection_policy_router_v4/coverage_gates.parquet",
+        "experiments/cache/reflection_policy_router_v4/paired_comparisons.parquet",
+        "experiments/cache/reflection_policy_router_v4/choice_summary.parquet",
+        "experiments/cache/reflection_policy_router_v4/policy_payoffs.parquet",
+        "experiments/cache/reflection_policy_router_v4/prompt_audits.parquet"
+      ],
+      "profile": "canonical",
+      "comparison": {"mode": "numeric", "atol": 1e-10, "rtol": 1e-8},
+      "environment": {"MSC_CANONICAL_OFFLINE": "1"}
+    },
+    {
+      "id": "index.usa500.gate",
+      "depends_on": ["market.indices.build"],
+      "module": "experiments.index_replication",
+      "args": ["--stream", "usa500", "--gate"],
+      "inputs": ["data/usa500_15min_2021_2026.parquet", "data/volidx_15min_2021_2026.parquet"],
+      "outputs": [
+        "experiments/cache/index_replication/usa500/protocol_manifest.json",
+        "experiments/cache/index_replication/usa500/vix_admission.json",
+        "experiments/cache/index_replication/usa500/vix_gate_paired_2024.parquet",
+        "experiments/cache/index_replication/usa500/vix_gate_classification_2024.parquet"
+      ],
+      "profile": "canonical",
+      "comparison": {"mode": "numeric", "atol": 1e-7, "rtol": 1e-6}
+    },
+    {
+      "id": "index.usa500.models",
+      "depends_on": ["index.usa500.gate", "news.deberta.score_gdelt", "news.deberta.score_direct", "news.llm.stage_frozen"],
+      "module": "experiments.index_replication",
+      "args": ["--stream", "usa500", "--full"],
+      "inputs": [
+        "data/usa500_15min_2021_2026.parquet",
+        "data/volidx_15min_2021_2026.parquet",
+        "experiments/cache/index_replication/usa500/protocol_manifest.json",
+        "experiments/cache/index_replication/usa500/vix_admission.json",
+        "experiments/cache/index_replication/usa500/vix_gate_paired_2024.parquet",
+        "experiments/cache/index_replication/usa500/vix_gate_classification_2024.parquet",
+        "sentiment/raw/scores_usa500.parquet",
+        "sentiment/raw/scores_usa500.manifest.json",
+        "sentiment/raw/scores_direct_events_usa500.parquet",
+        "sentiment/raw/scores_direct_events_usa500.manifest.json",
+        "sentiment/raw/scores_llm_usa500.parquet",
+        "sentiment/raw/scores_llm_usa500.manifest.json",
+        "sentiment/raw/scores_llm_direct_events_usa500.parquet",
+        "sentiment/raw/scores_llm_direct_events_usa500.manifest.json"
+      ],
+      "outputs": ["experiments/cache/index_replication/usa500"],
+      "profile": "canonical",
+      "comparison": {"mode": "numeric", "atol": 1e-7, "rtol": 1e-6}
+    },
+    {
+      "id": "index.usa500.forward",
+      "depends_on": ["index.usa500.models"],
+      "module": "experiments.index_all_model_forward",
+      "args": ["--stream", "usa500"],
+      "inputs": ["experiments/cache/index_replication/usa500", "data/usa500_15min_2021_2026.parquet", "data/volidx_15min_2021_2026.parquet"],
+      "outputs": ["experiments/cache/index_all_model_forward/usa500"],
+      "profile": "canonical",
+      "comparison": {"mode": "numeric", "atol": 1e-7, "rtol": 1e-6}
+    },
+    {
+      "id": "index.usa500.coverage",
+      "depends_on": ["index.usa500.models"],
+      "module": "experiments.index_trade_coverage",
+      "args": ["--stream", "usa500"],
+      "inputs": ["experiments/cache/index_replication/usa500", "data/usa500_15min_2021_2026.parquet", "data/volidx_15min_2021_2026.parquet"],
+      "outputs": ["experiments/cache/index_trade_coverage/usa500"],
+      "profile": "canonical",
+      "comparison": {"mode": "numeric", "atol": 1e-7, "rtol": 1e-6}
+    },
+    {
+      "id": "index.usa500.side",
+      "depends_on": ["index.usa500.models"],
+      "module": "experiments.index_side_calibration",
+      "args": ["--stream", "usa500"],
+      "inputs": ["experiments/cache/index_replication/usa500", "data/usa500_15min_2021_2026.parquet", "data/volidx_15min_2021_2026.parquet"],
+      "outputs": ["experiments/cache/index_side_calibration/usa500"],
+      "profile": "canonical",
+      "comparison": {"mode": "numeric", "atol": 1e-7, "rtol": 1e-6}
+    },
+    {
+      "id": "index.usa500.ensemble",
+      "depends_on": ["index.usa500.models"],
+      "module": "experiments.index_all_model_ensemble",
+      "args": ["--stream", "usa500"],
+      "inputs": ["experiments/cache/index_replication/usa500", "data/usa500_15min_2021_2026.parquet", "data/volidx_15min_2021_2026.parquet"],
+      "outputs": ["experiments/cache/index_all_model_ensemble/usa500"],
+      "profile": "canonical",
+      "comparison": {"mode": "numeric", "atol": 1e-7, "rtol": 1e-6}
+    },
+    {
+      "id": "index.usa500.channel",
+      "depends_on": ["market.indices.build"],
+      "module": "experiments.index_channel_replication",
+      "args": ["--stream", "usa500"],
+      "inputs": ["data/usa500_1m_2021_2026.parquet", "data/usa500_5min_2021_2026.parquet", "data/usa500_1h_2021_2026.parquet"],
+      "outputs": ["experiments/cache/index_channel_replication/usa500"],
+      "profile": "canonical",
+      "comparison": {"mode": "numeric", "atol": 1e-7, "rtol": 1e-6}
+    },
+    {
+      "id": "index.usatech.gate",
+      "depends_on": ["market.indices.build"],
+      "module": "experiments.index_replication",
+      "args": ["--stream", "usatech", "--gate"],
+      "inputs": ["data/usatech_15min_2021_2026.parquet", "data/volidx_15min_2021_2026.parquet"],
+      "outputs": [
+        "experiments/cache/index_replication/usatech/protocol_manifest.json",
+        "experiments/cache/index_replication/usatech/vix_admission.json",
+        "experiments/cache/index_replication/usatech/vix_gate_paired_2024.parquet",
+        "experiments/cache/index_replication/usatech/vix_gate_classification_2024.parquet"
+      ],
+      "profile": "canonical",
+      "comparison": {"mode": "numeric", "atol": 1e-7, "rtol": 1e-6}
+    },
+    {
+      "id": "index.usatech.models",
+      "depends_on": ["index.usatech.gate", "news.deberta.score_gdelt", "news.deberta.score_direct", "news.llm.stage_frozen"],
+      "module": "experiments.index_replication",
+      "args": ["--stream", "usatech", "--full"],
+      "inputs": [
+        "data/usatech_15min_2021_2026.parquet",
+        "data/volidx_15min_2021_2026.parquet",
+        "experiments/cache/index_replication/usatech/protocol_manifest.json",
+        "experiments/cache/index_replication/usatech/vix_admission.json",
+        "experiments/cache/index_replication/usatech/vix_gate_paired_2024.parquet",
+        "experiments/cache/index_replication/usatech/vix_gate_classification_2024.parquet",
+        "sentiment/raw/scores_usatech.parquet",
+        "sentiment/raw/scores_usatech.manifest.json",
+        "sentiment/raw/scores_direct_events_usatech.parquet",
+        "sentiment/raw/scores_direct_events_usatech.manifest.json",
+        "sentiment/raw/scores_llm_usatech.parquet",
+        "sentiment/raw/scores_llm_usatech.manifest.json",
+        "sentiment/raw/scores_llm_direct_events_usatech.parquet",
+        "sentiment/raw/scores_llm_direct_events_usatech.manifest.json"
+      ],
+      "outputs": ["experiments/cache/index_replication/usatech"],
+      "profile": "canonical",
+      "comparison": {"mode": "numeric", "atol": 1e-7, "rtol": 1e-6}
+    },
+    {
+      "id": "index.usatech.forward",
+      "depends_on": ["index.usatech.models"],
+      "module": "experiments.index_all_model_forward",
+      "args": ["--stream", "usatech"],
+      "inputs": ["experiments/cache/index_replication/usatech", "data/usatech_15min_2021_2026.parquet", "data/volidx_15min_2021_2026.parquet"],
+      "outputs": ["experiments/cache/index_all_model_forward/usatech"],
+      "profile": "canonical",
+      "comparison": {"mode": "numeric", "atol": 1e-7, "rtol": 1e-6}
+    },
+    {
+      "id": "index.usatech.coverage",
+      "depends_on": ["index.usatech.models"],
+      "module": "experiments.index_trade_coverage",
+      "args": ["--stream", "usatech"],
+      "inputs": ["experiments/cache/index_replication/usatech", "data/usatech_15min_2021_2026.parquet", "data/volidx_15min_2021_2026.parquet"],
+      "outputs": ["experiments/cache/index_trade_coverage/usatech"],
+      "profile": "canonical",
+      "comparison": {"mode": "numeric", "atol": 1e-7, "rtol": 1e-6}
+    },
+    {
+      "id": "index.usatech.side",
+      "depends_on": ["index.usatech.models"],
+      "module": "experiments.index_side_calibration",
+      "args": ["--stream", "usatech"],
+      "inputs": ["experiments/cache/index_replication/usatech", "data/usatech_15min_2021_2026.parquet", "data/volidx_15min_2021_2026.parquet"],
+      "outputs": ["experiments/cache/index_side_calibration/usatech"],
+      "profile": "canonical",
+      "comparison": {"mode": "numeric", "atol": 1e-7, "rtol": 1e-6}
+    },
+    {
+      "id": "index.usatech.ensemble",
+      "depends_on": ["index.usatech.models"],
+      "module": "experiments.index_all_model_ensemble",
+      "args": ["--stream", "usatech"],
+      "inputs": ["experiments/cache/index_replication/usatech", "data/usatech_15min_2021_2026.parquet", "data/volidx_15min_2021_2026.parquet"],
+      "outputs": ["experiments/cache/index_all_model_ensemble/usatech"],
+      "profile": "canonical",
+      "comparison": {"mode": "numeric", "atol": 1e-7, "rtol": 1e-6}
+    },
+    {
+      "id": "index.usatech.channel",
+      "depends_on": ["market.indices.build"],
+      "module": "experiments.index_channel_replication",
+      "args": ["--stream", "usatech"],
+      "inputs": ["data/usatech_1m_2021_2026.parquet", "data/usatech_5min_2021_2026.parquet", "data/usatech_1h_2021_2026.parquet"],
+      "outputs": ["experiments/cache/index_channel_replication/usatech"],
+      "profile": "canonical",
+      "comparison": {"mode": "numeric", "atol": 1e-7, "rtol": 1e-6}
+    },
+    {
+      "id": "channel.study",
+      "depends_on": ["market.binance.build_m1", "market.binance.build_positioning"],
+      "module": "experiments.channel_study",
+      "args": ["--stage", "dev", "--out", "experiments/cache/channel_study"],
+      "inputs": ["data/btcusdt_1m_2021_2026.parquet", "data/btcusdt_5min_2021_2026.parquet", "data/btcusdt_1h_2021_2026.parquet", "data/btcusdt_positioning_15min_2021_2026.parquet"],
+      "outputs": [
+        "experiments/cache/channel_study/BTCUSDT_dev_1hw60_5min_macro-hard_fa48d9681c/events.parquet",
+        "experiments/cache/channel_study/BTCUSDT_dev_1hw60_5min_macro-hard_fa48d9681c/trades.parquet",
+        "experiments/cache/channel_study/BTCUSDT_dev_1hw60_5min_macro-hard_fa48d9681c/orders.parquet",
+        "experiments/cache/channel_study/BTCUSDT_dev_1hw60_5min_macro-hard_fa48d9681c/funnel.csv",
+        "experiments/cache/channel_study/BTCUSDT_dev_1hw60_5min_macro-hard_fa48d9681c/config.json",
+        "experiments/cache/channel_study/BTCUSDT_dev_1hw60_5min_macro-hard_fa48d9681c/summary.json"
+      ],
+      "profile": "canonical",
+      "comparison": {"mode": "numeric", "atol": 1e-7, "rtol": 1e-6}
+    },
+    {
+      "id": "channel.ranking",
+      "depends_on": ["channel.study"],
+      "module": "experiments.channel_ranking",
+      "args": ["--events", "experiments/cache/channel_study/BTCUSDT_dev_1hw60_5min_macro-hard_fa48d9681c/events.parquet"],
+      "inputs": ["experiments/cache/channel_study/BTCUSDT_dev_1hw60_5min_macro-hard_fa48d9681c/events.parquet"],
+      "outputs": [
+        "experiments/cache/channel_study/BTCUSDT_dev_1hw60_5min_macro-hard_fa48d9681c/ranking_e8_table.csv",
+        "experiments/cache/channel_study/BTCUSDT_dev_1hw60_5min_macro-hard_fa48d9681c/ranking_e8_sides.csv",
+        "experiments/cache/channel_study/BTCUSDT_dev_1hw60_5min_macro-hard_fa48d9681c/ranking_e8.json"
+      ],
+      "profile": "canonical",
+      "comparison": {"mode": "numeric", "atol": 1e-7, "rtol": 1e-6}
+    },
+    {
+      "id": "channel.stage_handoffs",
+      "depends_on": ["source.verify"],
+      "module": "experiments.rebuild_remaining",
+      "args": ["stage_channel"],
+      "inputs": [".source_evidence", "source_evidence_manifest.json", ".rebuild/source_verified.json"],
+      "outputs": [".rebuild/channel_handoffs_staged.json"],
+      "profile": "canonical",
+      "comparison": "exact"
+    },
+    {
+      "id": "channel.j",
+      "depends_on": ["market.binance.build_m1", "market.binance.build_positioning"],
+      "module": "experiments.run_event_window_tcn",
+      "args": ["--stage", "dev"],
+      "inputs": ["data/btcusdt_1m_2021_2026.parquet", "data/btcusdt_5min_2021_2026.parquet", "data/btcusdt_1h_2021_2026.parquet", "data/btcusdt_positioning_15min_2021_2026.parquet"],
+      "outputs": ["experiments/cache/event_window_tcn"],
+      "profile": "canonical",
+      "comparison": {"mode": "numeric", "atol": 1e-7, "rtol": 1e-6}
+    },
+    {
+      "id": "channel.u",
+      "depends_on": ["channel.stage_handoffs", "channel.j", "market.binance.build_m1"],
+      "module": "experiments.run_event_window_feature_consolidation",
+      "args": ["--stage", "dev"],
+      "inputs": [".rebuild/channel_handoffs_staged.json", "experiments/cache/event_window_tcn", "data/btcusdt_1m_2021_2026.parquet", "data/btcusdt_5min_2021_2026.parquet"],
+      "outputs": ["experiments/cache/event_window_feature_consolidation"],
+      "profile": "canonical",
+      "comparison": {"mode": "numeric", "atol": 1e-7, "rtol": 1e-6}
+    },
+    {
+      "id": "channel.v",
+      "depends_on": ["channel.u", "channel.j"],
+      "module": "experiments.run_event_window_direction_head",
+      "args": ["--stage", "dev"],
+      "inputs": ["experiments/cache/event_window_feature_consolidation", "experiments/cache/event_window_tcn", "data/btcusdt_1m_2021_2026.parquet"],
+      "outputs": ["experiments/cache/event_window_direction_head"],
+      "profile": "canonical",
+      "comparison": {"mode": "numeric", "atol": 1e-7, "rtol": 1e-6}
+    },
+    {
+      "id": "channel.w",
+      "depends_on": ["channel.u", "channel.j", "market.binance.build_positioning"],
+      "module": "experiments.run_channel_vs_volatility_ablation",
+      "args": ["--stage", "dev"],
+      "inputs": ["experiments/cache/event_window_feature_consolidation", "experiments/cache/event_window_tcn", "data/btcusdt_1m_2021_2026.parquet", "data/btcusdt_5min_2021_2026.parquet", "data/btcusdt_positioning_15min_2021_2026.parquet"],
+      "outputs": ["experiments/cache/channel_vs_volatility_ablation"],
+      "profile": "canonical",
+      "comparison": {"mode": "numeric", "atol": 1e-7, "rtol": 1e-6}
+    },
+    {
+      "id": "final.q2.verify",
+      "depends_on": [],
+      "module": "experiments.rebuild_remaining",
+      "args": ["verify_q2"],
+      "inputs": [
+        "configs/final_q2_lockbox_protocol.json",
+        "configs/final_q2_lockbox_manifest.json",
+        "experiments/cache/final_q2_lockbox/OPENED.json",
+        "experiments/cache/final_q2_lockbox/8185dee25cc468ed9be8b79aad59eb33eeda874f4cb245c31883ef127f205312"
+      ],
+      "outputs": [".rebuild/final_q2_verified.json"],
+      "profile": "canonical",
+      "comparison": "exact"
+    },
+    {
+      "id": "final.q2.sentiment_sensitivity",
+      "depends_on": ["final.q2.verify"],
+      "module": "experiments.rebuild_remaining",
+      "args": ["verify_q2_sensitivity"],
+      "inputs": [".rebuild/final_q2_verified.json", "experiments/cache/q2_sentiment_sensitivity"],
+      "outputs": [".rebuild/q2_sentiment_sensitivity_verified.json"],
+      "profile": "canonical",
+      "comparison": "exact"
+    }
+  ]
+}

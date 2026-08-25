@@ -1,0 +1,123 @@
+{
+  "benchmark_model": "logreg",
+  "bootstrap_draws": 2000,
+  "bootstrap_unit": "calendar_week",
+  "bounded_development_input_identity": {
+    "aggregate_sha256": "dd432770b6eb7fb6207f932fa754a440dc1236a9cbbdba867dbab7193132fbfb",
+    "development_end_exclusive": "2025-07-01T00:00:00+00:00",
+    "development_start": "2021-01-01T00:00:00+00:00",
+    "method": "pyarrow_filtered_canonical_ipc_sha256_v1",
+    "source_fingerprints": {
+      "five_minute": {
+        "content_sha256": "0b4039dc0933e65fe4010e8d8543e5944855bf86e23a199cbd715834c07e9e69",
+        "max_timestamp": "2025-06-30T23:55:00+00:00",
+        "rows": 472683
+      },
+      "minute": {
+        "content_sha256": "fe7811a710e8e4ccefa75cd471fa125ac69dad5bdffcbe2b6b4a79e8e260e2ac",
+        "max_timestamp": "2025-06-30T23:59:00+00:00",
+        "rows": 2363407
+      },
+      "positioning": {
+        "content_sha256": "34014e21b68e630a570ee7aeee0aab2e3a73910b1cce1e393667dc58b8b9241e",
+        "max_timestamp": "2025-06-30T23:45:00+00:00",
+        "rows": 157562
+      }
+    }
+  },
+  "channel_blind_definition": "all completed 5m decisions; no channel feature or gate",
+  "channel_definition": "same scores restricted to frozen Notebook J channel decision times",
+  "cooldown_minutes": 60,
+  "development_end_exclusive": "2025-07-01",
+  "development_start": "2021-01-01",
+  "direction_features": [
+    "adaptive_barrier_bps",
+    "return_5m_bps",
+    "past_return_15_bps",
+    "past_return_60_bps",
+    "body_bps",
+    "lower_wick_fraction",
+    "upper_wick_fraction",
+    "taker_imbalance",
+    "taker_imbalance_delta_15_120",
+    "oi_chg_15m",
+    "oi_chg_1h",
+    "oi_chg_4h",
+    "oi_accel_1h",
+    "funding_z",
+    "price_oi_interaction",
+    "positioning_stale",
+    "positioning_age_log"
+  ],
+  "entry": "native one-minute Open at decision time",
+  "entry_cost_bps": 5.0,
+  "exit_cost_bps": 5.0,
+  "forward_or_lockbox_loaded": false,
+  "hold_minutes": 120,
+  "input_hash": "ff9252d8621f5a2437e73193b45f76eaf5ce4654a807a60e356def0d2edc920c",
+  "logreg_max_iter": 2000,
+  "matched_fold_counts": {
+    "2022H2": 236,
+    "2023H1": 541,
+    "2023H2": 305,
+    "2024H1": 910,
+    "2024H2": 532,
+    "2025H1": 415
+  },
+  "matched_total_activations": 2939,
+  "matching_is_online_policy": false,
+  "matching_policy": "foldwise label-blind matched top-k with global 60m refractory period",
+  "maximum_barrier_bps": 250.0,
+  "minimum_barrier_bps": 75.0,
+  "model_training": "one expanding channel-free model per family/head/fold, shared by both window sources",
+  "models": [
+    "logreg",
+    "xgboost"
+  ],
+  "n_jobs": 1,
+  "opportunity_features": [
+    "adaptive_barrier_bps",
+    "past_rv_15_bps",
+    "past_rv_30_bps",
+    "past_rv_60_bps",
+    "past_rv_120_bps",
+    "rv_ratio_15_60",
+    "rv_ratio_60_120",
+    "past_range_15_bps",
+    "past_range_60_bps",
+    "past_range_120_bps",
+    "range_ratio_15_120",
+    "past_abs_return_15_bps",
+    "past_abs_return_60_bps",
+    "volume_ratio_15_120",
+    "trade_count_ratio_15_120",
+    "taker_imbalance_abs_delta_15_120",
+    "abs_oi_chg_1h",
+    "abs_oi_chg_4h",
+    "abs_funding_z",
+    "positioning_age_log"
+  ],
+  "primary_model": "xgboost",
+  "primary_success_rule": "xgboost channel absolute net-R CI low > 0, channel-minus-blind net-R CI low > 0, and channel-minus-blind opportunity-rate CI low > 0",
+  "protocol_hash": "0b0e82b8dc112e13fe87890003685cfe7908150eb63dc02d4bcee7607dbdeaff",
+  "random_seed": 42,
+  "round_trip_cost_bps": 10.0,
+  "run_hash": "1321c7ed5547c321259e",
+  "same_minute_ambiguity": "stop_first",
+  "scored_calendar_days": 1096,
+  "source_hash": "a73bec22ccf7f47f23bb5bde420ec80793b86f82a44268bd7031e56321b55223",
+  "stage": "dev",
+  "study": "notebook_w_channel_vs_volatility_ablation",
+  "target_activations_per_day": 2.6815693430656933,
+  "target_multiple_b": 2.0,
+  "volatility_addon_weight": 0.5,
+  "window_sources": [
+    "channel",
+    "channel_blind"
+  ],
+  "xgb_depth": 3,
+  "xgb_estimators": 300,
+  "xgb_learning_rate": 0.03,
+  "xgb_min_child_weight": 20.0,
+  "xgb_reg_lambda": 10.0
+}

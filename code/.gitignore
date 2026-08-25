@@ -1,0 +1,36 @@
+# Secrets - never commit API keys / tokens
+sentiment/secrets/
+*.key
+*token*.txt
+
+# Environment
+.venv/
+.venv-broken-*/
+# Reinstall dependencies via requirements-repro.txt
+.local-packages/
+# editable-install / build artifacts
+*.egg-info/
+build/
+dist/
+__pycache__/
+*.pyc
+.pytest_cache/
+.pytest_tmp/
+.pytest-tmp/
+.pytest-tmp-*/
+pytest-tmp-*/
+.ipynb_checkpoints/
+catboost_info/
+project_memory.md
+
+# Large data — regenerate via the scripts in data/ and sentiment/
+data/raw/
+data/*.parquet
+data/final_q2_lockbox/
+sentiment/raw/
+sentiment/final_q2_lockbox/
+experiments/cache/
+.rebuild/
+.source_evidence/
+.pytest_tmp_*/
+data/btcusdt_1s_2024_2026/

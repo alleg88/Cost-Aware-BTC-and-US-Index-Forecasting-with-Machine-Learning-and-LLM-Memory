@@ -1,0 +1,59 @@
+protocol_version: reflection-agent-v3.0
+schema_version: "3.0"
+protocol_scope: continuous_2021_2026
+model: deepseek-v4-flash:cloud
+required_model_digest: 5166728b9358990e5f6c34f87cbe48716be2f2cd2d3b98527dff27ea755bf3ba
+think: low
+stream: false
+temperature: 0.0
+num_predict: 4096
+timeout_seconds: 300
+repair_attempts: 1
+allowed_decisions:
+  - NO_CHANGE
+  - ADD_ALLOW_RULE
+  - REMOVE_ALLOW_RULE
+registered_variants:
+  - reflection_real_memory
+  - reflection_no_memory
+  - reflection_shuffled_memory
+  - static_high_extra
+  - static_all_extra
+  - union_baseline
+development_start_utc: "2021-01-01T00:00:00Z"
+development_end_utc: "2025-01-01T00:00:00Z"
+h1_start_utc: "2025-01-01T00:00:00Z"
+h1_end_utc: "2025-07-01T00:00:00Z"
+forward_start_utc: "2025-07-01T00:00:00Z"
+forward_end_utc: "2026-04-01T00:00:00Z"
+q2_start_utc: "2026-04-01T00:00:00Z"
+q2_end_utc: "2026-07-01T00:00:00Z"
+confidence_tiers:
+  HIGH_EXTRA: [0.70, 0.75]
+  MID_EXTRA: [0.65, 0.70]
+  LOW_EXTRA: [0.60, 0.65]
+episode_min_candidates: 20
+episode_max_candidates: 30
+episode_min_per_side: 6
+shadow_min_matching_candidates: 12
+shadow_max_candidates: 40
+max_active_rules_per_side: 3
+max_retrieved_memories: 4
+semantic_lifetime_days: 180
+semantic_lifetime_episodes: 6
+minimum_trade_gain_fraction: 0.25
+minimum_side_gain_fraction: 0.10
+net_noninferiority_margin: 0.005
+side_noninferiority_margin: 0.0025
+sortino_noninferiority_margin: 0.10
+max_drawdown_absolute_margin: 0.01
+max_extra_trade_concentration: 0.60
+max_transport_failure_fraction: 0.05
+condition_values:
+  side: [LONG, SHORT]
+  confidence_tier: [HIGH_EXTRA, MID_EXTRA, LOW_EXTRA]
+  signal_run_bucket: [FIRST, SECOND, THIRD_PLUS]
+  vol_regime: [LOW, NORMAL, HIGH]
+  trend_regime: [DOWN, FLAT, UP]
+  funding_regime: [NEGATIVE, NEUTRAL, POSITIVE, MISSING]
+  oi_regime: [FALLING, FLAT, RISING, MISSING]

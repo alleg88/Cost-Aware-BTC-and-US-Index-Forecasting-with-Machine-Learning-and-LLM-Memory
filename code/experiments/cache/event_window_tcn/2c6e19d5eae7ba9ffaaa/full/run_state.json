@@ -1,0 +1,142 @@
+{
+  "artifacts": {
+    "daily_frequency.csv": {
+      "sha256": "0e1d26d58b5a6f82574eb69b59dce246c45e23930c0adf47994202be27f5e8c0",
+      "size": 89603
+    },
+    "episode_bootstrap.csv": {
+      "sha256": "f1f0d92b4a10ac26aa6c7cdbac09622959b2574ed7002fbf69ad248764744fbb",
+      "size": 123753
+    },
+    "example_windows.parquet": {
+      "sha256": "ded69574acaa22d8579a830e9edf87fe06fbaf2b324bd622de9f3c552feae775",
+      "size": 19043
+    },
+    "feature_profile.csv": {
+      "sha256": "e99e57336e280bc699b9cdd9fac06facadc8a92755a7fd822c816544206888c0",
+      "size": 7605
+    },
+    "fold_audit.csv": {
+      "sha256": "32bbf1895dc655df629bc354b94c84c37d0d471dc7eee217cec899d5bc695861",
+      "size": 970
+    },
+    "high_correlation_pairs.csv": {
+      "sha256": "7bfaa0d72a403c0e5f031cbee8cb3231131ad0b5f67f135658a3b08294a1c90c",
+      "size": 573
+    },
+    "labels_rr2.parquet": {
+      "sha256": "0d02eb8a2648440c4fb66feb0c8dfd6e3bfc8afcd62567cd5724bc10ee1528b1",
+      "size": 15792821
+    },
+    "labels_rr3.parquet": {
+      "sha256": "25c5b4abadb5ba9a3e9fb28fd667d770e6cc10d0156df29b1e3a724ba547d360",
+      "size": 15912356
+    },
+    "oof_scores.parquet": {
+      "sha256": "b16573cb61475a33cdfd4e770ca223d2c4d6888a50bb7ad6c39612923aadb2ce",
+      "size": 2481946
+    },
+    "protocol.json": {
+      "sha256": "7c997c06aba10e755ac0f9dc209aec61154c814c5dd2a0c37235d4ae8222f09b",
+      "size": 2457
+    },
+    "score_deciles.csv": {
+      "sha256": "e0a446c0bcfffc9a0e34981d41a28b4361592e196a911c9812c25ae9acb80f99",
+      "size": 1270
+    },
+    "selected_trades.parquet": {
+      "sha256": "5c2d082d50b02d86e5a6b35d2039ac7a328fd53a3f198ea2a02a4f2603d7bf59",
+      "size": 292891
+    },
+    "side_year_breakdown.csv": {
+      "sha256": "e3583a8a3369469d28a9201f6103debcfa9453ec8692587ce5835b77226a9418",
+      "size": 1255
+    },
+    "summary.json": {
+      "sha256": "55088ca284ffb7c7e4b5de4f2d3c09306047c2c944e52899220c5cc01a36604d",
+      "size": 2403
+    },
+    "threshold_frontier.csv": {
+      "sha256": "4688250fd7f066d6a696f1999b531a5b6eb0d3638021d8fdf90f140a470bed4f",
+      "size": 14978
+    },
+    "window_audit.csv": {
+      "sha256": "a2f892fd3d836bbd7e7e13827c6d02ae842ab6b7eba93dc480fb783ace4fdb97",
+      "size": 112
+    },
+    "window_manifest.parquet": {
+      "sha256": "b177a497f3850d37b9970e8b720203cefec1c354376e40a272a31529de34e883",
+      "size": 1299973
+    }
+  },
+  "input_hash": "71f73acbd5a9e7a648fecfcf65bda6db5a3d506c421a718d64cf7a7092ac1636",
+  "protocol_hash": "f5a0a4eb72f52de88f781b7dcc93c09d08747994f7e2f5294f88e0b6f118b0f6",
+  "run_hash": "2c6e19d5eae7ba9ffaaa",
+  "source_hash": "665a2d45ff7b31d4a1030635c13cba0d0757b492601b1c1720d97bc22bd3ec14",
+  "status": "complete",
+  "summary": {
+    "attempted_trades": 1448,
+    "baseline_mean_net_r_per_oof_window": -0.4823273756399382,
+    "baseline_total_net_r": -5224.570132931811,
+    "censored_labels": 68,
+    "censored_rate": 0.0,
+    "days_profit_ge_2pct": 24,
+    "days_profit_ge_3pct": 14,
+    "days_profit_ge_5pct": 4,
+    "forward_or_lockbox_loaded": false,
+    "frequency_admissible_2_to_5": false,
+    "geometry_valid_labels": 171656,
+    "manifest_windows": 14510,
+    "max_loaded_timestamp": "2025-06-30 23:59:00+00:00",
+    "max_trades_per_window": 1,
+    "mean_net_r": -0.23782605419009795,
+    "model_mean_net_r_per_oof_window": -0.03179210916425977,
+    "model_target_valid_labels": 171588,
+    "nonzero_threshold_frontier_is_exploratory": true,
+    "observed_trades": 1448,
+    "oi_coverage_decisions": 1.0,
+    "oof_fold_rows": 7,
+    "oof_score_rows": 128007,
+    "paired_delta_ci_high": 5226.555405370078,
+    "paired_delta_ci_low": 4537.8267513364435,
+    "paired_delta_mean_net_r": 0.45053526647567843,
+    "paired_delta_total_net_r": 4880.198006464549,
+    "preferred_frequency_3_to_5": false,
+    "primary_score_threshold": 0.0,
+    "profit_factor": 0.5824074880254488,
+    "protocol_hash": "f5a0a4eb72f52de88f781b7dcc93c09d08747994f7e2f5294f88e0b6f118b0f6",
+    "read_end_exclusive": "2025-07-01 00:00:00+00:00",
+    "read_start": "2021-01-01 00:00:00+00:00",
+    "rejection_reasons": [
+      "threshold_zero_frequency_outside_2_to_5_per_day",
+      "threshold_zero_mean_net_r_not_positive",
+      "threshold_zero_total_net_r_not_positive"
+    ],
+    "resumed": false,
+    "rr2_label_rows": 171658,
+    "rr3_attempted_trades": 1448,
+    "rr3_mean_net_r": -0.2400058691123665,
+    "rr3_observed_trades": 1448,
+    "rr3_same_entries": true,
+    "rr3_sl_rate": 0.39226519337016574,
+    "rr3_timeout_rate": 0.5490331491712708,
+    "rr3_total_net_r": -347.5284984747067,
+    "rr3_tp_rate": 0.05870165745856354,
+    "run_hash": "2c6e19d5eae7ba9ffaaa",
+    "side_dataset": "pooled",
+    "sl_rate": 0.3798342541436464,
+    "smoke": false,
+    "stage": "dev",
+    "tensor_decisions": 171658,
+    "tensor_windows": 14510,
+    "threshold_zero_is_registered_primary": true,
+    "threshold_zero_success": false,
+    "timeout_rate": 0.48964088397790057,
+    "total_net_r": -344.3721264672618,
+    "tp_rate": 0.13052486187845305,
+    "trades_per_calendar_day": 1.133907595927956,
+    "window_calendar_days": 1642,
+    "windows_per_calendar_day": 8.836784409257003,
+    "zero_trade_days": 827
+  }
+}

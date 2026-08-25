@@ -1,0 +1,7 @@
+{
+  "audit_sha256": "fe71095f81ef7a45c0834d5610bdb05a41c13c701735dfbd081faae8d339bc72",
+  "candidate_id": "btc_qualified_union_v1",
+  "ledger_sha256": "23226491533345b9804200f7ad29fe39ab67de90fca1a12ae17738c4f071ff2d",
+  "prediction_index_name": "timestamp",
+  "prediction_sha256": "6c9fc2e8acf73297d3caf24a6cc81034bb737d9fe4dee9cdc84a06a0214db7e8"
+}

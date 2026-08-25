@@ -1,0 +1,20 @@
+{
+  "artifact_hashes": {
+    "sentiment__scores_direct_events_usa500.manifest.json": "00d4ae9e93b4508573144d6972f2d7ff9afed19ccad17dacba232259c660d306",
+    "sentiment__scores_direct_events_usa500.parquet": "2dd1fa3e408931725adbbfc883be16e83d4b3888b395acfe976fe038be5ec23f",
+    "sentiment__scores_direct_events_usatech.manifest.json": "90f975e0a3fad4bd3b0727054abe2e781f06a38733ff323a8744e9811ac9bc68",
+    "sentiment__scores_direct_events_usatech.parquet": "2dd1fa3e408931725adbbfc883be16e83d4b3888b395acfe976fe038be5ec23f",
+    "sentiment__scores_llm_direct_events_usa500.manifest.json": "bf2608bb5afec896ec4133690d4388cc77e6e5018ec1211605bac307366d823d",
+    "sentiment__scores_llm_direct_events_usa500.parquet": "ebec7adf006db178e0330148cb7481079caf46c4034ca86e09f235a57a0babf0",
+    "sentiment__scores_llm_direct_events_usatech.manifest.json": "12c1b479abfce5d8e03bdda3253c4effcf6969d88d5e3b4c89e6b349db2a0e21",
+    "sentiment__scores_llm_direct_events_usatech.parquet": "ebec7adf006db178e0330148cb7481079caf46c4034ca86e09f235a57a0babf0",
+    "sentiment__scores_llm_usa500.manifest.json": "99d24aecfc254f06e9939e3e05b398efcfceab0cccbce7fdffc4b5ec63047dd2",
+    "sentiment__scores_llm_usa500.parquet": "ebec7adf006db178e0330148cb7481079caf46c4034ca86e09f235a57a0babf0",
+    "sentiment__scores_llm_usatech.manifest.json": "8c343a2eb787418cfd09039708d2093a90a20b666bf278322f78ba9c6bdcd204",
+    "sentiment__scores_llm_usatech.parquet": "ebec7adf006db178e0330148cb7481079caf46c4034ca86e09f235a57a0babf0",
+    "sentiment__scores_usa500.manifest.json": "b5b175f6a5ccc462aa04a84b10bd37d952fdbf50a57ed0c8d205ae3e8f85271e",
+    "sentiment__scores_usa500.parquet": "2dd1fa3e408931725adbbfc883be16e83d4b3888b395acfe976fe038be5ec23f",
+    "sentiment__scores_usatech.manifest.json": "3a6d56ce699d211b06a9ba7673807d1fa5613156427a7c46e1a09455b6e43725",
+    "sentiment__scores_usatech.parquet": "2dd1fa3e408931725adbbfc883be16e83d4b3888b395acfe976fe038be5ec23f"
+  }
+}

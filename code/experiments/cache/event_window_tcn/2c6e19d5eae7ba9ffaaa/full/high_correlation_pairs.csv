@@ -1,0 +1,8 @@
+layer,feature_a,feature_b,spearman,abs_spearman
+context,side_sign,window_reason_code,-1.0,1.0
+context,window_age_fraction,time_remaining_fraction,-1.0,1.0
+sequence,pre_window_mask,active_window_mask,-1.0,1.0
+sequence,volume_log_ratio_24,quote_volume_log_ratio_24,0.9999168388541333,0.9999168388541333
+sequence,log_return_side,body_bps_side,0.999856022603843,0.999856022603843
+sequence,channel_position_side,distance_adverse_rail_bps,0.9431623289290461,0.9431623289290461
+context,channel_confluence_count,channel_sign_agree_120,0.9317015319452974,0.9317015319452974

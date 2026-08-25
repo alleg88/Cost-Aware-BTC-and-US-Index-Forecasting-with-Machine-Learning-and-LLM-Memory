@@ -1,0 +1,164 @@
+{
+  "protocol_version": "final-q2-lockbox-v1",
+  "start_utc": "2026-04-01T00:00:00+00:00",
+  "end_utc": "2026-07-01T00:00:00+00:00",
+  "primary_estimand": "btc_union_minus_lstm_total_net",
+  "bootstrap_replicates": 5000,
+  "bootstrap_seed": 42,
+  "reconstruction_tolerance": {
+    "default": {
+      "max_abs_probability_error": 0.000001,
+      "mean_abs_probability_error": 0.000001,
+      "require_exact_classes": true,
+      "require_exact_decisions": true,
+      "torch_threads": 16
+    },
+    "exceptions": {
+      "btcusdt:none:lstm:w55": {
+        "max_abs_probability_error": 0.00002,
+        "mean_abs_probability_error": 0.0000005,
+        "require_exact_classes": true,
+        "require_exact_decisions": true,
+        "torch_threads": 16
+      }
+    }
+  },
+  "costs": {
+    "btcusdt": {"per_side_bps": 5.0, "round_trip_bps": 10.0},
+    "usa500": {"per_side_bps": 1.0, "round_trip_bps": 2.0},
+    "usatech": {"per_side_bps": 1.5, "round_trip_bps": 3.0}
+  },
+  "candidates": [
+    {
+      "stream": "btcusdt",
+      "candidate_id": "btc_qualified_union_v1",
+      "role": "primary",
+      "arm": "none",
+      "decision_tau": 0.0,
+      "members": [
+        {"model_name": "lstm", "width_bps": 55, "signal_tau": 0.75},
+        {"model_name": "svm_linear", "width_bps": 75, "signal_tau": 0.0}
+      ],
+      "combiner": "opposite_signal_veto",
+      "artifacts": [
+        {"role": "union_protocol", "path": "experiments/cache/qualified_union_v1/protocol.json", "sha256": "c5a16b9f671f0e48fdb73e4f2f585b247579f7f083749379d385bef1d3ea003c"},
+        {"role": "union_manifest", "path": "experiments/cache/qualified_union_v1/manifest.json", "sha256": "0ff38a2a8a8d634c0c59c99bc85c53872acc9d3a7f6c0d7ffc180f11661b123c"},
+        {"role": "lstm_forward_panel", "path": "experiments/cache/tuning/all_model_sentiment_raw_180d_fixed15/none/lstm/stage_predictions/raw_forward/w55_lb180_candidate_00_15e35a8d062d7b29002efb7162b6fb79ae8db17f00b931dce0ab95e80fc73c9c.parquet", "sha256": "09afd3b8edb393f25159db8ecc5679b86f81933c6038758118545b644f445d9c"},
+        {"role": "svm_linear_forward_panel", "path": "experiments/cache/tuning/all_model_sentiment_raw_180d_fixed15/none/svm_linear/stage_predictions/raw_forward/w75_lb180_candidate_00_2d4061a641d6289dc28bdd28054b3fd510da530f0c46229563f3082ecf939a3e.parquet", "sha256": "24994b26a90c0afda359792e7665abdeb0ec51ac1c1becc268cf6020dedb234c"},
+        {"role": "lstm_h1_policy", "path": "experiments/cache/tuning/all_model_sentiment_policy_180d_fixed15_monthly_h1/none/lstm/selected_policies_2025h1.parquet", "sha256": "afe35f5f05a99afd7e648a6b6fcb999e12cfd980d38e8c57e8e98e3baf7dba9c"}
+      ]
+    },
+    {
+      "stream": "btcusdt",
+      "candidate_id": "btc_lstm_dz55",
+      "role": "control",
+      "arm": "none",
+      "decision_tau": 0.75,
+      "members": [
+        {"model_name": "lstm", "width_bps": 55, "signal_tau": null}
+      ],
+      "combiner": null,
+      "artifacts": [
+        {"role": "raw_forward_manifest", "path": "experiments/cache/tuning/all_model_sentiment_raw_180d_fixed15/none/lstm/manifest.json", "sha256": "0da63fabe033445c38d1189affafbaeafa06de8e584aeadd96230caed452740a"},
+        {"role": "lstm_forward_panel", "path": "experiments/cache/tuning/all_model_sentiment_raw_180d_fixed15/none/lstm/stage_predictions/raw_forward/w55_lb180_candidate_00_15e35a8d062d7b29002efb7162b6fb79ae8db17f00b931dce0ab95e80fc73c9c.parquet", "sha256": "09afd3b8edb393f25159db8ecc5679b86f81933c6038758118545b644f445d9c"},
+        {"role": "lstm_h1_policy", "path": "experiments/cache/tuning/all_model_sentiment_policy_180d_fixed15_monthly_h1/none/lstm/selected_policies_2025h1.parquet", "sha256": "afe35f5f05a99afd7e648a6b6fcb999e12cfd980d38e8c57e8e98e3baf7dba9c"}
+      ]
+    },
+    {
+      "stream": "usa500",
+      "candidate_id": "usa500_best_single_deberta_svm",
+      "role": "primary",
+      "arm": "deberta_matched",
+      "decision_tau": 0.4,
+      "members": [
+        {"model_name": "svm_linear", "width_bps": 15, "signal_tau": null}
+      ],
+      "combiner": null,
+      "artifacts": [
+        {"role": "h1_selection", "path": "experiments/cache/index_all_model_ensemble/usa500/h1_selection.json", "sha256": "316752a755e1a401efd9d8660452842bd0c121136e1b15dfbcc57dce94f0f4d4"},
+        {"role": "h1_control", "path": "experiments/cache/index_all_model_ensemble/usa500/h1_selected_control.parquet", "sha256": "74dc909d7e1d7f974b52341ec579331205bb55f138f4239e3627b44d003ba7af"},
+        {"role": "svm_linear_forward_panel", "path": "experiments/cache/index_replication/usa500/predictions/forward/deberta_matched/svm_linear/w15_2025_07_to_2026_03_023bfba31ea9d4ba.parquet", "sha256": "b6902471b46ddb13e7d1fd161318c600a6615e005f0a67cd29d43ce98cd0d72a"}
+      ]
+    },
+    {
+      "stream": "usa500",
+      "candidate_id": "usa500_deberta_soft_vote",
+      "role": "secondary",
+      "arm": "deberta_matched",
+      "decision_tau": 0.55,
+      "members": [
+        {"model_name": "logreg", "width_bps": 15, "signal_tau": null},
+        {"model_name": "decision_tree", "width_bps": 15, "signal_tau": null},
+        {"model_name": "random_forest", "width_bps": 15, "signal_tau": null},
+        {"model_name": "svm_linear", "width_bps": 15, "signal_tau": null},
+        {"model_name": "xgboost_balanced", "width_bps": 15, "signal_tau": null},
+        {"model_name": "catboost_balanced", "width_bps": 15, "signal_tau": null},
+        {"model_name": "mlp", "width_bps": 15, "signal_tau": null},
+        {"model_name": "lstm", "width_bps": 15, "signal_tau": null},
+        {"model_name": "gru", "width_bps": 15, "signal_tau": null}
+      ],
+      "combiner": "soft_vote",
+      "artifacts": [
+        {"role": "h1_selection", "path": "experiments/cache/index_all_model_ensemble/usa500/h1_selection.json", "sha256": "316752a755e1a401efd9d8660452842bd0c121136e1b15dfbcc57dce94f0f4d4"},
+        {"role": "h1_candidates", "path": "experiments/cache/index_all_model_ensemble/usa500/h1_selected_candidates.parquet", "sha256": "361452e86e3c74fbd180390f97a4929e941154f06a94e737f992645f503125a0"},
+        {"role": "logreg_forward_panel", "path": "experiments/cache/index_replication/usa500/predictions/forward/deberta_matched/logreg/w15_2025_07_to_2026_03_d7b9b4bbf2784a1d.parquet", "sha256": "a17fd2c47c15ef5ec32a67d6343878a3581d61a87baacf256b95454511097aa1"},
+        {"role": "decision_tree_forward_panel", "path": "experiments/cache/index_replication/usa500/predictions/forward/deberta_matched/decision_tree/w15_2025_07_to_2026_03_700e5b6912dbacb0.parquet", "sha256": "247d6c45e447dd232f8e25851e9b032432e8bdaaa9bcbfe50b799d7ddf92fbfd"},
+        {"role": "random_forest_forward_panel", "path": "experiments/cache/index_replication/usa500/predictions/forward/deberta_matched/random_forest/w15_2025_07_to_2026_03_458c0d63ab7136a2.parquet", "sha256": "8d92df9fc9aee00410e6dfb9d86dc66a3d214cebe8af44c84d19842af26c461b"},
+        {"role": "svm_linear_forward_panel", "path": "experiments/cache/index_replication/usa500/predictions/forward/deberta_matched/svm_linear/w15_2025_07_to_2026_03_023bfba31ea9d4ba.parquet", "sha256": "b6902471b46ddb13e7d1fd161318c600a6615e005f0a67cd29d43ce98cd0d72a"},
+        {"role": "xgboost_balanced_forward_panel", "path": "experiments/cache/index_replication/usa500/predictions/forward/deberta_matched/xgboost_balanced/w15_2025_07_to_2026_03_cf5f3af2d80a1a23.parquet", "sha256": "2878d9efdf1d2073335f915ceb628dc9182202d8a0253bd80a944aee17818e5f"},
+        {"role": "catboost_balanced_forward_panel", "path": "experiments/cache/index_replication/usa500/predictions/forward/deberta_matched/catboost_balanced/w15_2025_07_to_2026_03_adce4d7edfc185be.parquet", "sha256": "0b7f99f831486ca3645209b0fc45f1724e788807cc2c505f3ba816bb3d3c0b7e"},
+        {"role": "mlp_forward_panel", "path": "experiments/cache/index_replication/usa500/predictions/forward/deberta_matched/mlp/w15_2025_07_to_2026_03_15ca15878328fd0e.parquet", "sha256": "dc2a8a978d5622c2829857637b9780362fa80f91b8332d01bfff4a159cda7779"},
+        {"role": "lstm_forward_panel", "path": "experiments/cache/index_replication/usa500/predictions/forward/deberta_matched/lstm/w15_2025_07_to_2026_03_8ff81dcfb2fad05e.parquet", "sha256": "1d080e9d8d026bec6e769b57016c470c6ac660c3316c248c0ed5b7a4fe2fcba4"},
+        {"role": "gru_forward_panel", "path": "experiments/cache/index_replication/usa500/predictions/forward/deberta_matched/gru/w15_2025_07_to_2026_03_78537ffec1b09f19.parquet", "sha256": "3b106a21bf7f650f46c9c2a14a618bf479af98810fed03c0b7dd68fd37ea7822"}
+      ]
+    },
+    {
+      "stream": "usatech",
+      "candidate_id": "usatech_best_single_deepseek_lstm",
+      "role": "primary",
+      "arm": "deepseek_matched",
+      "decision_tau": 0.65,
+      "members": [
+        {"model_name": "lstm", "width_bps": 15, "signal_tau": null}
+      ],
+      "combiner": null,
+      "artifacts": [
+        {"role": "h1_selection", "path": "experiments/cache/index_all_model_ensemble/usatech/h1_selection.json", "sha256": "5a45e208c88ade4433f4e1e80d4b36f952f9b7c001c3571cb0563da906ec405c"},
+        {"role": "h1_control", "path": "experiments/cache/index_all_model_ensemble/usatech/h1_selected_control.parquet", "sha256": "dae0aa7fb478ab8a51089bb216feb60e98c3b2f161deda04b65c646cab61abc1"},
+        {"role": "lstm_forward_panel", "path": "experiments/cache/index_replication/usatech/predictions/forward/deepseek_matched/lstm/w15_2025_07_to_2026_03_05c60742ec5b227c.parquet", "sha256": "23f91a968f98d4f1cd536afa6cef3893433909d3ac7b8ed2f56141226c3ea25d"}
+      ]
+    },
+    {
+      "stream": "usatech",
+      "candidate_id": "usatech_deepseek_soft_vote",
+      "role": "secondary",
+      "arm": "deepseek_matched",
+      "decision_tau": 0.55,
+      "members": [
+        {"model_name": "logreg", "width_bps": 5, "signal_tau": null},
+        {"model_name": "decision_tree", "width_bps": 5, "signal_tau": null},
+        {"model_name": "random_forest", "width_bps": 5, "signal_tau": null},
+        {"model_name": "svm_linear", "width_bps": 5, "signal_tau": null},
+        {"model_name": "xgboost_balanced", "width_bps": 5, "signal_tau": null},
+        {"model_name": "catboost_balanced", "width_bps": 5, "signal_tau": null},
+        {"model_name": "mlp", "width_bps": 5, "signal_tau": null},
+        {"model_name": "lstm", "width_bps": 5, "signal_tau": null},
+        {"model_name": "gru", "width_bps": 5, "signal_tau": null}
+      ],
+      "combiner": "soft_vote",
+      "artifacts": [
+        {"role": "h1_selection", "path": "experiments/cache/index_all_model_ensemble/usatech/h1_selection.json", "sha256": "5a45e208c88ade4433f4e1e80d4b36f952f9b7c001c3571cb0563da906ec405c"},
+        {"role": "h1_candidates", "path": "experiments/cache/index_all_model_ensemble/usatech/h1_selected_candidates.parquet", "sha256": "3774ef40bc1586c7fbf9d62e2fc2221ee97a75e9adb73356b25171c45c59b5d1"},
+        {"role": "logreg_forward_panel", "path": "experiments/cache/index_replication/usatech/predictions/forward/deepseek_matched/logreg/w5_2025_07_to_2026_03_d3248586791bfa56.parquet", "sha256": "7e5b7b310452854f577da2c12daadc3e4d821234026a121db8a27bd36273377f"},
+        {"role": "decision_tree_forward_panel", "path": "experiments/cache/index_replication/usatech/predictions/forward/deepseek_matched/decision_tree/w5_2025_07_to_2026_03_e98775852fe59e04.parquet", "sha256": "a8bb3231b0aff59f27e063910facf8011dfe51ba05f9466d8898a6939fac586b"},
+        {"role": "random_forest_forward_panel", "path": "experiments/cache/index_replication/usatech/predictions/forward/deepseek_matched/random_forest/w5_2025_07_to_2026_03_365399a024672069.parquet", "sha256": "b5f317c132965354df1847ee90e73d1a363bcebd8e49bbadedd5572f0c0fde1f"},
+        {"role": "svm_linear_forward_panel", "path": "experiments/cache/index_replication/usatech/predictions/forward/deepseek_matched/svm_linear/w5_2025_07_to_2026_03_ff9454812f66c5c0.parquet", "sha256": "cfac48dd7ac16545f3f12002f278df56696ae0a04913f6d4bfe406c2b6f5f4fb"},
+        {"role": "xgboost_balanced_forward_panel", "path": "experiments/cache/index_replication/usatech/predictions/forward/deepseek_matched/xgboost_balanced/w5_2025_07_to_2026_03_d74a7d1af8875772.parquet", "sha256": "f257d7758fa9f11251bd5da60e59a066892b10a06f085cad00b35f6a86bcba3b"},
+        {"role": "catboost_balanced_forward_panel", "path": "experiments/cache/index_replication/usatech/predictions/forward/deepseek_matched/catboost_balanced/w5_2025_07_to_2026_03_74819f98c7a396ef.parquet", "sha256": "ed62e3c478af6b9764a060e0cac69127fe07d9f48962eb4dbd8d82f438bfd555"},
+        {"role": "mlp_forward_panel", "path": "experiments/cache/index_replication/usatech/predictions/forward/deepseek_matched/mlp/w5_2025_07_to_2026_03_e67be1e445f5781d.parquet", "sha256": "945588fa6eed6a15d36d93a0984cbcc23d2087db11ff63e411f15ca02c55c6ec"},
+        {"role": "lstm_forward_panel", "path": "experiments/cache/index_replication/usatech/predictions/forward/deepseek_matched/lstm/w5_2025_07_to_2026_03_377330481bb25aff.parquet", "sha256": "a33e3d202aa621c4e9a305412e86946657683dbe64d3cee5d8f3145227063de9"},
+        {"role": "gru_forward_panel", "path": "experiments/cache/index_replication/usatech/predictions/forward/deepseek_matched/gru/w5_2025_07_to_2026_03_c3e945f3e3a31f5c.parquet", "sha256": "eb7d3f68d93ad66176d04f4369308dbf0706d9d8c0205a2ca2d3cbcb214d64b4"}
+      ]
+    }
+  ]
+}

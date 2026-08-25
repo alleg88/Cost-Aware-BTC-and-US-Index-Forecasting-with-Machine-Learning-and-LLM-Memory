@@ -1,0 +1,30 @@
+{
+  "complete": true,
+  "cutoff_exclusive": "2026-07-01T00:00:00+00:00",
+  "identity": {
+    "batch_protocol": "indexed-json-object-v1",
+    "batch_size": 10,
+    "digest": "d3f1c87447216481a8001f48c517a51e13bfb141853a8df5e52f81bf765dabc3",
+    "num_ctx": 8192,
+    "ollama_version": "ollama version is 0.32.9",
+    "prompt_hash": "94bea4d8071a2e8eb1114b39815d0e08f669b8c484d78100e1dbffc5895eda40",
+    "pulled_at_utc": "2026-08-12T22:19:35.106201+00:00",
+    "registry_digest_prefix": "031ce2a95446",
+    "remote_host": "https://ollama.com",
+    "remote_model": "deepseek-v4-flash:0731",
+    "schema_hash": "57ac5a4ea650657dcca3e7f9327670500344243899f7cf879580be90d7db6f63",
+    "scorer_implementation_hash": "6edb573f6a77dee78d72f9b89dc0001827dff814a4d77448c9062749a520094c",
+    "tag": "deepseek-v4-flash:0731-cloud",
+    "temperature": 0.0,
+    "think": "low"
+  },
+  "rows_after_cutoff": 0,
+  "scored_unique_titles": 0,
+  "source_prefix": "gdelt",
+  "source_sha256": "94f43bab08739c11ffb787048bb449ea8b8313c1ea1f7ba421dfe65110a6b0ba",
+  "source_sha256_scope": "canonical_interval_scoring_rows",
+  "start_inclusive": "2026-04-01T00:00:00+00:00",
+  "state_path": "index_deepseek_state_gdelt_usa500_5ea8376b8239a8c1.parquet",
+  "stream": "usa500",
+  "unique_titles": 0
+}

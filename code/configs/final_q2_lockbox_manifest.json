@@ -1,0 +1,2131 @@
+{
+  "candidates": [
+    {
+      "arm": "none",
+      "artifacts": [
+        {
+          "path": "experiments/cache/qualified_union_v1/protocol.json",
+          "role": "union_protocol",
+          "sha256": "c5a16b9f671f0e48fdb73e4f2f585b247579f7f083749379d385bef1d3ea003c"
+        },
+        {
+          "path": "experiments/cache/qualified_union_v1/manifest.json",
+          "role": "union_manifest",
+          "sha256": "0ff38a2a8a8d634c0c59c99bc85c53872acc9d3a7f6c0d7ffc180f11661b123c"
+        },
+        {
+          "path": "experiments/cache/tuning/all_model_sentiment_raw_180d_fixed15/none/lstm/stage_predictions/raw_forward/w55_lb180_candidate_00_15e35a8d062d7b29002efb7162b6fb79ae8db17f00b931dce0ab95e80fc73c9c.parquet",
+          "role": "lstm_forward_panel",
+          "sha256": "09afd3b8edb393f25159db8ecc5679b86f81933c6038758118545b644f445d9c"
+        },
+        {
+          "path": "experiments/cache/tuning/all_model_sentiment_raw_180d_fixed15/none/svm_linear/stage_predictions/raw_forward/w75_lb180_candidate_00_2d4061a641d6289dc28bdd28054b3fd510da530f0c46229563f3082ecf939a3e.parquet",
+          "role": "svm_linear_forward_panel",
+          "sha256": "24994b26a90c0afda359792e7665abdeb0ec51ac1c1becc268cf6020dedb234c"
+        },
+        {
+          "path": "experiments/cache/tuning/all_model_sentiment_policy_180d_fixed15_monthly_h1/none/lstm/selected_policies_2025h1.parquet",
+          "role": "lstm_h1_policy",
+          "sha256": "afe35f5f05a99afd7e648a6b6fcb999e12cfd980d38e8c57e8e98e3baf7dba9c"
+        }
+      ],
+      "candidate_id": "btc_qualified_union_v1",
+      "combiner": "opposite_signal_veto",
+      "decision_tau": 0.0,
+      "members": [
+        {
+          "model_name": "lstm",
+          "signal_tau": 0.75,
+          "width_bps": 55
+        },
+        {
+          "model_name": "svm_linear",
+          "signal_tau": 0.0,
+          "width_bps": 75
+        }
+      ],
+      "role": "primary",
+      "stream": "btcusdt"
+    },
+    {
+      "arm": "none",
+      "artifacts": [
+        {
+          "path": "experiments/cache/tuning/all_model_sentiment_raw_180d_fixed15/none/lstm/manifest.json",
+          "role": "raw_forward_manifest",
+          "sha256": "0da63fabe033445c38d1189affafbaeafa06de8e584aeadd96230caed452740a"
+        },
+        {
+          "path": "experiments/cache/tuning/all_model_sentiment_raw_180d_fixed15/none/lstm/stage_predictions/raw_forward/w55_lb180_candidate_00_15e35a8d062d7b29002efb7162b6fb79ae8db17f00b931dce0ab95e80fc73c9c.parquet",
+          "role": "lstm_forward_panel",
+          "sha256": "09afd3b8edb393f25159db8ecc5679b86f81933c6038758118545b644f445d9c"
+        },
+        {
+          "path": "experiments/cache/tuning/all_model_sentiment_policy_180d_fixed15_monthly_h1/none/lstm/selected_policies_2025h1.parquet",
+          "role": "lstm_h1_policy",
+          "sha256": "afe35f5f05a99afd7e648a6b6fcb999e12cfd980d38e8c57e8e98e3baf7dba9c"
+        }
+      ],
+      "candidate_id": "btc_lstm_dz55",
+      "combiner": null,
+      "decision_tau": 0.75,
+      "members": [
+        {
+          "model_name": "lstm",
+          "signal_tau": null,
+          "width_bps": 55
+        }
+      ],
+      "role": "control",
+      "stream": "btcusdt"
+    },
+    {
+      "arm": "deberta_matched",
+      "artifacts": [
+        {
+          "path": "experiments/cache/index_all_model_ensemble/usa500/h1_selection.json",
+          "role": "h1_selection",
+          "sha256": "316752a755e1a401efd9d8660452842bd0c121136e1b15dfbcc57dce94f0f4d4"
+        },
+        {
+          "path": "experiments/cache/index_all_model_ensemble/usa500/h1_selected_control.parquet",
+          "role": "h1_control",
+          "sha256": "74dc909d7e1d7f974b52341ec579331205bb55f138f4239e3627b44d003ba7af"
+        },
+        {
+          "path": "experiments/cache/index_replication/usa500/predictions/forward/deberta_matched/svm_linear/w15_2025_07_to_2026_03_023bfba31ea9d4ba.parquet",
+          "role": "svm_linear_forward_panel",
+          "sha256": "b6902471b46ddb13e7d1fd161318c600a6615e005f0a67cd29d43ce98cd0d72a"
+        }
+      ],
+      "candidate_id": "usa500_best_single_deberta_svm",
+      "combiner": null,
+      "decision_tau": 0.4,
+      "members": [
+        {
+          "model_name": "svm_linear",
+          "signal_tau": null,
+          "width_bps": 15
+        }
+      ],
+      "role": "primary",
+      "stream": "usa500"
+    },
+    {
+      "arm": "deberta_matched",
+      "artifacts": [
+        {
+          "path": "experiments/cache/index_all_model_ensemble/usa500/h1_selection.json",
+          "role": "h1_selection",
+          "sha256": "316752a755e1a401efd9d8660452842bd0c121136e1b15dfbcc57dce94f0f4d4"
+        },
+        {
+          "path": "experiments/cache/index_all_model_ensemble/usa500/h1_selected_candidates.parquet",
+          "role": "h1_candidates",
+          "sha256": "361452e86e3c74fbd180390f97a4929e941154f06a94e737f992645f503125a0"
+        },
+        {
+          "path": "experiments/cache/index_replication/usa500/predictions/forward/deberta_matched/logreg/w15_2025_07_to_2026_03_d7b9b4bbf2784a1d.parquet",
+          "role": "logreg_forward_panel",
+          "sha256": "a17fd2c47c15ef5ec32a67d6343878a3581d61a87baacf256b95454511097aa1"
+        },
+        {
+          "path": "experiments/cache/index_replication/usa500/predictions/forward/deberta_matched/decision_tree/w15_2025_07_to_2026_03_700e5b6912dbacb0.parquet",
+          "role": "decision_tree_forward_panel",
+          "sha256": "247d6c45e447dd232f8e25851e9b032432e8bdaaa9bcbfe50b799d7ddf92fbfd"
+        },
+        {
+          "path": "experiments/cache/index_replication/usa500/predictions/forward/deberta_matched/random_forest/w15_2025_07_to_2026_03_458c0d63ab7136a2.parquet",
+          "role": "random_forest_forward_panel",
+          "sha256": "8d92df9fc9aee00410e6dfb9d86dc66a3d214cebe8af44c84d19842af26c461b"
+        },
+        {
+          "path": "experiments/cache/index_replication/usa500/predictions/forward/deberta_matched/svm_linear/w15_2025_07_to_2026_03_023bfba31ea9d4ba.parquet",
+          "role": "svm_linear_forward_panel",
+          "sha256": "b6902471b46ddb13e7d1fd161318c600a6615e005f0a67cd29d43ce98cd0d72a"
+        },
+        {
+          "path": "experiments/cache/index_replication/usa500/predictions/forward/deberta_matched/xgboost_balanced/w15_2025_07_to_2026_03_cf5f3af2d80a1a23.parquet",
+          "role": "xgboost_balanced_forward_panel",
+          "sha256": "2878d9efdf1d2073335f915ceb628dc9182202d8a0253bd80a944aee17818e5f"
+        },
+        {
+          "path": "experiments/cache/index_replication/usa500/predictions/forward/deberta_matched/catboost_balanced/w15_2025_07_to_2026_03_adce4d7edfc185be.parquet",
+          "role": "catboost_balanced_forward_panel",
+          "sha256": "0b7f99f831486ca3645209b0fc45f1724e788807cc2c505f3ba816bb3d3c0b7e"
+        },
+        {
+          "path": "experiments/cache/index_replication/usa500/predictions/forward/deberta_matched/mlp/w15_2025_07_to_2026_03_15ca15878328fd0e.parquet",
+          "role": "mlp_forward_panel",
+          "sha256": "dc2a8a978d5622c2829857637b9780362fa80f91b8332d01bfff4a159cda7779"
+        },
+        {
+          "path": "experiments/cache/index_replication/usa500/predictions/forward/deberta_matched/lstm/w15_2025_07_to_2026_03_8ff81dcfb2fad05e.parquet",
+          "role": "lstm_forward_panel",
+          "sha256": "1d080e9d8d026bec6e769b57016c470c6ac660c3316c248c0ed5b7a4fe2fcba4"
+        },
+        {
+          "path": "experiments/cache/index_replication/usa500/predictions/forward/deberta_matched/gru/w15_2025_07_to_2026_03_78537ffec1b09f19.parquet",
+          "role": "gru_forward_panel",
+          "sha256": "3b106a21bf7f650f46c9c2a14a618bf479af98810fed03c0b7dd68fd37ea7822"
+        }
+      ],
+      "candidate_id": "usa500_deberta_soft_vote",
+      "combiner": "soft_vote",
+      "decision_tau": 0.55,
+      "members": [
+        {
+          "model_name": "logreg",
+          "signal_tau": null,
+          "width_bps": 15
+        },
+        {
+          "model_name": "decision_tree",
+          "signal_tau": null,
+          "width_bps": 15
+        },
+        {
+          "model_name": "random_forest",
+          "signal_tau": null,
+          "width_bps": 15
+        },
+        {
+          "model_name": "svm_linear",
+          "signal_tau": null,
+          "width_bps": 15
+        },
+        {
+          "model_name": "xgboost_balanced",
+          "signal_tau": null,
+          "width_bps": 15
+        },
+        {
+          "model_name": "catboost_balanced",
+          "signal_tau": null,
+          "width_bps": 15
+        },
+        {
+          "model_name": "mlp",
+          "signal_tau": null,
+          "width_bps": 15
+        },
+        {
+          "model_name": "lstm",
+          "signal_tau": null,
+          "width_bps": 15
+        },
+        {
+          "model_name": "gru",
+          "signal_tau": null,
+          "width_bps": 15
+        }
+      ],
+      "role": "secondary",
+      "stream": "usa500"
+    },
+    {
+      "arm": "deepseek_matched",
+      "artifacts": [
+        {
+          "path": "experiments/cache/index_all_model_ensemble/usatech/h1_selection.json",
+          "role": "h1_selection",
+          "sha256": "5a45e208c88ade4433f4e1e80d4b36f952f9b7c001c3571cb0563da906ec405c"
+        },
+        {
+          "path": "experiments/cache/index_all_model_ensemble/usatech/h1_selected_control.parquet",
+          "role": "h1_control",
+          "sha256": "dae0aa7fb478ab8a51089bb216feb60e98c3b2f161deda04b65c646cab61abc1"
+        },
+        {
+          "path": "experiments/cache/index_replication/usatech/predictions/forward/deepseek_matched/lstm/w15_2025_07_to_2026_03_05c60742ec5b227c.parquet",
+          "role": "lstm_forward_panel",
+          "sha256": "23f91a968f98d4f1cd536afa6cef3893433909d3ac7b8ed2f56141226c3ea25d"
+        }
+      ],
+      "candidate_id": "usatech_best_single_deepseek_lstm",
+      "combiner": null,
+      "decision_tau": 0.65,
+      "members": [
+        {
+          "model_name": "lstm",
+          "signal_tau": null,
+          "width_bps": 15
+        }
+      ],
+      "role": "primary",
+      "stream": "usatech"
+    },
+    {
+      "arm": "deepseek_matched",
+      "artifacts": [
+        {
+          "path": "experiments/cache/index_all_model_ensemble/usatech/h1_selection.json",
+          "role": "h1_selection",
+          "sha256": "5a45e208c88ade4433f4e1e80d4b36f952f9b7c001c3571cb0563da906ec405c"
+        },
+        {
+          "path": "experiments/cache/index_all_model_ensemble/usatech/h1_selected_candidates.parquet",
+          "role": "h1_candidates",
+          "sha256": "3774ef40bc1586c7fbf9d62e2fc2221ee97a75e9adb73356b25171c45c59b5d1"
+        },
+        {
+          "path": "experiments/cache/index_replication/usatech/predictions/forward/deepseek_matched/logreg/w5_2025_07_to_2026_03_d3248586791bfa56.parquet",
+          "role": "logreg_forward_panel",
+          "sha256": "7e5b7b310452854f577da2c12daadc3e4d821234026a121db8a27bd36273377f"
+        },
+        {
+          "path": "experiments/cache/index_replication/usatech/predictions/forward/deepseek_matched/decision_tree/w5_2025_07_to_2026_03_e98775852fe59e04.parquet",
+          "role": "decision_tree_forward_panel",
+          "sha256": "a8bb3231b0aff59f27e063910facf8011dfe51ba05f9466d8898a6939fac586b"
+        },
+        {
+          "path": "experiments/cache/index_replication/usatech/predictions/forward/deepseek_matched/random_forest/w5_2025_07_to_2026_03_365399a024672069.parquet",
+          "role": "random_forest_forward_panel",
+          "sha256": "b5f317c132965354df1847ee90e73d1a363bcebd8e49bbadedd5572f0c0fde1f"
+        },
+        {
+          "path": "experiments/cache/index_replication/usatech/predictions/forward/deepseek_matched/svm_linear/w5_2025_07_to_2026_03_ff9454812f66c5c0.parquet",
+          "role": "svm_linear_forward_panel",
+          "sha256": "cfac48dd7ac16545f3f12002f278df56696ae0a04913f6d4bfe406c2b6f5f4fb"
+        },
+        {
+          "path": "experiments/cache/index_replication/usatech/predictions/forward/deepseek_matched/xgboost_balanced/w5_2025_07_to_2026_03_d74a7d1af8875772.parquet",
+          "role": "xgboost_balanced_forward_panel",
+          "sha256": "f257d7758fa9f11251bd5da60e59a066892b10a06f085cad00b35f6a86bcba3b"
+        },
+        {
+          "path": "experiments/cache/index_replication/usatech/predictions/forward/deepseek_matched/catboost_balanced/w5_2025_07_to_2026_03_74819f98c7a396ef.parquet",
+          "role": "catboost_balanced_forward_panel",
+          "sha256": "ed62e3c478af6b9764a060e0cac69127fe07d9f48962eb4dbd8d82f438bfd555"
+        },
+        {
+          "path": "experiments/cache/index_replication/usatech/predictions/forward/deepseek_matched/mlp/w5_2025_07_to_2026_03_e67be1e445f5781d.parquet",
+          "role": "mlp_forward_panel",
+          "sha256": "945588fa6eed6a15d36d93a0984cbcc23d2087db11ff63e411f15ca02c55c6ec"
+        },
+        {
+          "path": "experiments/cache/index_replication/usatech/predictions/forward/deepseek_matched/lstm/w5_2025_07_to_2026_03_377330481bb25aff.parquet",
+          "role": "lstm_forward_panel",
+          "sha256": "a33e3d202aa621c4e9a305412e86946657683dbe64d3cee5d8f3145227063de9"
+        },
+        {
+          "path": "experiments/cache/index_replication/usatech/predictions/forward/deepseek_matched/gru/w5_2025_07_to_2026_03_c3e945f3e3a31f5c.parquet",
+          "role": "gru_forward_panel",
+          "sha256": "eb7d3f68d93ad66176d04f4369308dbf0706d9d8c0205a2ca2d3cbcb214d64b4"
+        }
+      ],
+      "candidate_id": "usatech_deepseek_soft_vote",
+      "combiner": "soft_vote",
+      "decision_tau": 0.55,
+      "members": [
+        {
+          "model_name": "logreg",
+          "signal_tau": null,
+          "width_bps": 5
+        },
+        {
+          "model_name": "decision_tree",
+          "signal_tau": null,
+          "width_bps": 5
+        },
+        {
+          "model_name": "random_forest",
+          "signal_tau": null,
+          "width_bps": 5
+        },
+        {
+          "model_name": "svm_linear",
+          "signal_tau": null,
+          "width_bps": 5
+        },
+        {
+          "model_name": "xgboost_balanced",
+          "signal_tau": null,
+          "width_bps": 5
+        },
+        {
+          "model_name": "catboost_balanced",
+          "signal_tau": null,
+          "width_bps": 5
+        },
+        {
+          "model_name": "mlp",
+          "signal_tau": null,
+          "width_bps": 5
+        },
+        {
+          "model_name": "lstm",
+          "signal_tau": null,
+          "width_bps": 5
+        },
+        {
+          "model_name": "gru",
+          "signal_tau": null,
+          "width_bps": 5
+        }
+      ],
+      "role": "secondary",
+      "stream": "usatech"
+    }
+  ],
+  "costs": {
+    "btcusdt": {
+      "per_side_bps": 5.0,
+      "round_trip_bps": 10.0
+    },
+    "usa500": {
+      "per_side_bps": 1.0,
+      "round_trip_bps": 2.0
+    },
+    "usatech": {
+      "per_side_bps": 1.5,
+      "round_trip_bps": 3.0
+    }
+  },
+  "critical_sources": {
+    "configs__default.yaml": {
+      "path": "D:/MSC project/MSC project/code/configs/default.yaml",
+      "sha256": "5eb359616e43d352c9f12c36e9ee4dd0de23311f93825c30ebb116129cb12f49",
+      "size": 5787
+    },
+    "configs__final_q2_lockbox_protocol.json": {
+      "path": "D:/MSC project/MSC project/code/configs/final_q2_lockbox_protocol.json",
+      "sha256": "04b3ce5674bd10c64085d94b7b2f8e09d26219003e375c0126036f9ccba775e4",
+      "size": 13284
+    },
+    "data__build_positioning.py": {
+      "path": "D:/MSC project/MSC project/code/data/build_positioning.py",
+      "sha256": "0fa65ea96c02b9dc7a534a2543e09652aaf96e52dffffc0d86b0d863e27361fb",
+      "size": 9047
+    },
+    "data__index_market.py": {
+      "path": "D:/MSC project/MSC project/code/data/index_market.py",
+      "sha256": "b1095d3677cb97dd664d5eb2845c88cc26d61fc28fc9e154c0eaee85d9689f5f",
+      "size": 12352
+    },
+    "data__load.py": {
+      "path": "D:/MSC project/MSC project/code/data/load.py",
+      "sha256": "b38148bf26efdf53c11738314adf1495b312622600e1ac5ffe1bb2e0eb1a9194",
+      "size": 7778
+    },
+    "evaluation__economics.py": {
+      "path": "D:/MSC project/MSC project/code/evaluation/economics.py",
+      "sha256": "f885206d50dd80c070269cd3c1d7c05ccb3e0d9e51756fb9f20c0e0e5f366b27",
+      "size": 6329
+    },
+    "evaluation__splits.py": {
+      "path": "D:/MSC project/MSC project/code/evaluation/splits.py",
+      "sha256": "9e2091bcd13695c1bda2b40d9f6906555459638f535faee10114528e8dbe7b84",
+      "size": 2259
+    },
+    "evaluation__trades.py": {
+      "path": "D:/MSC project/MSC project/code/evaluation/trades.py",
+      "sha256": "d1846946e0ca3c99ed6cc052820c7cca3c079183ff588d82a9fe653e53c8b9df",
+      "size": 8816
+    },
+    "evaluation__trades_intrabar.py": {
+      "path": "D:/MSC project/MSC project/code/evaluation/trades_intrabar.py",
+      "sha256": "7f0ccd1cd43a446518398f3250b91be9bd766261ad1999c2b11bc407ca593f63",
+      "size": 11655
+    },
+    "experiments__all_model_sentiment_raw.py": {
+      "path": "D:/MSC project/MSC project/code/experiments/all_model_sentiment_raw.py",
+      "sha256": "78fcad0479623909c4d833f8fe829e967a9c34bbeb26b04038bc8ff76f3ec780",
+      "size": 15859
+    },
+    "experiments__baseline_model_zoo_1m.py": {
+      "path": "D:/MSC project/MSC project/code/experiments/baseline_model_zoo_1m.py",
+      "sha256": "51ed038bf070deb313ced254ef829133db79162ec66607fe1e9c2aae972b2326",
+      "size": 28675
+    },
+    "experiments__build_notebook_07.py": {
+      "path": "D:/MSC project/MSC project/code/experiments/build_notebook_07.py",
+      "sha256": "88528bcf44ddb8504bdb3a586c87ef5f11b5d99396f0bca9e5a78ecc9a7c6a8a",
+      "size": 16362
+    },
+    "experiments__catboost_execution_resolution.py": {
+      "path": "D:/MSC project/MSC project/code/experiments/catboost_execution_resolution.py",
+      "sha256": "c467393e0b3914ea7cb3d937439faa4d8c15404291b19f23c61ac6ae846e4354",
+      "size": 10376
+    },
+    "experiments__catboost_execution_scoring.py": {
+      "path": "D:/MSC project/MSC project/code/experiments/catboost_execution_scoring.py",
+      "sha256": "63779b588fcb060f81a52b4a037b70d7f0720e0214175e3dcde23f0f67d7e553",
+      "size": 7963
+    },
+    "experiments__catboost_matched_ablation.py": {
+      "path": "D:/MSC project/MSC project/code/experiments/catboost_matched_ablation.py",
+      "sha256": "9462f1662379a93fd9585fd1dd3c4c15b166ce175ee2b8174ab7eb17d6ed111b",
+      "size": 9151
+    },
+    "experiments__catboost_sentiment_ablation.py": {
+      "path": "D:/MSC project/MSC project/code/experiments/catboost_sentiment_ablation.py",
+      "sha256": "d71bda15d8d69731c1a441e3a81efccb3b7c4d358cb9111f7ad4b977494ec8a8",
+      "size": 7044
+    },
+    "experiments__final_q2_lockbox_contract.py": {
+      "path": "D:/MSC project/MSC project/code/experiments/final_q2_lockbox_contract.py",
+      "sha256": "0012b937f4c3e6a3d5c78aeff2af3d19e1f3e7382f13fa28c577069e30ad9523",
+      "size": 13513
+    },
+    "experiments__final_q2_lockbox_inputs.py": {
+      "path": "D:/MSC project/MSC project/code/experiments/final_q2_lockbox_inputs.py",
+      "sha256": "e2d0914888b5e76625da64c17c765e3f1329318ebca720a2e5d911e066a09a50",
+      "size": 13852
+    },
+    "experiments__final_q2_lockbox_metrics.py": {
+      "path": "D:/MSC project/MSC project/code/experiments/final_q2_lockbox_metrics.py",
+      "sha256": "95ec0ce360415ccd4d70f27fd68935e58757f436db0ced757fc0aaede634aa8e",
+      "size": 10506
+    },
+    "experiments__final_q2_lockbox_preflight.py": {
+      "path": "D:/MSC project/MSC project/code/experiments/final_q2_lockbox_preflight.py",
+      "sha256": "12d98cf1fa591674f490579c788c0222261812d1229f9a2f77ad24c2e0488e28",
+      "size": 34495
+    },
+    "experiments__final_q2_lockbox_reconstruction.py": {
+      "path": "D:/MSC project/MSC project/code/experiments/final_q2_lockbox_reconstruction.py",
+      "sha256": "fcec007557e4dbd08a3bf1bcb164bb1da550d031eb8aeb869d05b0477c26e014",
+      "size": 31239
+    },
+    "experiments__final_q2_lockbox_runner.py": {
+      "path": "D:/MSC project/MSC project/code/experiments/final_q2_lockbox_runner.py",
+      "sha256": "edbcf8f081e25bf99bbbe1cfc522c6f0fb4e7acc89adebc5c4e250db9e4e0945",
+      "size": 61547
+    },
+    "experiments__final_q2_lockbox_state.py": {
+      "path": "D:/MSC project/MSC project/code/experiments/final_q2_lockbox_state.py",
+      "sha256": "061ca9fb29d7901e086e9e33dbaf5e0691a5a2ff16b76ac8ab976718be41e178",
+      "size": 7964
+    },
+    "experiments__index_replication.py": {
+      "path": "D:/MSC project/MSC project/code/experiments/index_replication.py",
+      "sha256": "bca391a2ae22928864fc76b3b48e09d9de7111c4a86c60e53363c89a376f8bb0",
+      "size": 43679
+    },
+    "experiments__index_replication_protocol.py": {
+      "path": "D:/MSC project/MSC project/code/experiments/index_replication_protocol.py",
+      "sha256": "b32476c928304727f417dd8db878c09201b00cf012aef58d365521aa20f86d45",
+      "size": 13744
+    },
+    "experiments__notebook02_handoff.py": {
+      "path": "D:/MSC project/MSC project/code/experiments/notebook02_handoff.py",
+      "sha256": "b42a3926af59e05b56cd32aa373f78fc4fc419ecc9b177653caf73fa7ee016df",
+      "size": 6208
+    },
+    "experiments__raw_hold_control.py": {
+      "path": "D:/MSC project/MSC project/code/experiments/raw_hold_control.py",
+      "sha256": "c78a470179edc9839a2c855748232ee0ef609dd8febf9b9716c9acc824e2b639",
+      "size": 14411
+    },
+    "experiments__run_catboost_matched_ablation.py": {
+      "path": "D:/MSC project/MSC project/code/experiments/run_catboost_matched_ablation.py",
+      "sha256": "2e95e1decfce61f467ab773b87e670a2ed6abe20213683e3bf101da9f1f77d31",
+      "size": 72557
+    },
+    "experiments__run_walkforward.py": {
+      "path": "D:/MSC project/MSC project/code/experiments/run_walkforward.py",
+      "sha256": "a973a6c9b0654517a2dbe137c6310c00a189ac8d8872c4826480ec17cc22f7a4",
+      "size": 10020
+    },
+    "experiments__spans.py": {
+      "path": "D:/MSC project/MSC project/code/experiments/spans.py",
+      "sha256": "ccd1bb18012e08fea8401c804c147b8f210dda59df4029366c9d600cd07cb3dd",
+      "size": 1165
+    },
+    "experiments__walkforward.py": {
+      "path": "D:/MSC project/MSC project/code/experiments/walkforward.py",
+      "sha256": "6dd3e2348e6b991cda9fc47fd5afd3e7510dd4ed1ef9a8037d34054fb346b0ea",
+      "size": 9386
+    },
+    "features__build.py": {
+      "path": "D:/MSC project/MSC project/code/features/build.py",
+      "sha256": "e62eeb282756cf5e26a3a9fbc1d7f978c4c7becc2e199d16bf22e69dfe72f46d",
+      "size": 9952
+    },
+    "features__index_sentiment.py": {
+      "path": "D:/MSC project/MSC project/code/features/index_sentiment.py",
+      "sha256": "f6c238b996c50fcf38c619f7f5e5c7620615ebfccd7dc10f4fdb4f01dfe1c1e9",
+      "size": 21086
+    },
+    "features__sentiment.py": {
+      "path": "D:/MSC project/MSC project/code/features/sentiment.py",
+      "sha256": "9187ae9134e88a0de31b1fb1d156357fe4faa4231a0f5e4b6b56febe5656b6e4",
+      "size": 25201
+    },
+    "models__deep.py": {
+      "path": "D:/MSC project/MSC project/code/models/deep.py",
+      "sha256": "2d60ba0aac778b59580a72f5870758f66968c09c5c360eb579da2e728afa4361",
+      "size": 7994
+    },
+    "models__zoo.py": {
+      "path": "D:/MSC project/MSC project/code/models/zoo.py",
+      "sha256": "f0600f147cd41f1f9db13a41addec63114f17a4c369297914bc8831a7e26ad0a",
+      "size": 10150
+    },
+    "requirements-repro.txt": {
+      "path": "D:/MSC project/MSC project/code/requirements-repro.txt",
+      "sha256": "4bac92bc2efda04ad4b4212fa88233229aa1c6424b69c43253e29bdfc2cdf870",
+      "size": 82
+    },
+    "sentiment__dedup.py": {
+      "path": "D:/MSC project/MSC project/code/sentiment/dedup.py",
+      "sha256": "894a06ff4a79b914ff38d7763b5151283b552b12e6246dd4473f9a8f4e2fa66f",
+      "size": 9076
+    },
+    "sentiment__index_scoring.py": {
+      "path": "D:/MSC project/MSC project/code/sentiment/index_scoring.py",
+      "sha256": "6d47d42dec330c60179b746af1c22b35ada29de42a803841e7ed01bfa4b77626",
+      "size": 34490
+    },
+    "sentiment__score.py": {
+      "path": "D:/MSC project/MSC project/code/sentiment/score.py",
+      "sha256": "d2b561cfdf93bbbde67aa3932270c537d69b9c5e157671f46f6001bf85f8a836",
+      "size": 5609
+    },
+    "sentiment__score_llm.py": {
+      "path": "D:/MSC project/MSC project/code/sentiment/score_llm.py",
+      "sha256": "7136d0501e2eff589b8966bd8da6f2347301eaf9b01f7575152c593e150e5b4d",
+      "size": 10470
+    },
+    "tests__test_notebook_07_final_q2_lockbox.py": {
+      "path": "D:/MSC project/MSC project/code/tests/test_notebook_07_final_q2_lockbox.py",
+      "sha256": "f61e381902490edee3940dca288767c93ad1bdeffbefb2462fe65d1f45aebdc9",
+      "size": 3663
+    }
+  },
+  "implementation_commit": "8a071c797ee86b6cb2f9e67c7c18ed1a49eab54f",
+  "metrics": {
+    "annualisation": 365,
+    "bootstrap_blocks": "Monday-Sunday UTC with zero-padded boundaries",
+    "bootstrap_replicates": 5000,
+    "bootstrap_seed": 42,
+    "calendar": "91 zero-filled UTC days",
+    "primary_estimand": "btc_union_minus_lstm_total_net"
+  },
+  "model_identities": {
+    "deberta": {
+      "files": {
+        "added_tokens.json": {
+          "path": "C:/Users/alleg/.cache/huggingface/hub/models--mrm8488--deberta-v3-ft-financial-news-sentiment-analysis/snapshots/9e10915c245a80a89b18d1ac51350e093c7bb35a/added_tokens.json",
+          "sha256": "dc046d04c9b0ada7ae6f1dc89c465801799acdf0c9a6aab8c15a1b2d5ca4e91f",
+          "size": 23
+        },
+        "config.json": {
+          "path": "C:/Users/alleg/.cache/huggingface/hub/models--mrm8488--deberta-v3-ft-financial-news-sentiment-analysis/snapshots/9e10915c245a80a89b18d1ac51350e093c7bb35a/config.json",
+          "sha256": "d7b9b097c0ac5da894de6906ab00662c7df7ec313bfef830d4fa9cf71b0d2a9c",
+          "size": 1038
+        },
+        "model.safetensors": {
+          "path": "C:/Users/alleg/.cache/huggingface/hub/models--mrm8488--deberta-v3-ft-financial-news-sentiment-analysis/snapshots/9e10915c245a80a89b18d1ac51350e093c7bb35a/model.safetensors",
+          "sha256": "96a27b12ec06202bb959c66b774e7ead6e99ce227d150c0d777ecf974524c139",
+          "size": 567601628
+        },
+        "special_tokens_map.json": {
+          "path": "C:/Users/alleg/.cache/huggingface/hub/models--mrm8488--deberta-v3-ft-financial-news-sentiment-analysis/snapshots/9e10915c245a80a89b18d1ac51350e093c7bb35a/special_tokens_map.json",
+          "sha256": "9463f61e1b109a8eb4688b829260d7c6b1e6dff04c98ff7269bb89e2b92369b9",
+          "size": 286
+        },
+        "spm.model": {
+          "path": "C:/Users/alleg/.cache/huggingface/hub/models--mrm8488--deberta-v3-ft-financial-news-sentiment-analysis/snapshots/9e10915c245a80a89b18d1ac51350e093c7bb35a/spm.model",
+          "sha256": "c679fbf93643d19aab7ee10c0b99e460bdbc02fedf34b92b05af343b4af586fd",
+          "size": 2464616
+        },
+        "tokenizer.json": {
+          "path": "C:/Users/alleg/.cache/huggingface/hub/models--mrm8488--deberta-v3-ft-financial-news-sentiment-analysis/snapshots/9e10915c245a80a89b18d1ac51350e093c7bb35a/tokenizer.json",
+          "sha256": "05402ffae6dd382a8491b1d29bfc139bec5d332662e86a026f433ce54c25c202",
+          "size": 8656646
+        },
+        "tokenizer_config.json": {
+          "path": "C:/Users/alleg/.cache/huggingface/hub/models--mrm8488--deberta-v3-ft-financial-news-sentiment-analysis/snapshots/9e10915c245a80a89b18d1ac51350e093c7bb35a/tokenizer_config.json",
+          "sha256": "557b3d33d3f41b81ad769244e506549e98a1857d41dd58160aacd4d98d710b5a",
+          "size": 1284
+        }
+      },
+      "model": "mrm8488/deberta-v3-ft-financial-news-sentiment-analysis",
+      "revision": "9e10915c245a80a89b18d1ac51350e093c7bb35a"
+    },
+    "deepseek": {
+      "batch_protocol": "indexed-json-object-v1",
+      "batch_size": 10,
+      "digest": "d3f1c87447216481a8001f48c517a51e13bfb141853a8df5e52f81bf765dabc3",
+      "identity_file": {
+        "path": "D:/MSC project/MSC project/code/sentiment/raw/index_deepseek_identity.json",
+        "sha256": "8f671f7af8473a3e5fbf6b074ff6d0890c5693a7a1eaa6c5ca47b3f163ebdaa7",
+        "size": 1069
+      },
+      "live_verified": true,
+      "num_ctx": 8192,
+      "ollama_version": "ollama version is 0.32.9",
+      "prompt_hash": "94bea4d8071a2e8eb1114b39815d0e08f669b8c484d78100e1dbffc5895eda40",
+      "pulled_at_utc": "2026-08-12T22:19:35.106201+00:00",
+      "registry_digest_prefix": "031ce2a95446",
+      "remote_host": "https://ollama.com",
+      "remote_model": "deepseek-v4-flash:0731",
+      "schema_hash": "57ac5a4ea650657dcca3e7f9327670500344243899f7cf879580be90d7db6f63",
+      "scorer_implementation_hash": "6edb573f6a77dee78d72f9b89dc0001827dff814a4d77448c9062749a520094c",
+      "tag": "deepseek-v4-flash:0731-cloud",
+      "temperature": 0.0,
+      "think": "low"
+    }
+  },
+  "protocol": {
+    "path": "configs/final_q2_lockbox_protocol.json",
+    "protocol_hash": "8185dee25cc468ed9be8b79aad59eb33eeda874f4cb245c31883ef127f205312",
+    "sha256": "04b3ce5674bd10c64085d94b7b2f8e09d26219003e375c0126036f9ccba775e4"
+  },
+  "q2_decoded": false,
+  "q2_sources": {
+    "btc_15m_2026_04_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/BTCUSDT-15m-2026-04.zip.CHECKSUM",
+      "sha256": "8f5ff62754b0b964ecbfa9de9824a3bdb4c93dcdb2866bf910d08a43e3cdbaec",
+      "size": 89
+    },
+    "btc_15m_2026_04_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/BTCUSDT-15m-2026-04.zip",
+      "sha256": "ba9adf37ba8dc020618db953888cb9a6e1ccc4f1ae62c026b2d99ed66e92b853",
+      "size": 159408
+    },
+    "btc_15m_2026_05_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/BTCUSDT-15m-2026-05.zip.CHECKSUM",
+      "sha256": "53181c501d2b1096ed8a88073f1f026d5dcdc64e9559bf4fac5decce8ed6dc3e",
+      "size": 89
+    },
+    "btc_15m_2026_05_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/BTCUSDT-15m-2026-05.zip",
+      "sha256": "1df53032797db1ca7ab680d9aa726b6cd591e0b7ae0e13d6b5e1bbfd1bd04b8c",
+      "size": 163343
+    },
+    "btc_15m_2026_06_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/BTCUSDT-15m-2026-06.zip.CHECKSUM",
+      "sha256": "0e27d97c65860fd19359503e5076b225a565b6525c37b5e77dcf85d3902d7bd4",
+      "size": 89
+    },
+    "btc_15m_2026_06_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/BTCUSDT-15m-2026-06.zip",
+      "sha256": "1380a9c33e1025bdd4bbe690fd1bb67e37ca8b57d50dfc2993ba36d9dc4a1c7d",
+      "size": 158549
+    },
+    "btc_1m_2026_04_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/BTCUSDT-1m-2026-04.zip.CHECKSUM",
+      "sha256": "4a15c1eec916a07547d4b0462cae9e0018f8892c62e9bd227c908354ff9db8a3",
+      "size": 88
+    },
+    "btc_1m_2026_04_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/BTCUSDT-1m-2026-04.zip",
+      "sha256": "318afd4f5acfbcfbb40fbe727a77eee8e9e7b54d8941589c78a32283d90b4a01",
+      "size": 2088776
+    },
+    "btc_1m_2026_05_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/BTCUSDT-1m-2026-05.zip.CHECKSUM",
+      "sha256": "0fd9cf17e652daca79e44dc6fa7ea21a5de72699011e7704866cd6ad75c9ec98",
+      "size": 88
+    },
+    "btc_1m_2026_05_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/BTCUSDT-1m-2026-05.zip",
+      "sha256": "62983d93c35e26ec6c29116c629e443b7ddfe3d301aca83331ff58112199d8d0",
+      "size": 2120776
+    },
+    "btc_1m_2026_06_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/BTCUSDT-1m-2026-06.zip.CHECKSUM",
+      "sha256": "1b97197f34f7e2794f3defa8e93ec2c02f1496303aec1aaf200ded1f3daf9741",
+      "size": 88
+    },
+    "btc_1m_2026_06_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/BTCUSDT-1m-2026-06.zip",
+      "sha256": "c8e1d5e70b766dd2312fc9cd7085785bb25708e27e75c21a5a5aaba61a6d07f5",
+      "size": 2092027
+    },
+    "btc_funding_2026_04_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/fundingRate/BTCUSDT-fundingRate-2026-04.zip.CHECKSUM",
+      "sha256": "4306ccbfbf24cbcfe36ea1226dcdb8aa744ff6bd417018a432b16221415e34fa",
+      "size": 98
+    },
+    "btc_funding_2026_04_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/fundingRate/BTCUSDT-fundingRate-2026-04.zip",
+      "sha256": "51cdeb4de7d5ef1d4eece80b6115e391bdf7a2d0803bf9ad8371ab23340b22d3",
+      "size": 960
+    },
+    "btc_funding_2026_05_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/fundingRate/BTCUSDT-fundingRate-2026-05.zip.CHECKSUM",
+      "sha256": "d235c278ef78737a6c6ebcee4ea3754c64e67e04d6575c10637b9eb32144be2a",
+      "size": 98
+    },
+    "btc_funding_2026_05_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/fundingRate/BTCUSDT-fundingRate-2026-05.zip",
+      "sha256": "445b65fd6b17bfcfb5e4d035db29fad34f729fa078f0449024db42621be84e6e",
+      "size": 980
+    },
+    "btc_funding_2026_06_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/fundingRate/BTCUSDT-fundingRate-2026-06.zip.CHECKSUM",
+      "sha256": "b16df2145a1acd03de19335dcd416e3f9dd85d4dd252ce8a60b205668d23f4a4",
+      "size": 98
+    },
+    "btc_funding_2026_06_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/fundingRate/BTCUSDT-fundingRate-2026-06.zip",
+      "sha256": "cff97ce688329592bccbbf5873b5c7021649e093f5f5806e332c5b4fb7fd6a00",
+      "size": 964
+    },
+    "btc_m15_q2": {
+      "path": "D:/MSC project/MSC project/code/data/btcusdt_m15_lockbox_2026Q2.parquet",
+      "sha256": "fb0babfbdb7156dc821d9d1a0f8405cfdbaebe753fbdde6f3a59747ba6f4c42d",
+      "size": 696149
+    },
+    "btc_m1_q2_source": {
+      "path": "D:/MSC project/MSC project/code/data/btcusdt_1m_2025_2026.parquet",
+      "sha256": "9f26b1522375eef3b1b759c14f10ff5c268b6b06c30f87aa0cd509405ee488e6",
+      "size": 47816380
+    },
+    "btc_metrics_2026_04_01_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-04-01.zip.CHECKSUM",
+      "sha256": "23e4cd8fc6ff9adf1775995fc5348797a88d9e3f055ffa71ce28d5fb34b76ed4",
+      "size": 97
+    },
+    "btc_metrics_2026_04_01_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-04-01.zip",
+      "sha256": "46f8a5e19bf9927ef9023477cd3453561a53632fb848f6c40e1d30edfffcdc20",
+      "size": 11177
+    },
+    "btc_metrics_2026_04_02_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-04-02.zip.CHECKSUM",
+      "sha256": "f7fedf449a3653d59e13ea141821d9e5149b6cf65c018177c62a96e0bf95f81e",
+      "size": 97
+    },
+    "btc_metrics_2026_04_02_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-04-02.zip",
+      "sha256": "a1847bb37a37898c20057101364d16de939c9e269db091496b27d5ad8d6967a8",
+      "size": 11308
+    },
+    "btc_metrics_2026_04_03_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-04-03.zip.CHECKSUM",
+      "sha256": "912eaab9567ab69bca60a3722ab678b41350ad8e00d09bf423755d22e09a2205",
+      "size": 97
+    },
+    "btc_metrics_2026_04_03_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-04-03.zip",
+      "sha256": "ded605af60e985eda7e44890ff4e8b436a1c6946ab44b6c61e7d1135010b6ba8",
+      "size": 11025
+    },
+    "btc_metrics_2026_04_04_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-04-04.zip.CHECKSUM",
+      "sha256": "81063c3f5ccd9119af6d8f50ff88236cb62d686cd52ae0abe9e7a0ed60ff2d09",
+      "size": 97
+    },
+    "btc_metrics_2026_04_04_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-04-04.zip",
+      "sha256": "4e9ae79eab8b97f04185b92b42827e65d9b460ed3d3b780e4be1336216b58b6f",
+      "size": 10874
+    },
+    "btc_metrics_2026_04_05_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-04-05.zip.CHECKSUM",
+      "sha256": "24c50866c48760b0fc744c432121bf1d0db296a87400fe6930ddcec983347064",
+      "size": 97
+    },
+    "btc_metrics_2026_04_05_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-04-05.zip",
+      "sha256": "177acbb580804867502797a665d35d23de8330b9229bcb75cd95b55a1f45690d",
+      "size": 11033
+    },
+    "btc_metrics_2026_04_06_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-04-06.zip.CHECKSUM",
+      "sha256": "a7ca147b62c3d954c19b074215d80b2a60994c72d14ade39ecdaef8a498e1d80",
+      "size": 97
+    },
+    "btc_metrics_2026_04_06_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-04-06.zip",
+      "sha256": "91950dbaa051c94f9399d89b94f25af73122330f2efe5eeb5c0448c042632016",
+      "size": 11179
+    },
+    "btc_metrics_2026_04_07_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-04-07.zip.CHECKSUM",
+      "sha256": "2818e7c765b9230a07943f79e823415be2b7f810213a36a6573e54ab07a3ca11",
+      "size": 97
+    },
+    "btc_metrics_2026_04_07_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-04-07.zip",
+      "sha256": "1eb45840b70f8f2a4dcfc198686190a1f9f7bd144df94132852cf1c79bf25701",
+      "size": 11292
+    },
+    "btc_metrics_2026_04_08_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-04-08.zip.CHECKSUM",
+      "sha256": "476c372571bfb3b50b46239022b046a35143102920807bea40395de41af369a0",
+      "size": 97
+    },
+    "btc_metrics_2026_04_08_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-04-08.zip",
+      "sha256": "4159f4be82e6b38cd68f29fa92063f3c482d76bc3ea491a667e8a86ad960d63f",
+      "size": 11220
+    },
+    "btc_metrics_2026_04_09_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-04-09.zip.CHECKSUM",
+      "sha256": "be515f02320087e7971fa0000cbc3d7f8ab8c58bcf474f71dced64a09fe0711b",
+      "size": 97
+    },
+    "btc_metrics_2026_04_09_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-04-09.zip",
+      "sha256": "8d4b6ded0abc05e5bd8acd6638554f239462712a1a8c3e9f2c7f09f499f68bc1",
+      "size": 11156
+    },
+    "btc_metrics_2026_04_10_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-04-10.zip.CHECKSUM",
+      "sha256": "c03dbfb86284aa9e553ff8085aa13b9684e04697a7312b8a06e92df05688f967",
+      "size": 97
+    },
+    "btc_metrics_2026_04_10_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-04-10.zip",
+      "sha256": "c638781f08e0c0c493a65e0bff245775867ac372ed74d4df46b44c56df676b54",
+      "size": 11110
+    },
+    "btc_metrics_2026_04_11_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-04-11.zip.CHECKSUM",
+      "sha256": "3eb3ecd86a0b1a7d4c4bce2154791e614f4d28b6988562e603b89b43ff95d086",
+      "size": 97
+    },
+    "btc_metrics_2026_04_11_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-04-11.zip",
+      "sha256": "1afe69f2657588bf7de3a191148e8eec124ce97a14a8f42911279eb2c23512e9",
+      "size": 10984
+    },
+    "btc_metrics_2026_04_12_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-04-12.zip.CHECKSUM",
+      "sha256": "3dc080f559c2604ee506b0b54651c7f4a597c0ea8218c77fabb2a77036b44e2f",
+      "size": 97
+    },
+    "btc_metrics_2026_04_12_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-04-12.zip",
+      "sha256": "b7a3d9cdabb4f2070f986862c8c0dafea7b74b7da2d2af61e60a42e0964b4b34",
+      "size": 11163
+    },
+    "btc_metrics_2026_04_13_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-04-13.zip.CHECKSUM",
+      "sha256": "abf94e0286376e2110f0ee9b97ec2ad63b9ac64e7f5761038a057dd4b299c566",
+      "size": 97
+    },
+    "btc_metrics_2026_04_13_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-04-13.zip",
+      "sha256": "cec0bc53785cbe121e2d2bf0ea89ddd8bc0a3b972f0b7fed973b64b3ee706f52",
+      "size": 11191
+    },
+    "btc_metrics_2026_04_14_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-04-14.zip.CHECKSUM",
+      "sha256": "9922cf8630454db49a1308ed254c65300e52295361eb97a5b1541c97f126c24f",
+      "size": 97
+    },
+    "btc_metrics_2026_04_14_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-04-14.zip",
+      "sha256": "5cf35a2b7aad17abe4fcfe50fd82eabd211b8fceefdb6312c86051746de34911",
+      "size": 11161
+    },
+    "btc_metrics_2026_04_15_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-04-15.zip.CHECKSUM",
+      "sha256": "c5bd7eaf7923eed08ac58e76492bfb71d9a00727435cbf081047d6a2ebf53916",
+      "size": 97
+    },
+    "btc_metrics_2026_04_15_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-04-15.zip",
+      "sha256": "3ad4b7c33cc0ef7629cdf10e4a2fdc96905e91a0e21999175a93224cdc81ab8a",
+      "size": 11006
+    },
+    "btc_metrics_2026_04_16_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-04-16.zip.CHECKSUM",
+      "sha256": "d6afcae8c5c7a1e0ddf4a0e6bbe6a34888334e0a1088248ae52af3f12cd16a8c",
+      "size": 97
+    },
+    "btc_metrics_2026_04_16_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-04-16.zip",
+      "sha256": "f33624e86b6e17356afe426a1896e42f1bb4e39b4821a6d8a63d1fc7b444d072",
+      "size": 11027
+    },
+    "btc_metrics_2026_04_17_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-04-17.zip.CHECKSUM",
+      "sha256": "6903fc67f5acd56105564b4dc9779263fad7860e28816bda1b924d16cf61f65b",
+      "size": 97
+    },
+    "btc_metrics_2026_04_17_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-04-17.zip",
+      "sha256": "f49418264a151dbcbb16c3bfbb7872fe247ff42a15f00696b0d6cfff35367dd8",
+      "size": 11210
+    },
+    "btc_metrics_2026_04_18_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-04-18.zip.CHECKSUM",
+      "sha256": "fc04f4caa7f902ea9578e142156f53c67f1c3e95ebc1a3c6621e176073a11885",
+      "size": 97
+    },
+    "btc_metrics_2026_04_18_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-04-18.zip",
+      "sha256": "f47e97c5a09dd4881d9bbf6aa3a9da41e55657cf3625eb664c680251f82d342e",
+      "size": 11151
+    },
+    "btc_metrics_2026_04_19_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-04-19.zip.CHECKSUM",
+      "sha256": "975e33a8ae95b06e6dbae0a72cb1f74bc03d652d80c7387d271dc4f0748c0753",
+      "size": 97
+    },
+    "btc_metrics_2026_04_19_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-04-19.zip",
+      "sha256": "f2fd585ea40570e1df3161da1d1562cb1c89dcc48fb9b911f56e17703044410a",
+      "size": 11033
+    },
+    "btc_metrics_2026_04_20_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-04-20.zip.CHECKSUM",
+      "sha256": "eb1fe066367e586e370d44beb233553f0ad36c5cc4c2cd565fde3dc1ea51154e",
+      "size": 97
+    },
+    "btc_metrics_2026_04_20_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-04-20.zip",
+      "sha256": "7fabcd4ba5bc6901f559608e7afd0f8aefa5b159e0505341fcd124ae38b3dd5c",
+      "size": 11078
+    },
+    "btc_metrics_2026_04_21_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-04-21.zip.CHECKSUM",
+      "sha256": "789be96575d3e2943d6d841e72e096468bf06f7e99e61dd63449c306148a6641",
+      "size": 97
+    },
+    "btc_metrics_2026_04_21_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-04-21.zip",
+      "sha256": "4e00ffe3fbf1e5549049a01b965f977b50271dd67ac270004692ba6c6a9f2221",
+      "size": 11088
+    },
+    "btc_metrics_2026_04_22_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-04-22.zip.CHECKSUM",
+      "sha256": "ff58ef8481086c47b9db70b8717b2fa7e8e22b30a97e7e6a97b184038a79764b",
+      "size": 97
+    },
+    "btc_metrics_2026_04_22_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-04-22.zip",
+      "sha256": "db2a12a325fe5fed026275d691dfb7ba7112de445507be18938e6dbe76765773",
+      "size": 11255
+    },
+    "btc_metrics_2026_04_23_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-04-23.zip.CHECKSUM",
+      "sha256": "cdf615fe61d3e8ed544b6620888b7d9b386a598b2cfd34f0665b05e20fd73138",
+      "size": 97
+    },
+    "btc_metrics_2026_04_23_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-04-23.zip",
+      "sha256": "f5423a82397a840148c8b060c3c362a8b94d0e77a2dea7afcd68b70f3acaaf3f",
+      "size": 11192
+    },
+    "btc_metrics_2026_04_24_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-04-24.zip.CHECKSUM",
+      "sha256": "21904088b6c5fd0ec29c9a4da44ee66813e31fddfa4b5e2a7dc62e1d801c0aae",
+      "size": 97
+    },
+    "btc_metrics_2026_04_24_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-04-24.zip",
+      "sha256": "c821578612f0cc5dfd1d71d61bdf5019724e8f09fc879808219e0dac8e84823a",
+      "size": 11055
+    },
+    "btc_metrics_2026_04_25_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-04-25.zip.CHECKSUM",
+      "sha256": "10e24dd62a70f416eb66cc2d08585bbb81654c0e313825c672d0f16ef342f276",
+      "size": 97
+    },
+    "btc_metrics_2026_04_25_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-04-25.zip",
+      "sha256": "74c2b86ea5aff5f3a1df28f07ed55803ccd364bf45776ac7a78ba44f58375759",
+      "size": 10774
+    },
+    "btc_metrics_2026_04_26_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-04-26.zip.CHECKSUM",
+      "sha256": "ab873ec219a5d0a66995a9627c4bd61dd1fec8781a21380ee6d21201da5feeb3",
+      "size": 97
+    },
+    "btc_metrics_2026_04_26_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-04-26.zip",
+      "sha256": "4953fbdb0edbc3d9726a9ea1e82baa3b34d6b9c1925788fab92f2071fbc6d85c",
+      "size": 10840
+    },
+    "btc_metrics_2026_04_27_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-04-27.zip.CHECKSUM",
+      "sha256": "8276323ad955ef327e017bd6389a6562318fc57a78bfc417ee45f06ffeacfa37",
+      "size": 97
+    },
+    "btc_metrics_2026_04_27_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-04-27.zip",
+      "sha256": "2a9b0fd9f8e1342a7bc7f41eb1e34a76e201b6970445d524197f1e073d6d34da",
+      "size": 11126
+    },
+    "btc_metrics_2026_04_28_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-04-28.zip.CHECKSUM",
+      "sha256": "c23bd602dc1eb31df401ba1ba286eab7de0dc35193c49c31ae9aa2821d493633",
+      "size": 97
+    },
+    "btc_metrics_2026_04_28_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-04-28.zip",
+      "sha256": "051a9686b26195e75b02b4d628d7dc60db91b3e7d3836301d4232cd3063fcbeb",
+      "size": 11036
+    },
+    "btc_metrics_2026_04_29_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-04-29.zip.CHECKSUM",
+      "sha256": "0a482827514992582b28e73df8bee6b5f9ecc8ab5554ac383a2fc9812880a0c3",
+      "size": 97
+    },
+    "btc_metrics_2026_04_29_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-04-29.zip",
+      "sha256": "ef5c3eae538901589a461e10bd2ec3acf72e39425695a7a7bae5621d97eb2c61",
+      "size": 11234
+    },
+    "btc_metrics_2026_04_30_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-04-30.zip.CHECKSUM",
+      "sha256": "219e2906344c672a2f57cb0bc9c131a90141b77f5fc925543a357ec7c4af5688",
+      "size": 97
+    },
+    "btc_metrics_2026_04_30_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-04-30.zip",
+      "sha256": "ae50fa5b96f59dd56fdc85ca7c6ae976b58f078b75cfd57220e08fb98fc2aebe",
+      "size": 11009
+    },
+    "btc_metrics_2026_05_01_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-05-01.zip.CHECKSUM",
+      "sha256": "96848186752d01963711318cb80375136da8a4d313159721e13683a83bfd78c7",
+      "size": 97
+    },
+    "btc_metrics_2026_05_01_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-05-01.zip",
+      "sha256": "8d9c62941ce39ac077b0c8baafad04deb0acaeb299c121108e9b61a2e66dc595",
+      "size": 11137
+    },
+    "btc_metrics_2026_05_02_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-05-02.zip.CHECKSUM",
+      "sha256": "225b751c35d745ff7cb4bb3f114ad4f3c13069175b5e9104db5dd6500ed3d5d4",
+      "size": 97
+    },
+    "btc_metrics_2026_05_02_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-05-02.zip",
+      "sha256": "b7d76c4006eb74eeaf61cd8a6c2a677b239ff0cdcc98f74b525d832565ef79fc",
+      "size": 10832
+    },
+    "btc_metrics_2026_05_03_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-05-03.zip.CHECKSUM",
+      "sha256": "edd185fc768ee77c38a9944ce564b017b24f16ee9163615689836575e7dcc067",
+      "size": 97
+    },
+    "btc_metrics_2026_05_03_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-05-03.zip",
+      "sha256": "b2dfce7838aa0097b4c752d611798ecf3c5d0139de1bb6dba1137cba030f8c75",
+      "size": 10882
+    },
+    "btc_metrics_2026_05_04_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-05-04.zip.CHECKSUM",
+      "sha256": "226ceeea7fdfece29d16930b2dba0280b54cd050474d89051979b2a330fae502",
+      "size": 97
+    },
+    "btc_metrics_2026_05_04_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-05-04.zip",
+      "sha256": "4180eb8d0d1ffbb2df1e8c31c409a324ed5de4a634d9016f669454af0ab87ba1",
+      "size": 11221
+    },
+    "btc_metrics_2026_05_05_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-05-05.zip.CHECKSUM",
+      "sha256": "7d8ccbb0914e3febb823f6841b86618093857415553e8bf9fb4bc0a813899727",
+      "size": 97
+    },
+    "btc_metrics_2026_05_05_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-05-05.zip",
+      "sha256": "791cbb823a6c26e888b225a7f9d8ad45707442a8c1207fd5ade4de1b7dd82999",
+      "size": 11092
+    },
+    "btc_metrics_2026_05_06_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-05-06.zip.CHECKSUM",
+      "sha256": "3ab59011b237a28ecbd39ccdc06436ac6afa1aa2ca71ec6b7b8fe0339c25403b",
+      "size": 97
+    },
+    "btc_metrics_2026_05_06_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-05-06.zip",
+      "sha256": "4c6b811041af7246383c103f34ed22ff2b144ffb5039d0a7149da77884755281",
+      "size": 11021
+    },
+    "btc_metrics_2026_05_07_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-05-07.zip.CHECKSUM",
+      "sha256": "e50f26a4ba46d64cab2a050f107f15527c2e3e408ba87211135ef2d98eba870f",
+      "size": 97
+    },
+    "btc_metrics_2026_05_07_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-05-07.zip",
+      "sha256": "7bc1d6a1c647fa58abb9a5ba595ca55370c6f62820c9e0b36ad19806a3818c18",
+      "size": 11058
+    },
+    "btc_metrics_2026_05_08_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-05-08.zip.CHECKSUM",
+      "sha256": "9ee129b29e676b3af4782024eb07aa8d295abdb5d15d114cee73b02cdac0f549",
+      "size": 97
+    },
+    "btc_metrics_2026_05_08_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-05-08.zip",
+      "sha256": "c61d2c550d9b2894070f44a05b1c6cc906955abdb83112f3186034b035f0faf1",
+      "size": 10969
+    },
+    "btc_metrics_2026_05_09_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-05-09.zip.CHECKSUM",
+      "sha256": "f0b5b6f8bb0f96c15e285d4097ddd0f690fe98dd3ecf827e7d0c34c4fe2d756a",
+      "size": 97
+    },
+    "btc_metrics_2026_05_09_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-05-09.zip",
+      "sha256": "345392f8c8c62000931cb3f6df9bbd3bd9beedb25e56fbfd2200e8d40d5e1d2e",
+      "size": 10872
+    },
+    "btc_metrics_2026_05_10_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-05-10.zip.CHECKSUM",
+      "sha256": "024e3f7e89eae17429c53661d87130a5b56cff4e3f1aecb39a38063929337493",
+      "size": 97
+    },
+    "btc_metrics_2026_05_10_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-05-10.zip",
+      "sha256": "43b48b74ca3e642b2d88729ad37896d7228a710a26458291f84fbb0d0d6adab4",
+      "size": 10873
+    },
+    "btc_metrics_2026_05_11_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-05-11.zip.CHECKSUM",
+      "sha256": "4e3febf9cedb7f5e33bbe21dfd75dd6e2bbe48ddfc7f365d50e09922aac059b5",
+      "size": 97
+    },
+    "btc_metrics_2026_05_11_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-05-11.zip",
+      "sha256": "dea7c76990f1346e907f868d7368a697af045be494e9db3dc850c81658531a7a",
+      "size": 11130
+    },
+    "btc_metrics_2026_05_12_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-05-12.zip.CHECKSUM",
+      "sha256": "a969cd485b26bb27a6bf5a99b783183fe034b93c31d5f0cd73829ec9a117b0f6",
+      "size": 97
+    },
+    "btc_metrics_2026_05_12_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-05-12.zip",
+      "sha256": "c076edb11d6cecaafbf0e79c29a8e2b18fcf76881195331961113f019f6174fe",
+      "size": 11093
+    },
+    "btc_metrics_2026_05_13_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-05-13.zip.CHECKSUM",
+      "sha256": "c1dc8448d323d19cb673b000fefe5a2a024d648b318cf8b78e81cb6871c40598",
+      "size": 97
+    },
+    "btc_metrics_2026_05_13_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-05-13.zip",
+      "sha256": "5cee6e4df28aa735f6f111d14b48211624d52189504d5b927f0135d471291960",
+      "size": 11115
+    },
+    "btc_metrics_2026_05_14_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-05-14.zip.CHECKSUM",
+      "sha256": "e25a308aa533c93b44ee58787d0d8a296b360adf0f76e291511afe97744a3c11",
+      "size": 97
+    },
+    "btc_metrics_2026_05_14_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-05-14.zip",
+      "sha256": "9e3e3a7195cd41a3d93e00c41653ebb4d72b536214bf40ea1a100aaa5676d94c",
+      "size": 11093
+    },
+    "btc_metrics_2026_05_15_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-05-15.zip.CHECKSUM",
+      "sha256": "5c86d3b00984233965c018560e5f9f5ddbda8a4c7f654eecf27beedfd379a700",
+      "size": 97
+    },
+    "btc_metrics_2026_05_15_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-05-15.zip",
+      "sha256": "9a2c471432d0ecab4caafcc80642f6e7109afa188ae9e3a0a5bb9b8a1d5ce044",
+      "size": 11126
+    },
+    "btc_metrics_2026_05_16_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-05-16.zip.CHECKSUM",
+      "sha256": "1aaafa78096f621c0d034a5245ba158637c1f19ac156ee87428fb145683c37e3",
+      "size": 97
+    },
+    "btc_metrics_2026_05_16_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-05-16.zip",
+      "sha256": "29c0c599959136f62268e505882f4c2288c31046065936d55faab3f947c03fdf",
+      "size": 11004
+    },
+    "btc_metrics_2026_05_17_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-05-17.zip.CHECKSUM",
+      "sha256": "9fdbf7db60655f2ab8d8978966d04d9c3c3340a6fa75f28b1922e0b385a82847",
+      "size": 97
+    },
+    "btc_metrics_2026_05_17_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-05-17.zip",
+      "sha256": "35b6530fdab168e224ad12ad0cac55bcd63990cfb145f1c1e8bc364d4a2d1699",
+      "size": 10945
+    },
+    "btc_metrics_2026_05_18_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-05-18.zip.CHECKSUM",
+      "sha256": "5fd35d3abc16ef81373007b9736e8a05f910e0068b742ad2431d4cc0bb911e55",
+      "size": 97
+    },
+    "btc_metrics_2026_05_18_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-05-18.zip",
+      "sha256": "6f1aaab633fb7bdb4b194cc84845a9cb4e38e4d8bf862248f22aabf300040ba1",
+      "size": 11203
+    },
+    "btc_metrics_2026_05_19_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-05-19.zip.CHECKSUM",
+      "sha256": "0d9f44eb86b950658204a8ba258ec95c8b0a4ed17c9222e10abfcdc1a516f8a6",
+      "size": 97
+    },
+    "btc_metrics_2026_05_19_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-05-19.zip",
+      "sha256": "b5ece22397e5d4f00e05c39eb07518ce711cd852f32d60721b65c7a040f91e24",
+      "size": 11005
+    },
+    "btc_metrics_2026_05_20_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-05-20.zip.CHECKSUM",
+      "sha256": "da2f7bb6122ab9eb1ea444040a9b0b7d399fb2be286ea7b52396b4779faf34a6",
+      "size": 97
+    },
+    "btc_metrics_2026_05_20_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-05-20.zip",
+      "sha256": "8714985438e5dd7b516de92be1ea45e4a7fc6b9e8ba8936f0ac7b5df142ca358",
+      "size": 11057
+    },
+    "btc_metrics_2026_05_21_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-05-21.zip.CHECKSUM",
+      "sha256": "15b0674457d37bb1181bc74e671b3285fe478390af67f920fbff958892958a64",
+      "size": 97
+    },
+    "btc_metrics_2026_05_21_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-05-21.zip",
+      "sha256": "fdb046f72202274fc28ec536307e60e3d4010951d71d4c9614b3d95356dca940",
+      "size": 11102
+    },
+    "btc_metrics_2026_05_22_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-05-22.zip.CHECKSUM",
+      "sha256": "7441f01a3faae6a0c12b6fbbd3145afb24bf19e8064e1e72e39f552d015894c7",
+      "size": 97
+    },
+    "btc_metrics_2026_05_22_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-05-22.zip",
+      "sha256": "f7797d5482147d6c14c368056687eb247beab10cf21779902e9acb766a474595",
+      "size": 11097
+    },
+    "btc_metrics_2026_05_23_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-05-23.zip.CHECKSUM",
+      "sha256": "2dc43b3452a29dc1faae454858b0596b91521a1d72664f04ad509146d76e7d12",
+      "size": 97
+    },
+    "btc_metrics_2026_05_23_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-05-23.zip",
+      "sha256": "aa015fb00eed264eba466c716d4d8a7f2a930aa567a813ae07ca3dc73987c5a3",
+      "size": 11193
+    },
+    "btc_metrics_2026_05_24_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-05-24.zip.CHECKSUM",
+      "sha256": "559e19df1c37cc14baf057807c48ad44f898f2f5c69e31dbc16fbc3b40daad1e",
+      "size": 97
+    },
+    "btc_metrics_2026_05_24_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-05-24.zip",
+      "sha256": "473502e64f7e538823f7d7be4979ee2f127703c3f6ed7ca2b7d324136aa0aef7",
+      "size": 11027
+    },
+    "btc_metrics_2026_05_25_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-05-25.zip.CHECKSUM",
+      "sha256": "db2a3a200a7f55505ce4dd344ef8e15064ab33ffc0faa67d49eaec2129fd5b12",
+      "size": 97
+    },
+    "btc_metrics_2026_05_25_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-05-25.zip",
+      "sha256": "a0b2dddc7472c411030923c394fb3b9c1121ccbc4c5aceabe75fcddd7adee95f",
+      "size": 10960
+    },
+    "btc_metrics_2026_05_26_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-05-26.zip.CHECKSUM",
+      "sha256": "4dec79c1b8657fba5c00d233d2a7f787a71381c6661e6ccc08d5bb1fa6abc8c1",
+      "size": 97
+    },
+    "btc_metrics_2026_05_26_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-05-26.zip",
+      "sha256": "54dd0c1227a2e8f92a6d5926113118e0f19662557d5dd222697f088382d3bf04",
+      "size": 11110
+    },
+    "btc_metrics_2026_05_27_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-05-27.zip.CHECKSUM",
+      "sha256": "efa173454f25d79f210dcfe7eb274c678b07e97bdfc05108b1b4a0b04e8984e0",
+      "size": 97
+    },
+    "btc_metrics_2026_05_27_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-05-27.zip",
+      "sha256": "e4c45b78d8c8329c3255d53524fa397ee1c4fd25819f46c2e6cc3f4b0bd2329f",
+      "size": 11210
+    },
+    "btc_metrics_2026_05_28_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-05-28.zip.CHECKSUM",
+      "sha256": "9a8f0465e270782ef08bfcf7f7821e8de4f4f8de470ee90fdc2661c0740ad82c",
+      "size": 97
+    },
+    "btc_metrics_2026_05_28_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-05-28.zip",
+      "sha256": "150606a17e53655fca58d5c12f095b2e90a6640f71e795a03a1f0b56e67bbe58",
+      "size": 11197
+    },
+    "btc_metrics_2026_05_29_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-05-29.zip.CHECKSUM",
+      "sha256": "51011ee655be394dca70ea24c86ce0db73c10c54dcd2f8890af0fc8157ae1b8a",
+      "size": 97
+    },
+    "btc_metrics_2026_05_29_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-05-29.zip",
+      "sha256": "393b64291dd77054cf1e1167f4ae0640cb4481a5210a3d3778a2a194379db1c1",
+      "size": 11175
+    },
+    "btc_metrics_2026_05_30_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-05-30.zip.CHECKSUM",
+      "sha256": "32ee5c2323b7432f151c41cc3abfa252f4b41b3ec11af4b60974a16ab6b1bb9a",
+      "size": 97
+    },
+    "btc_metrics_2026_05_30_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-05-30.zip",
+      "sha256": "087715cf166d6a92f3bf06d294506c0268cbcc3e6f11720d35543903bb79f77d",
+      "size": 10984
+    },
+    "btc_metrics_2026_05_31_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-05-31.zip.CHECKSUM",
+      "sha256": "b2e6683fd38d02678cd9e9c38db9c746c14077a7789a721e68eb9b6cd9d300a2",
+      "size": 97
+    },
+    "btc_metrics_2026_05_31_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-05-31.zip",
+      "sha256": "9aa1866ee0def3fae16869b2a4ff96520bd6245eee88b30be9a6a97a14b17af8",
+      "size": 10893
+    },
+    "btc_metrics_2026_06_01_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-06-01.zip.CHECKSUM",
+      "sha256": "97937fdf75613a0b8494868c280654e290b1cb078fc70cb02e7646d41e3bc06a",
+      "size": 97
+    },
+    "btc_metrics_2026_06_01_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-06-01.zip",
+      "sha256": "9134c7a7828bfaa45215b24230029c656215f118cf265936f904503cfa798a23",
+      "size": 11287
+    },
+    "btc_metrics_2026_06_02_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-06-02.zip.CHECKSUM",
+      "sha256": "22d2e040ff28a1584f58b0efa2bc756820ecba7781b3cbfcde7f28ba6f9701c5",
+      "size": 97
+    },
+    "btc_metrics_2026_06_02_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-06-02.zip",
+      "sha256": "4a98d6f87a4b2a8372c5a085901eff3dff81543d794612778ef110e66f23b196",
+      "size": 11314
+    },
+    "btc_metrics_2026_06_03_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-06-03.zip.CHECKSUM",
+      "sha256": "afc96e9449a7604645e8bfcc7e88f94b4329c56b4073075284b954fb799c8dfa",
+      "size": 97
+    },
+    "btc_metrics_2026_06_03_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-06-03.zip",
+      "sha256": "34f8be57e329d98ea832996f696e156b235b60ef4390e5af0c667dddc755c33c",
+      "size": 11423
+    },
+    "btc_metrics_2026_06_04_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-06-04.zip.CHECKSUM",
+      "sha256": "8ef70315b8881f519c7fc9d2db771f32683eaf51b3eb09961cc7135e869d582f",
+      "size": 97
+    },
+    "btc_metrics_2026_06_04_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-06-04.zip",
+      "sha256": "540158d610f763875b893e1f7102394f8decce8a68c986e510079f87a786a57c",
+      "size": 11413
+    },
+    "btc_metrics_2026_06_05_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-06-05.zip.CHECKSUM",
+      "sha256": "1807d9e78b9dc138782f7a6123268bd3227e80807c94902e098ae47d7dd154f0",
+      "size": 97
+    },
+    "btc_metrics_2026_06_05_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-06-05.zip",
+      "sha256": "02f0d798ed7bc60d70ceb88194657c2a594b6cb5cdefbdd06f2e54ba613ee9f6",
+      "size": 11427
+    },
+    "btc_metrics_2026_06_06_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-06-06.zip.CHECKSUM",
+      "sha256": "25c904214bf4313c6f350de8b8305b228f908b2ae4e8a7c2da7e91f26f42e693",
+      "size": 97
+    },
+    "btc_metrics_2026_06_06_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-06-06.zip",
+      "sha256": "aff69e9e6de755fadcefb4bf74813d3311769fe2cc4e7c2f1d3e0c4381cdb071",
+      "size": 11207
+    },
+    "btc_metrics_2026_06_07_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-06-07.zip.CHECKSUM",
+      "sha256": "f06f0e71b5f30bf1bb7c8d49047d06b9ae26042b269a2f5d81c4e2fc8fcbc6b1",
+      "size": 97
+    },
+    "btc_metrics_2026_06_07_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-06-07.zip",
+      "sha256": "6cb2e94afce6f64e8d5c752b822c28539f4bedc2c3748632fbf1e27a5dd52e24",
+      "size": 11195
+    },
+    "btc_metrics_2026_06_08_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-06-08.zip.CHECKSUM",
+      "sha256": "f029c6467a98b768e38055971a04b9c2f3d05449b0e25ce1f093f5113c1a5606",
+      "size": 97
+    },
+    "btc_metrics_2026_06_08_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-06-08.zip",
+      "sha256": "618ab609795f68ced1b828b8d35940b8f789dbc2a0f5a8945ad2f88341a83fc0",
+      "size": 11169
+    },
+    "btc_metrics_2026_06_09_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-06-09.zip.CHECKSUM",
+      "sha256": "f887c062013d6f5258012e4b887eb4bcecfd20dc6fc760bed5c0db83d292bfee",
+      "size": 97
+    },
+    "btc_metrics_2026_06_09_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-06-09.zip",
+      "sha256": "4b2fe9a532db3b874954030710336d152ca46b3076c1f9b8b834154690846bc4",
+      "size": 11235
+    },
+    "btc_metrics_2026_06_10_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-06-10.zip.CHECKSUM",
+      "sha256": "b43864a21536cd04218fc0fe1d6c154445c7dbab90d58663493cdf68d537a557",
+      "size": 97
+    },
+    "btc_metrics_2026_06_10_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-06-10.zip",
+      "sha256": "60585756ced0291f5d2976414ce7d6fe676bc0bfc901a4333f52d64d6d3267e4",
+      "size": 11173
+    },
+    "btc_metrics_2026_06_11_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-06-11.zip.CHECKSUM",
+      "sha256": "ae4ec902d63a82c6459eec40ab593c5de8c78fdbaa78d9ed8fe48d86cbc31d18",
+      "size": 97
+    },
+    "btc_metrics_2026_06_11_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-06-11.zip",
+      "sha256": "6433a3ce4e682e9eb841f50343d5fc6309e219113ba3556b50354c80283a75d4",
+      "size": 11341
+    },
+    "btc_metrics_2026_06_12_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-06-12.zip.CHECKSUM",
+      "sha256": "ee10a1ec1beef76ee91ad288ee98595848cba29e85227c24f30314883c7ada63",
+      "size": 97
+    },
+    "btc_metrics_2026_06_12_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-06-12.zip",
+      "sha256": "ea13874b94bb43a426a71a2f003b191a7bf2b75289fccb96d2093d8af6edbb3b",
+      "size": 11080
+    },
+    "btc_metrics_2026_06_13_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-06-13.zip.CHECKSUM",
+      "sha256": "3fbdd42757564769b9372b21bddbc6d7f8688b47c204f543326d1787b8b805f3",
+      "size": 97
+    },
+    "btc_metrics_2026_06_13_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-06-13.zip",
+      "sha256": "c018428571271c0c758eeed00ebbb99b4fbfd2a39c6f3c8c6337f2f79656a826",
+      "size": 11074
+    },
+    "btc_metrics_2026_06_14_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-06-14.zip.CHECKSUM",
+      "sha256": "7cf4f008dd29368f65bdd92193917e6b8cf75e5b1e6b40317ee2ef34e5da07c9",
+      "size": 97
+    },
+    "btc_metrics_2026_06_14_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-06-14.zip",
+      "sha256": "ba41ab25d52fcf510f8095f8525ca77823260947d6f8aefc1a2bffefd0728b1c",
+      "size": 10969
+    },
+    "btc_metrics_2026_06_15_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-06-15.zip.CHECKSUM",
+      "sha256": "2288387784e66bfd36ce5f002a2eb07be717fbc351a7071c34140461ab13efbd",
+      "size": 97
+    },
+    "btc_metrics_2026_06_15_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-06-15.zip",
+      "sha256": "3b5aa75a8a7a33fd00e7d34a5583ebedc5de20fb27632b871598377f6eb88548",
+      "size": 11128
+    },
+    "btc_metrics_2026_06_16_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-06-16.zip.CHECKSUM",
+      "sha256": "916187dec0679b991440d20320b65329cb8730e342e30cb448dad7c78f3a9424",
+      "size": 97
+    },
+    "btc_metrics_2026_06_16_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-06-16.zip",
+      "sha256": "4136072028166d5f85897fad0ea356053cfd1a3c18724b8fad963306e829429e",
+      "size": 11087
+    },
+    "btc_metrics_2026_06_17_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-06-17.zip.CHECKSUM",
+      "sha256": "ad46d14af3648b4ced58e730ccbc74b3a921fb36991d77f51b7f944b850a1241",
+      "size": 97
+    },
+    "btc_metrics_2026_06_17_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-06-17.zip",
+      "sha256": "326b31801520e14dd94b94da7e0c6a06d4fc7e7d1d63fb545b243f491990fbe8",
+      "size": 11223
+    },
+    "btc_metrics_2026_06_18_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-06-18.zip.CHECKSUM",
+      "sha256": "e173ee31ddf6cea51b1083a8c54446bd174c11557b3baf16846eb4b13a12cf35",
+      "size": 97
+    },
+    "btc_metrics_2026_06_18_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-06-18.zip",
+      "sha256": "78f98bbbcc78cc29787e13e1e9675a41a2b6258235d95389fe6486379783c9e9",
+      "size": 11186
+    },
+    "btc_metrics_2026_06_19_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-06-19.zip.CHECKSUM",
+      "sha256": "5365bdae70176d801f7fd440fa8a3348e9a870b2019b9c6d2a0d562356473a9b",
+      "size": 97
+    },
+    "btc_metrics_2026_06_19_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-06-19.zip",
+      "sha256": "8ae32bfc960ceaeca59769f4e1b2aa99ac2e3a9a8b2399786426eb16f6899df8",
+      "size": 11014
+    },
+    "btc_metrics_2026_06_20_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-06-20.zip.CHECKSUM",
+      "sha256": "a8acd8cb755cac603426cd6272178aabbee6b09e4d7cbc2c8c361b09ff2c5b2a",
+      "size": 97
+    },
+    "btc_metrics_2026_06_20_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-06-20.zip",
+      "sha256": "dc11d66a0b075866abf469106d8510b20657ee0ed445c3124e5d6e1cba737c99",
+      "size": 11101
+    },
+    "btc_metrics_2026_06_21_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-06-21.zip.CHECKSUM",
+      "sha256": "605ba13de4553a28ea8eb74df7002781d88021e053069e43a62c24d9a584dad0",
+      "size": 97
+    },
+    "btc_metrics_2026_06_21_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-06-21.zip",
+      "sha256": "e07ebf931abc55e35c77d3bcd002bb313d599b03e0703f46c3c426f01e47b9f2",
+      "size": 11099
+    },
+    "btc_metrics_2026_06_22_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-06-22.zip.CHECKSUM",
+      "sha256": "3ba8f746bd6ce52f7ba7c8b694dda85ecc41b39a42a922958df873162996a626",
+      "size": 97
+    },
+    "btc_metrics_2026_06_22_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-06-22.zip",
+      "sha256": "9f96f36253fd1ea37e0fc7cba592832dea2846c211f152e3d3e92da06455dd36",
+      "size": 11213
+    },
+    "btc_metrics_2026_06_23_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-06-23.zip.CHECKSUM",
+      "sha256": "ee4a08dc504cc5c3e694fbdb66ae040f88745389b4347ac0d0d9eadc2b305598",
+      "size": 97
+    },
+    "btc_metrics_2026_06_23_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-06-23.zip",
+      "sha256": "d05a62441561a0746705866b938f4eea3f951d3700c7ac0fc3af5b30cb1485b0",
+      "size": 11257
+    },
+    "btc_metrics_2026_06_24_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-06-24.zip.CHECKSUM",
+      "sha256": "ff3ef659728e6832c9b1fe7683ee3d718c362b933dbc4e67210b3129f8aaa5e4",
+      "size": 97
+    },
+    "btc_metrics_2026_06_24_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-06-24.zip",
+      "sha256": "7b4ce78db0a7a813deb211eba8cda31e1390755e580facea052b513cd7b8847f",
+      "size": 11312
+    },
+    "btc_metrics_2026_06_25_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-06-25.zip.CHECKSUM",
+      "sha256": "9be680453aced6169d99e047c62f46c6e7897baecd400642ba4c49c84c21d621",
+      "size": 97
+    },
+    "btc_metrics_2026_06_25_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-06-25.zip",
+      "sha256": "3f68b7049e24ee8da25b196b2b286dded1d841f4cd7bd703af9966bc07243d3b",
+      "size": 11330
+    },
+    "btc_metrics_2026_06_26_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-06-26.zip.CHECKSUM",
+      "sha256": "7eedf204a82e26c021b5909f900b2a8160b58f22a94e1d0c89dc910de8d696dc",
+      "size": 97
+    },
+    "btc_metrics_2026_06_26_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-06-26.zip",
+      "sha256": "9aed9b9f4ef0b0f17d7293dcd4aee250ff577350a4ddb2351ba6670245ecb9a5",
+      "size": 11292
+    },
+    "btc_metrics_2026_06_27_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-06-27.zip.CHECKSUM",
+      "sha256": "b4b3f23a6f328b28b4abbf2e3d1177e58a5023c074f512ede07602242b788962",
+      "size": 97
+    },
+    "btc_metrics_2026_06_27_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-06-27.zip",
+      "sha256": "ac413b0a97a47e53b2c17b516544f4985b8f25dcf065f56dea749baef5f24ee8",
+      "size": 11069
+    },
+    "btc_metrics_2026_06_28_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-06-28.zip.CHECKSUM",
+      "sha256": "bc8945331aab608bedfce3e720fd68f9d0ff048db5b329e612585bf7e677c41c",
+      "size": 97
+    },
+    "btc_metrics_2026_06_28_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-06-28.zip",
+      "sha256": "38480d5bf808b8a76d59036767c4ecb08cb5bce7a87bea994b2b62a5436c6da1",
+      "size": 11155
+    },
+    "btc_metrics_2026_06_29_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-06-29.zip.CHECKSUM",
+      "sha256": "6fc562798ccf963f8f9a4932c6e038227d68353054434e3905c76fb57f5b969d",
+      "size": 97
+    },
+    "btc_metrics_2026_06_29_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-06-29.zip",
+      "sha256": "d792778c509cdff9bd33c5ce054f2b2762ff366501ca4a36972cfe6fbb074d70",
+      "size": 11300
+    },
+    "btc_metrics_2026_06_30_checksum": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-06-30.zip.CHECKSUM",
+      "sha256": "ebbbe8bbdbe200fd02052a0b0c95443ab98faff70c2c8119caad657c26725061",
+      "size": 97
+    },
+    "btc_metrics_2026_06_30_zip": {
+      "path": "D:/MSC project/MSC project/code/data/raw/binance/futures/metrics/BTCUSDT-metrics-2026-06-30.zip",
+      "sha256": "77177b1b57f2a61bfa51afac67ef33f585a9cf5ee98c6ec456d1d2e6b27a02ea",
+      "size": 11336
+    },
+    "btc_positioning_q2_source": {
+      "path": "D:/MSC project/MSC project/code/data/btcusdt_positioning_m15_2024_2026.parquet",
+      "sha256": "b492b7e8e81b626f3b26e995c73aabc40e0cf59e51b676e8def8eb8f38a1a00c",
+      "size": 3124782
+    },
+    "direct_events_usa500_q2_source": {
+      "path": "D:/MSC project/MSC project/code/sentiment/raw/direct_events_usa500.parquet",
+      "sha256": "2ab4cc640d622c65eca1bb17b7dd584a659cee2c6689333069c6c5f0900b41bd",
+      "size": 1080612
+    },
+    "direct_events_usatech_q2_source": {
+      "path": "D:/MSC project/MSC project/code/sentiment/raw/direct_events_usatech.parquet",
+      "sha256": "1eafddd7747131ce2be47459979a04167fabeddf3a2b65a610f0230ce565b066",
+      "size": 1080623
+    },
+    "fred_q2_source": {
+      "path": "D:/MSC project/MSC project/code/sentiment/raw/fred_calendar.parquet",
+      "sha256": "4703c290f5e23e773d7d89a3aeb705eebb0957f7bb7d1ad5a3a6ff5ddd4f71e7",
+      "size": 12003
+    },
+    "gdelt_usa500_q2_source": {
+      "path": "D:/MSC project/MSC project/code/sentiment/raw/gdelt_usa500.parquet",
+      "sha256": "9efc548ed0f1af3fb0357a6ec8b663be681fa753371483eba059dfd66bf13a4a",
+      "size": 8475993
+    },
+    "gdelt_usatech_q2_source": {
+      "path": "D:/MSC project/MSC project/code/sentiment/raw/gdelt_usatech.parquet",
+      "sha256": "b19e68e2e7c8da7a72c4792835e556c987b259037b5f2ae2e05dff3009f8a262",
+      "size": 1370665
+    },
+    "usa500_ask_q2_source": {
+      "path": "D:/MSC project/MSC project/code/data/raw/USA500IDXUSD_1 Min_Ask_2021.01.01_2026.08.01.csv",
+      "sha256": "06497bea273b97aa54363c9162cc9053aca3e7a992450b02cde0c6f7599338a7",
+      "size": 122651460
+    },
+    "usa500_bid_q2_source": {
+      "path": "D:/MSC project/MSC project/code/data/raw/USA500IDXUSD_1 Min_Bid_2021.01.01_2026.08.01.csv",
+      "sha256": "381a26a4fcbcc53ec128b2253723bf717b7768fa7e194f4fe5106ce8687d6af9",
+      "size": 122698092
+    },
+    "usatech_ask_q2_source": {
+      "path": "D:/MSC project/MSC project/code/data/raw/USATECHIDXUSD_1 Min_Ask_2021.01.01_2026.08.01.csv",
+      "sha256": "2cd0807b053500a0b1629d4e4bfffc66e522bcc884138c263b6e8ba4584a793f",
+      "size": 130864036
+    },
+    "usatech_bid_q2_source": {
+      "path": "D:/MSC project/MSC project/code/data/raw/USATECHIDXUSD_1 Min_Bid_2021.01.01_2026.08.01.csv",
+      "sha256": "e109a2b1ad110ad570d35a37bc8afa9b908d06b83d6ac748a85e85d742f41abc",
+      "size": 131047272
+    },
+    "volidx_ask_q2_source": {
+      "path": "D:/MSC project/MSC project/code/data/raw/VOLIDXUSD_1 Min_Ask_2022.10.05_2026.08.01.csv",
+      "sha256": "caed6ba965694013f636e1833948ce5809913e1d7531964d57f1bce27d3a792f",
+      "size": 64719266
+    },
+    "volidx_bid_q2_source": {
+      "path": "D:/MSC project/MSC project/code/data/raw/VOLIDXUSD_1 Min_Bid_2022.10.05_2026.08.01.csv",
+      "sha256": "8bc26f1b2b10d6b06932eb5e0e63ee411d4d8947b9184b7475fd8d5f5ab57372",
+      "size": 64735502
+    }
+  },
+  "reconstructed_estimators": [
+    {
+      "feature_order_sha256": "8c4c383a93df24eda21a8533ef3a80ff81e529f72f5dde421eafebd772196d10",
+      "fit_cutoff": "2025-07-01T00:00:00+00:00",
+      "fit_key": "btcusdt:none:lstm:w55",
+      "manifest": "D:/MSC project/MSC project/code/experiments/cache/final_q2_lockbox/reconstructed_models/btcusdt/none/lstm/w55/reconstruction_manifest.json",
+      "manifest_sha256": "ffdfa85800cc6b005e88a045149cab4504d7ab4ace89d6caf2fbc034a0c0a3f6",
+      "rebuilt_panel": "D:/MSC project/MSC project/code/experiments/cache/final_q2_lockbox/reconstructed_models/btcusdt/none/lstm/w55/rebuilt_reference_panel.parquet",
+      "rebuilt_panel_sha256": "4466bc1e40fcfbd54736673ea525a717f50ed259816940d15d36df3f2183b7ad",
+      "serialized_estimator": "D:/MSC project/MSC project/code/experiments/cache/final_q2_lockbox/reconstructed_models/btcusdt/none/lstm/w55/estimator.joblib",
+      "serialized_estimator_sha256": "d6a6e6fe37cc1ff8d8926d5173bfa43608d72e832cf4c6067fafa7f17f10ccae"
+    },
+    {
+      "feature_order_sha256": "8c4c383a93df24eda21a8533ef3a80ff81e529f72f5dde421eafebd772196d10",
+      "fit_cutoff": "2025-07-01T00:00:00+00:00",
+      "fit_key": "btcusdt:none:svm_linear:w75",
+      "manifest": "D:/MSC project/MSC project/code/experiments/cache/final_q2_lockbox/reconstructed_models/btcusdt/none/svm_linear/w75/reconstruction_manifest.json",
+      "manifest_sha256": "3224f77c2e6179a0a6a58082164c6b4976e2cc2d174c44130cd9f4934c026b39",
+      "rebuilt_panel": "D:/MSC project/MSC project/code/experiments/cache/final_q2_lockbox/reconstructed_models/btcusdt/none/svm_linear/w75/rebuilt_reference_panel.parquet",
+      "rebuilt_panel_sha256": "ac7fab9823adbdd53e4e9a80e18e0590a9d191a9a9e7deff75c16ebb8d1bbbb0",
+      "serialized_estimator": "D:/MSC project/MSC project/code/experiments/cache/final_q2_lockbox/reconstructed_models/btcusdt/none/svm_linear/w75/estimator.joblib",
+      "serialized_estimator_sha256": "9a9a945443a0a337c4756c835c2ba1ce60b2a8aceaa73b6042b5ead6310a073f"
+    },
+    {
+      "feature_order_sha256": "85299290bca9db5b1ec6e797bf6b6df4fa2592e44fdd3279d2d3477c394a9a76",
+      "fit_cutoff": "2025-07-01T00:00:00+00:00",
+      "fit_key": "usa500:deberta_matched:catboost_balanced:w15",
+      "manifest": "D:/MSC project/MSC project/code/experiments/cache/final_q2_lockbox/reconstructed_models/usa500/deberta_matched/catboost_balanced/w15/reconstruction_manifest.json",
+      "manifest_sha256": "c8e9e25fd1ee8becc74c1823f452457abd5127ad7755905ebb0e3fef313db25d",
+      "rebuilt_panel": "D:/MSC project/MSC project/code/experiments/cache/final_q2_lockbox/reconstructed_models/usa500/deberta_matched/catboost_balanced/w15/rebuilt_reference_panel.parquet",
+      "rebuilt_panel_sha256": "c1af750745703ea7e4534988da1d690d95b159554542da45d4f1661fc53549d7",
+      "serialized_estimator": "D:/MSC project/MSC project/code/experiments/cache/final_q2_lockbox/reconstructed_models/usa500/deberta_matched/catboost_balanced/w15/estimator.joblib",
+      "serialized_estimator_sha256": "74dd0db3d7a9f107630be99675c603046828a33cb4cd547a7768b51ad08fb0c3"
+    },
+    {
+      "feature_order_sha256": "85299290bca9db5b1ec6e797bf6b6df4fa2592e44fdd3279d2d3477c394a9a76",
+      "fit_cutoff": "2025-07-01T00:00:00+00:00",
+      "fit_key": "usa500:deberta_matched:decision_tree:w15",
+      "manifest": "D:/MSC project/MSC project/code/experiments/cache/final_q2_lockbox/reconstructed_models/usa500/deberta_matched/decision_tree/w15/reconstruction_manifest.json",
+      "manifest_sha256": "7aa2549b192ddd7168719e0b0e605b3ba93712bdd4151d6c95fe35a583235506",
+      "rebuilt_panel": "D:/MSC project/MSC project/code/experiments/cache/final_q2_lockbox/reconstructed_models/usa500/deberta_matched/decision_tree/w15/rebuilt_reference_panel.parquet",
+      "rebuilt_panel_sha256": "1921e9c63300128f87e55245ca9dad190430cfcdb99a205b473704798c1875d1",
+      "serialized_estimator": "D:/MSC project/MSC project/code/experiments/cache/final_q2_lockbox/reconstructed_models/usa500/deberta_matched/decision_tree/w15/estimator.joblib",
+      "serialized_estimator_sha256": "1c65e206961509e9ef1a19642da591f39c1a6bcaf05314d94df28fc5d6271a52"
+    },
+    {
+      "feature_order_sha256": "85299290bca9db5b1ec6e797bf6b6df4fa2592e44fdd3279d2d3477c394a9a76",
+      "fit_cutoff": "2025-07-01T00:00:00+00:00",
+      "fit_key": "usa500:deberta_matched:gru:w15",
+      "manifest": "D:/MSC project/MSC project/code/experiments/cache/final_q2_lockbox/reconstructed_models/usa500/deberta_matched/gru/w15/reconstruction_manifest.json",
+      "manifest_sha256": "8659abffade6e65e3f7ddcdce33c8c2e84afa7434d8dde53c7d9c22eea48c59f",
+      "rebuilt_panel": "D:/MSC project/MSC project/code/experiments/cache/final_q2_lockbox/reconstructed_models/usa500/deberta_matched/gru/w15/rebuilt_reference_panel.parquet",
+      "rebuilt_panel_sha256": "07f538ebb298e518103f767ee33625a23d034df8a6e2cd6314ac2d2e341f55b2",
+      "serialized_estimator": "D:/MSC project/MSC project/code/experiments/cache/final_q2_lockbox/reconstructed_models/usa500/deberta_matched/gru/w15/estimator.joblib",
+      "serialized_estimator_sha256": "a023cedc498e4c0dfec6e632ce4f267a417eef35d5f7a3932c657679324718f1"
+    },
+    {
+      "feature_order_sha256": "85299290bca9db5b1ec6e797bf6b6df4fa2592e44fdd3279d2d3477c394a9a76",
+      "fit_cutoff": "2025-07-01T00:00:00+00:00",
+      "fit_key": "usa500:deberta_matched:logreg:w15",
+      "manifest": "D:/MSC project/MSC project/code/experiments/cache/final_q2_lockbox/reconstructed_models/usa500/deberta_matched/logreg/w15/reconstruction_manifest.json",
+      "manifest_sha256": "fdf53063aa18adc9628ee57411d259f312be92238122bfb4ddc646bf637c77de",
+      "rebuilt_panel": "D:/MSC project/MSC project/code/experiments/cache/final_q2_lockbox/reconstructed_models/usa500/deberta_matched/logreg/w15/rebuilt_reference_panel.parquet",
+      "rebuilt_panel_sha256": "d43fa472196c36b3185e53fa422a00a6f98f4f47a7db8a4d320efbfe77c96256",
+      "serialized_estimator": "D:/MSC project/MSC project/code/experiments/cache/final_q2_lockbox/reconstructed_models/usa500/deberta_matched/logreg/w15/estimator.joblib",
+      "serialized_estimator_sha256": "6fb2a53a6a920828e7ea4ab5a7b228852e56fe57274305976252d734f35b7171"
+    },
+    {
+      "feature_order_sha256": "85299290bca9db5b1ec6e797bf6b6df4fa2592e44fdd3279d2d3477c394a9a76",
+      "fit_cutoff": "2025-07-01T00:00:00+00:00",
+      "fit_key": "usa500:deberta_matched:lstm:w15",
+      "manifest": "D:/MSC project/MSC project/code/experiments/cache/final_q2_lockbox/reconstructed_models/usa500/deberta_matched/lstm/w15/reconstruction_manifest.json",
+      "manifest_sha256": "0fe49178cae4ca6a77b89624540118524577c8d206976de89d5883c64abf0fa2",
+      "rebuilt_panel": "D:/MSC project/MSC project/code/experiments/cache/final_q2_lockbox/reconstructed_models/usa500/deberta_matched/lstm/w15/rebuilt_reference_panel.parquet",
+      "rebuilt_panel_sha256": "85801f544f5c87d8379c5072747900c02877be913f1eaabbeff8efce75318584",
+      "serialized_estimator": "D:/MSC project/MSC project/code/experiments/cache/final_q2_lockbox/reconstructed_models/usa500/deberta_matched/lstm/w15/estimator.joblib",
+      "serialized_estimator_sha256": "1f93191525deaea5ea8a0c01002a394186a6e18b62341eedfe80a63e617ee36b"
+    },
+    {
+      "feature_order_sha256": "85299290bca9db5b1ec6e797bf6b6df4fa2592e44fdd3279d2d3477c394a9a76",
+      "fit_cutoff": "2025-07-01T00:00:00+00:00",
+      "fit_key": "usa500:deberta_matched:mlp:w15",
+      "manifest": "D:/MSC project/MSC project/code/experiments/cache/final_q2_lockbox/reconstructed_models/usa500/deberta_matched/mlp/w15/reconstruction_manifest.json",
+      "manifest_sha256": "000f9620dd0ef1294eb0d1b5fe50d28b68a1eb3e7e1f5602411b02d1df9b7ddc",
+      "rebuilt_panel": "D:/MSC project/MSC project/code/experiments/cache/final_q2_lockbox/reconstructed_models/usa500/deberta_matched/mlp/w15/rebuilt_reference_panel.parquet",
+      "rebuilt_panel_sha256": "6dfe6531ea692ae792a2ef29e8f773402d0b475bdb6a11c6009e94a90c5fc3c7",
+      "serialized_estimator": "D:/MSC project/MSC project/code/experiments/cache/final_q2_lockbox/reconstructed_models/usa500/deberta_matched/mlp/w15/estimator.joblib",
+      "serialized_estimator_sha256": "d3c320e1a781a5efda1649d1ea8f3378a1790b5ec7e6bc7ac47ea998842682f5"
+    },
+    {
+      "feature_order_sha256": "85299290bca9db5b1ec6e797bf6b6df4fa2592e44fdd3279d2d3477c394a9a76",
+      "fit_cutoff": "2025-07-01T00:00:00+00:00",
+      "fit_key": "usa500:deberta_matched:random_forest:w15",
+      "manifest": "D:/MSC project/MSC project/code/experiments/cache/final_q2_lockbox/reconstructed_models/usa500/deberta_matched/random_forest/w15/reconstruction_manifest.json",
+      "manifest_sha256": "087bfa125aa0ae698c154122d8bddfb82b16011ce145c898993a7450533aaa0a",
+      "rebuilt_panel": "D:/MSC project/MSC project/code/experiments/cache/final_q2_lockbox/reconstructed_models/usa500/deberta_matched/random_forest/w15/rebuilt_reference_panel.parquet",
+      "rebuilt_panel_sha256": "06af1d1ae09b195768130d3dae715d2cad018f4a85ad7e6b9ad869c0893f8f51",
+      "serialized_estimator": "D:/MSC project/MSC project/code/experiments/cache/final_q2_lockbox/reconstructed_models/usa500/deberta_matched/random_forest/w15/estimator.joblib",
+      "serialized_estimator_sha256": "a1f4475aeef65272ecd35c1b61e316745902cd33597b6f2bf566f833ab057117"
+    },
+    {
+      "feature_order_sha256": "85299290bca9db5b1ec6e797bf6b6df4fa2592e44fdd3279d2d3477c394a9a76",
+      "fit_cutoff": "2025-07-01T00:00:00+00:00",
+      "fit_key": "usa500:deberta_matched:svm_linear:w15",
+      "manifest": "D:/MSC project/MSC project/code/experiments/cache/final_q2_lockbox/reconstructed_models/usa500/deberta_matched/svm_linear/w15/reconstruction_manifest.json",
+      "manifest_sha256": "72b6ece034997c30609dc567f1094c50ddbde0c0c5e8f5f3559662891795e23d",
+      "rebuilt_panel": "D:/MSC project/MSC project/code/experiments/cache/final_q2_lockbox/reconstructed_models/usa500/deberta_matched/svm_linear/w15/rebuilt_reference_panel.parquet",
+      "rebuilt_panel_sha256": "2e7c97400601633b242c025bdc53243d28c6369e7ecc33235c0cf29dcdba8101",
+      "serialized_estimator": "D:/MSC project/MSC project/code/experiments/cache/final_q2_lockbox/reconstructed_models/usa500/deberta_matched/svm_linear/w15/estimator.joblib",
+      "serialized_estimator_sha256": "866642662e4999bda3316240221f50904225967f7fd061f1461e2f7fe190375b"
+    },
+    {
+      "feature_order_sha256": "85299290bca9db5b1ec6e797bf6b6df4fa2592e44fdd3279d2d3477c394a9a76",
+      "fit_cutoff": "2025-07-01T00:00:00+00:00",
+      "fit_key": "usa500:deberta_matched:xgboost_balanced:w15",
+      "manifest": "D:/MSC project/MSC project/code/experiments/cache/final_q2_lockbox/reconstructed_models/usa500/deberta_matched/xgboost_balanced/w15/reconstruction_manifest.json",
+      "manifest_sha256": "edb1994d496638424ab13eeae560a5caf3059bc9eb79e3ade046f1a355b5c271",
+      "rebuilt_panel": "D:/MSC project/MSC project/code/experiments/cache/final_q2_lockbox/reconstructed_models/usa500/deberta_matched/xgboost_balanced/w15/rebuilt_reference_panel.parquet",
+      "rebuilt_panel_sha256": "40574bca81d91a9551ba375976f2d049e218a844ae731fa8299d73f091a3224b",
+      "serialized_estimator": "D:/MSC project/MSC project/code/experiments/cache/final_q2_lockbox/reconstructed_models/usa500/deberta_matched/xgboost_balanced/w15/estimator.joblib",
+      "serialized_estimator_sha256": "ed8cc26288be7ddd0445161fc23dec903a174371dbc5d5568a698af607e779e7"
+    },
+    {
+      "feature_order_sha256": "85299290bca9db5b1ec6e797bf6b6df4fa2592e44fdd3279d2d3477c394a9a76",
+      "fit_cutoff": "2025-07-01T00:00:00+00:00",
+      "fit_key": "usatech:deepseek_matched:catboost_balanced:w5",
+      "manifest": "D:/MSC project/MSC project/code/experiments/cache/final_q2_lockbox/reconstructed_models/usatech/deepseek_matched/catboost_balanced/w5/reconstruction_manifest.json",
+      "manifest_sha256": "ef62e96cd2307bddd21073f939752b443349550f73439f2d1ad00ff12ebb8786",
+      "rebuilt_panel": "D:/MSC project/MSC project/code/experiments/cache/final_q2_lockbox/reconstructed_models/usatech/deepseek_matched/catboost_balanced/w5/rebuilt_reference_panel.parquet",
+      "rebuilt_panel_sha256": "6174aaa70c3f32e4389317d13ab34a7e81015819be2aa12e9003d3ddb54197cb",
+      "serialized_estimator": "D:/MSC project/MSC project/code/experiments/cache/final_q2_lockbox/reconstructed_models/usatech/deepseek_matched/catboost_balanced/w5/estimator.joblib",
+      "serialized_estimator_sha256": "6811c9bfe1cfc1327bd7ae6246bc20df8b6ddf6676faeadda123b20510465c30"
+    },
+    {
+      "feature_order_sha256": "85299290bca9db5b1ec6e797bf6b6df4fa2592e44fdd3279d2d3477c394a9a76",
+      "fit_cutoff": "2025-07-01T00:00:00+00:00",
+      "fit_key": "usatech:deepseek_matched:decision_tree:w5",
+      "manifest": "D:/MSC project/MSC project/code/experiments/cache/final_q2_lockbox/reconstructed_models/usatech/deepseek_matched/decision_tree/w5/reconstruction_manifest.json",
+      "manifest_sha256": "c5f52a60b4950e3afc52a24635e02ce251e17220fb0e1a88d5db000a9f611bc6",
+      "rebuilt_panel": "D:/MSC project/MSC project/code/experiments/cache/final_q2_lockbox/reconstructed_models/usatech/deepseek_matched/decision_tree/w5/rebuilt_reference_panel.parquet",
+      "rebuilt_panel_sha256": "19914661bc5f292c7bb851f83fa326df5915644d684a2e258d052e5e89ab1eb1",
+      "serialized_estimator": "D:/MSC project/MSC project/code/experiments/cache/final_q2_lockbox/reconstructed_models/usatech/deepseek_matched/decision_tree/w5/estimator.joblib",
+      "serialized_estimator_sha256": "15547f174190aa524bf1b7ab36b57b8184c4f0be785cc05bcecb8dededa17885"
+    },
+    {
+      "feature_order_sha256": "85299290bca9db5b1ec6e797bf6b6df4fa2592e44fdd3279d2d3477c394a9a76",
+      "fit_cutoff": "2025-07-01T00:00:00+00:00",
+      "fit_key": "usatech:deepseek_matched:gru:w5",
+      "manifest": "D:/MSC project/MSC project/code/experiments/cache/final_q2_lockbox/reconstructed_models/usatech/deepseek_matched/gru/w5/reconstruction_manifest.json",
+      "manifest_sha256": "8846d884f5bbfbf7f752916e44e3f08c6aa428a57d506fe0f74c1c6346a3f043",
+      "rebuilt_panel": "D:/MSC project/MSC project/code/experiments/cache/final_q2_lockbox/reconstructed_models/usatech/deepseek_matched/gru/w5/rebuilt_reference_panel.parquet",
+      "rebuilt_panel_sha256": "482e404831b26b2fffd71aec3ac45f0d97a3796c66e40463947cc8ed2cb65727",
+      "serialized_estimator": "D:/MSC project/MSC project/code/experiments/cache/final_q2_lockbox/reconstructed_models/usatech/deepseek_matched/gru/w5/estimator.joblib",
+      "serialized_estimator_sha256": "f2f885cbf55df77a84952574655c213968aa445994af87b92ae05ecdd0425312"
+    },
+    {
+      "feature_order_sha256": "85299290bca9db5b1ec6e797bf6b6df4fa2592e44fdd3279d2d3477c394a9a76",
+      "fit_cutoff": "2025-07-01T00:00:00+00:00",
+      "fit_key": "usatech:deepseek_matched:logreg:w5",
+      "manifest": "D:/MSC project/MSC project/code/experiments/cache/final_q2_lockbox/reconstructed_models/usatech/deepseek_matched/logreg/w5/reconstruction_manifest.json",
+      "manifest_sha256": "64341023a1df25efb096fa9d3af7b86f39fdf108e60c3fb05681e1846a54d0b2",
+      "rebuilt_panel": "D:/MSC project/MSC project/code/experiments/cache/final_q2_lockbox/reconstructed_models/usatech/deepseek_matched/logreg/w5/rebuilt_reference_panel.parquet",
+      "rebuilt_panel_sha256": "3ab28ca2a218c92678c1b0f0cff1e7bb68b149fc1937caa1939ed4060e888762",
+      "serialized_estimator": "D:/MSC project/MSC project/code/experiments/cache/final_q2_lockbox/reconstructed_models/usatech/deepseek_matched/logreg/w5/estimator.joblib",
+      "serialized_estimator_sha256": "41b71361ca8f2d5663e97357728f28b0317861257dbe24511b7fdcabc0b3df65"
+    },
+    {
+      "feature_order_sha256": "85299290bca9db5b1ec6e797bf6b6df4fa2592e44fdd3279d2d3477c394a9a76",
+      "fit_cutoff": "2025-07-01T00:00:00+00:00",
+      "fit_key": "usatech:deepseek_matched:lstm:w15",
+      "manifest": "D:/MSC project/MSC project/code/experiments/cache/final_q2_lockbox/reconstructed_models/usatech/deepseek_matched/lstm/w15/reconstruction_manifest.json",
+      "manifest_sha256": "d24a76970e962c8a006a14332201b0a0445067bd1ccc1ee8c8b7ee7756f4e620",
+      "rebuilt_panel": "D:/MSC project/MSC project/code/experiments/cache/final_q2_lockbox/reconstructed_models/usatech/deepseek_matched/lstm/w15/rebuilt_reference_panel.parquet",
+      "rebuilt_panel_sha256": "f07f199b8be73f106d792c4b487e33c1d1238346745fd22da4fc03ed42f89dfd",
+      "serialized_estimator": "D:/MSC project/MSC project/code/experiments/cache/final_q2_lockbox/reconstructed_models/usatech/deepseek_matched/lstm/w15/estimator.joblib",
+      "serialized_estimator_sha256": "912d244c61ab877b81b9e37c3bca6e343ba2f03a3aac84107c35a8c0f08cb3e9"
+    },
+    {
+      "feature_order_sha256": "85299290bca9db5b1ec6e797bf6b6df4fa2592e44fdd3279d2d3477c394a9a76",
+      "fit_cutoff": "2025-07-01T00:00:00+00:00",
+      "fit_key": "usatech:deepseek_matched:lstm:w5",
+      "manifest": "D:/MSC project/MSC project/code/experiments/cache/final_q2_lockbox/reconstructed_models/usatech/deepseek_matched/lstm/w5/reconstruction_manifest.json",
+      "manifest_sha256": "985c751ec3a639c218da5f59e26a9d7d4053984b1387e51ef573f8062bf8fe9f",
+      "rebuilt_panel": "D:/MSC project/MSC project/code/experiments/cache/final_q2_lockbox/reconstructed_models/usatech/deepseek_matched/lstm/w5/rebuilt_reference_panel.parquet",
+      "rebuilt_panel_sha256": "375c59fd35dcd59e996fa867872d03acf7a779627a69ba5ff6e33a0cf8ed6866",
+      "serialized_estimator": "D:/MSC project/MSC project/code/experiments/cache/final_q2_lockbox/reconstructed_models/usatech/deepseek_matched/lstm/w5/estimator.joblib",
+      "serialized_estimator_sha256": "75adb71025600c505934317cff9203dbc1cc1c85f1a7596b288608b62ce52e96"
+    },
+    {
+      "feature_order_sha256": "85299290bca9db5b1ec6e797bf6b6df4fa2592e44fdd3279d2d3477c394a9a76",
+      "fit_cutoff": "2025-07-01T00:00:00+00:00",
+      "fit_key": "usatech:deepseek_matched:mlp:w5",
+      "manifest": "D:/MSC project/MSC project/code/experiments/cache/final_q2_lockbox/reconstructed_models/usatech/deepseek_matched/mlp/w5/reconstruction_manifest.json",
+      "manifest_sha256": "854079b3f18595c5582dcf891f74a8debaba696ec8c0285acadec5ef120837c4",
+      "rebuilt_panel": "D:/MSC project/MSC project/code/experiments/cache/final_q2_lockbox/reconstructed_models/usatech/deepseek_matched/mlp/w5/rebuilt_reference_panel.parquet",
+      "rebuilt_panel_sha256": "c6cc5cc5599077579bdcee70d2f49700b09c11867d72904a019a75f98f3b0107",
+      "serialized_estimator": "D:/MSC project/MSC project/code/experiments/cache/final_q2_lockbox/reconstructed_models/usatech/deepseek_matched/mlp/w5/estimator.joblib",
+      "serialized_estimator_sha256": "946a0438464b40e323c9c4450bf0bb92bb0cf05fb85148978e787a6bc1e98dde"
+    },
+    {
+      "feature_order_sha256": "85299290bca9db5b1ec6e797bf6b6df4fa2592e44fdd3279d2d3477c394a9a76",
+      "fit_cutoff": "2025-07-01T00:00:00+00:00",
+      "fit_key": "usatech:deepseek_matched:random_forest:w5",
+      "manifest": "D:/MSC project/MSC project/code/experiments/cache/final_q2_lockbox/reconstructed_models/usatech/deepseek_matched/random_forest/w5/reconstruction_manifest.json",
+      "manifest_sha256": "5cd55f312797ca7646595d7fba83f20bcc001c3e3969b59d187849e86325a8f6",
+      "rebuilt_panel": "D:/MSC project/MSC project/code/experiments/cache/final_q2_lockbox/reconstructed_models/usatech/deepseek_matched/random_forest/w5/rebuilt_reference_panel.parquet",
+      "rebuilt_panel_sha256": "afde6d6ae34a099cd3a1f372a213af3c13b6c375a951185404d86bd8a971c621",
+      "serialized_estimator": "D:/MSC project/MSC project/code/experiments/cache/final_q2_lockbox/reconstructed_models/usatech/deepseek_matched/random_forest/w5/estimator.joblib",
+      "serialized_estimator_sha256": "254fbf9c2cfbaf31bfb0983721c16bd61ae61809d4d025b1726e7d7930b43387"
+    },
+    {
+      "feature_order_sha256": "85299290bca9db5b1ec6e797bf6b6df4fa2592e44fdd3279d2d3477c394a9a76",
+      "fit_cutoff": "2025-07-01T00:00:00+00:00",
+      "fit_key": "usatech:deepseek_matched:svm_linear:w5",
+      "manifest": "D:/MSC project/MSC project/code/experiments/cache/final_q2_lockbox/reconstructed_models/usatech/deepseek_matched/svm_linear/w5/reconstruction_manifest.json",
+      "manifest_sha256": "8a4d98626ab0f5714f465596dd2976978b6499cccfa33e68032d58acd65f2a06",
+      "rebuilt_panel": "D:/MSC project/MSC project/code/experiments/cache/final_q2_lockbox/reconstructed_models/usatech/deepseek_matched/svm_linear/w5/rebuilt_reference_panel.parquet",
+      "rebuilt_panel_sha256": "678d90f4137523fcddc0ad9eacda17ebe75ba161d38acf6912bbb2f4d535598c",
+      "serialized_estimator": "D:/MSC project/MSC project/code/experiments/cache/final_q2_lockbox/reconstructed_models/usatech/deepseek_matched/svm_linear/w5/estimator.joblib",
+      "serialized_estimator_sha256": "557e86cf1ef383c1b3dc116e89a1fafd96d94218d300e95f4f2e75c1e484221a"
+    },
+    {
+      "feature_order_sha256": "85299290bca9db5b1ec6e797bf6b6df4fa2592e44fdd3279d2d3477c394a9a76",
+      "fit_cutoff": "2025-07-01T00:00:00+00:00",
+      "fit_key": "usatech:deepseek_matched:xgboost_balanced:w5",
+      "manifest": "D:/MSC project/MSC project/code/experiments/cache/final_q2_lockbox/reconstructed_models/usatech/deepseek_matched/xgboost_balanced/w5/reconstruction_manifest.json",
+      "manifest_sha256": "23da6500b53be2108f883b51a193bd5535181c8c8bd7edd4a3e955258f5722fe",
+      "rebuilt_panel": "D:/MSC project/MSC project/code/experiments/cache/final_q2_lockbox/reconstructed_models/usatech/deepseek_matched/xgboost_balanced/w5/rebuilt_reference_panel.parquet",
+      "rebuilt_panel_sha256": "19a50ddc7ad6b97604551a152b084b316dd0ae3297095d286f9216adb7c6820e",
+      "serialized_estimator": "D:/MSC project/MSC project/code/experiments/cache/final_q2_lockbox/reconstructed_models/usatech/deepseek_matched/xgboost_balanced/w5/estimator.joblib",
+      "serialized_estimator_sha256": "55f32b4c517d241c877fd6e4ff841e7020d1aa70e1d63e8e0b44c39ea49ed979"
+    }
+  ],
+  "schema_version": "final-q2-lockbox-manifest-v1",
+  "warmups": {
+    "btc_features": {
+      "path": "D:/MSC project/MSC project/code/data/final_q2_lockbox/btc_feature_warmup_pre_q2.parquet",
+      "sha256": "033f1dcdb1771da6fbf406b5cddb76f3cb284efb078a28ff453efcd996614f79",
+      "size": 1691754
+    },
+    "btc_m1": {
+      "path": "D:/MSC project/MSC project/code/data/final_q2_lockbox/btc_m1_warmup_pre_q2.parquet",
+      "sha256": "d6c81ba43d61de8185edcc145437b435165ed4cbcdac894d5ecdfd35a0943b3a",
+      "size": 9604561
+    },
+    "btc_m15": {
+      "path": "D:/MSC project/MSC project/code/data/final_q2_lockbox/btc_m15_warmup_pre_q2.parquet",
+      "sha256": "39d1f78c6ec96499515d1bdb8bb68be71b9480aba6afa65164ef8dfc65f9eba5",
+      "size": 694758
+    },
+    "btc_positioning": {
+      "path": "D:/MSC project/MSC project/code/data/final_q2_lockbox/btc_positioning_warmup_pre_q2.parquet",
+      "sha256": "59aaf6d6fbc76433172f491b7331837e0c9f48adcc05c0d47f734dfcc2296113",
+      "size": 308280
+    },
+    "scores_direct_events_usa500": {
+      "path": "D:/MSC project/MSC project/code/sentiment/final_q2_lockbox/pre_q2_scores/scores_direct_events_usa500.parquet",
+      "sha256": "cf999b1479c661b8997c444c24833a465fb97eacf3ad4889b66a646d35a5a32e",
+      "size": 1149190
+    },
+    "scores_direct_events_usa500_manifest": {
+      "path": "D:/MSC project/MSC project/code/sentiment/final_q2_lockbox/pre_q2_scores/scores_direct_events_usa500.manifest.json",
+      "sha256": "1614157af0ce3b38b06eb69c92a1dff8d102d763076557c6d3ff234e197fc347",
+      "size": 435
+    },
+    "scores_direct_events_usatech": {
+      "path": "D:/MSC project/MSC project/code/sentiment/final_q2_lockbox/pre_q2_scores/scores_direct_events_usatech.parquet",
+      "sha256": "c36a3318278d7d5286cd4a1f0f2cdf5b610a03710cd8412a42fe95e5bf40a71c",
+      "size": 1151720
+    },
+    "scores_direct_events_usatech_manifest": {
+      "path": "D:/MSC project/MSC project/code/sentiment/final_q2_lockbox/pre_q2_scores/scores_direct_events_usatech.manifest.json",
+      "sha256": "271546dffdd2a22cc38502fd4b720f1fc6695779220490431f265116eb98d474",
+      "size": 436
+    },
+    "scores_llm_direct_events_usa500": {
+      "path": "D:/MSC project/MSC project/code/sentiment/final_q2_lockbox/pre_q2_scores/scores_llm_direct_events_usa500.parquet",
+      "sha256": "bc73ab6adca0f86e1da28bdf3cd8af561d41f02478f1f9006fd940f2d0dffb12",
+      "size": 1146248
+    },
+    "scores_llm_direct_events_usa500_manifest": {
+      "path": "D:/MSC project/MSC project/code/sentiment/final_q2_lockbox/pre_q2_scores/scores_llm_direct_events_usa500.manifest.json",
+      "sha256": "54dc320e211284008e8529c63d44f3fe37f956e1e09b7da99217f5e39cf5cd54",
+      "size": 1278
+    },
+    "scores_llm_direct_events_usatech": {
+      "path": "D:/MSC project/MSC project/code/sentiment/final_q2_lockbox/pre_q2_scores/scores_llm_direct_events_usatech.parquet",
+      "sha256": "6161682b0ecf552013507d6f8abfb766a4dec1bf46ed970da3e048bbc6e87f80",
+      "size": 1148809
+    },
+    "scores_llm_direct_events_usatech_manifest": {
+      "path": "D:/MSC project/MSC project/code/sentiment/final_q2_lockbox/pre_q2_scores/scores_llm_direct_events_usatech.manifest.json",
+      "sha256": "5f00dc15ed8daa2b2e65909911206b6ec5e0dc2519b11ec70813d93b2ca1c931",
+      "size": 1280
+    },
+    "scores_llm_usa500": {
+      "path": "D:/MSC project/MSC project/code/sentiment/final_q2_lockbox/pre_q2_scores/scores_llm_usa500.parquet",
+      "sha256": "e81103c77387ee9f498fb66e038d377bb546ae390b6522659992c48b0744b208",
+      "size": 20264634
+    },
+    "scores_llm_usa500_manifest": {
+      "path": "D:/MSC project/MSC project/code/sentiment/final_q2_lockbox/pre_q2_scores/scores_llm_usa500.manifest.json",
+      "sha256": "477b28ac29837f100e07e4903003dd542c2155141eabb620de5a93e89f1dc432",
+      "size": 1265
+    },
+    "scores_llm_usatech": {
+      "path": "D:/MSC project/MSC project/code/sentiment/final_q2_lockbox/pre_q2_scores/scores_llm_usatech.parquet",
+      "sha256": "c453c7f25cc67ad6b03959edd902f88cbf8a0a5714f73cfbc36ebc84f6d0d36a",
+      "size": 3246291
+    },
+    "scores_llm_usatech_manifest": {
+      "path": "D:/MSC project/MSC project/code/sentiment/final_q2_lockbox/pre_q2_scores/scores_llm_usatech.manifest.json",
+      "sha256": "16f2eacbaa55ce1b13c78efde02e62fa2457168092b669a3863b30907429567d",
+      "size": 1267
+    },
+    "scores_usa500": {
+      "path": "D:/MSC project/MSC project/code/sentiment/final_q2_lockbox/pre_q2_scores/scores_usa500.parquet",
+      "sha256": "9e2eed54a5373ba9e0c0037fa7433db2b296bef02ae9cabc1e1f4710e522211f",
+      "size": 20781955
+    },
+    "scores_usa500_manifest": {
+      "path": "D:/MSC project/MSC project/code/sentiment/final_q2_lockbox/pre_q2_scores/scores_usa500.manifest.json",
+      "sha256": "5f78dbedf017aa5b8515e98c724729ee7eb94068053908658680a6ed1c85f3c6",
+      "size": 429
+    },
+    "scores_usatech": {
+      "path": "D:/MSC project/MSC project/code/sentiment/final_q2_lockbox/pre_q2_scores/scores_usatech.parquet",
+      "sha256": "f205175614125142f82e0573de24cc63e03ee8bcc4598ec5bba478dd8758cbb5",
+      "size": 3324104
+    },
+    "scores_usatech_manifest": {
+      "path": "D:/MSC project/MSC project/code/sentiment/final_q2_lockbox/pre_q2_scores/scores_usatech.manifest.json",
+      "sha256": "6b4f43f126915c6488f9dcb777d6883808250810cee3fe7e50fc705c8bc1482c",
+      "size": 430
+    },
+    "usa500_15min": {
+      "path": "D:/MSC project/MSC project/code/data/final_q2_lockbox/usa500_15min_warmup_pre_q2.parquet",
+      "sha256": "8c464d071e1773ccc0aadc5e9b2252e15a53470ae821ac6339f168307e54d4da",
+      "size": 9356737
+    },
+    "usa500_1m": {
+      "path": "D:/MSC project/MSC project/code/data/final_q2_lockbox/usa500_1m_warmup_pre_q2.parquet",
+      "sha256": "aa8336899c9c9f7b98fd81ac0f05854a5e0dea5236ca87665c3a6b0b2dafcbcd",
+      "size": 104104926
+    },
+    "usa500_features": {
+      "path": "D:/MSC project/MSC project/code/data/final_q2_lockbox/usa500_feature_warmup_pre_q2.parquet",
+      "sha256": "f0d6ec8500536b796b0482d96e728763dbb9eaf0242bc5b525986cc2e83b6771",
+      "size": 859532
+    },
+    "usatech_15min": {
+      "path": "D:/MSC project/MSC project/code/data/final_q2_lockbox/usatech_15min_warmup_pre_q2.parquet",
+      "sha256": "430fce5325c6ecfb89c13bf89771adc4a5ad0a8dba01bb223c6919e5374a9d1f",
+      "size": 9580202
+    },
+    "usatech_1m": {
+      "path": "D:/MSC project/MSC project/code/data/final_q2_lockbox/usatech_1m_warmup_pre_q2.parquet",
+      "sha256": "c0d390a328b74f408e714e1046c38e085422e6cc64ab9c8c4a1b5cd156d9a129",
+      "size": 108535576
+    },
+    "usatech_features": {
+      "path": "D:/MSC project/MSC project/code/data/final_q2_lockbox/usatech_feature_warmup_pre_q2.parquet",
+      "sha256": "006534007c3f086df9303d10aec922f93f8c6c658e9d528c8c5d7bbcf6e6d5c7",
+      "size": 851175
+    },
+    "volidx_15min": {
+      "path": "D:/MSC project/MSC project/code/data/final_q2_lockbox/volidx_15min_warmup_pre_q2.parquet",
+      "sha256": "9768b586e86447e5bd4d71ff6833756e8054caca749a32b868464411c7fc17a2",
+      "size": 2792337
+    },
+    "volidx_1m": {
+      "path": "D:/MSC project/MSC project/code/data/final_q2_lockbox/volidx_1m_warmup_pre_q2.parquet",
+      "sha256": "1fc9acbff5f434eac72311ffd9ca086ac639df8ee03eb43ecdd73d9c30cd2d75",
+      "size": 29209856
+    },
+    "warmup_provenance": {
+      "path": "D:/MSC project/MSC project/code/data/final_q2_lockbox/warmup_provenance.json",
+      "sha256": "a9b3c4a07d8ef625a22c1a6e2256e589a2e45b2db187338229ed92ede778f972",
+      "size": 529211
+    }
+  }
+}

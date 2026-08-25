@@ -1,0 +1,49 @@
+{
+  "combined_rows_per_model": {
+    "logreg": 2939,
+    "xgboost": 2939
+  },
+  "decision": "negative direction result; add no trade gate",
+  "direction_feature_count": 28,
+  "effective_bootstrap_draws": 2000,
+  "effective_xgb_estimators": 300,
+  "entry_cost_bps": 5.0,
+  "exit_cost_bps": 5.0,
+  "forced_direction": true,
+  "forward_or_lockbox_loaded": false,
+  "frozen_timing_arm": "xgboost_base",
+  "frozen_u_run_hash": "ad36396ae54e17571e81",
+  "input_hash": "134e0c5ab3095764c4134543eeef69f0da1560105279d0239dd4d7badf54b782",
+  "max_loaded_timestamp": "2025-06-30 23:59:00+00:00",
+  "model_viability": {
+    "logreg": false,
+    "xgboost": false
+  },
+  "oof_rows_per_model": {
+    "logreg": 2939,
+    "xgboost": 2939
+  },
+  "path_completeness": 1.0,
+  "protocol_hash": "984d0721df6d652ccc21c4b4938c322d20d50f1f768b91329bd4c09521f37420",
+  "registered_bootstrap_draws": 2000,
+  "registered_xgb_estimators": 300,
+  "research_claim": "development_result",
+  "round_trip_cost_bps": 10.0,
+  "run_hash": "f05414b8325b73546969",
+  "scored_activations": 2939,
+  "scored_folds": [
+    "2022H2",
+    "2023H1",
+    "2023H2",
+    "2024H1",
+    "2024H2",
+    "2025H1"
+  ],
+  "selected_model": null,
+  "source_activations": 3431,
+  "source_hash": "664d66889f9c068a6b307ac22e5d7ff711e76636e11b6790a050abeafa4a2a83",
+  "timing_frequency_changed": false,
+  "timing_model_refit": false,
+  "trade_gate_included": false,
+  "warmup_activations": 492
+}

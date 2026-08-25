@@ -1,0 +1,130 @@
+{
+  "artifacts": {
+    "combined_policy_ledger.parquet": {
+      "sha256": "94b1707ae0ede82f7a3db780ce4654e032895b03cfc284cc54c8c740278d7790",
+      "size": 374996
+    },
+    "concurrency_audit.csv": {
+      "sha256": "ff62b78ce902e6799ab48d6fe6331a96bec6a295f84991d0af0c45c7f8942867",
+      "size": 185
+    },
+    "correlation_audit.csv": {
+      "sha256": "99ae60495b95a378ca53886da76eaeb9f7e480a72fa79fbb0697ded5e983cf29",
+      "size": 32174
+    },
+    "direction_dataset.parquet": {
+      "sha256": "6549e7e0345e4339510e729945ade5b4d9b3ba670b2f85e18ae790c434aaaab1",
+      "size": 903878
+    },
+    "economic_metrics.csv": {
+      "sha256": "c480a2c6dd30ecf786a232f9cca12c8e839d0b9d2e453f60d3c6465ea396f0e0",
+      "size": 2506
+    },
+    "economic_paths.parquet": {
+      "sha256": "de0c383480c33bc4f31f2868e16e6912f72aed0dd307652eecd7583c799bca1c",
+      "size": 658350
+    },
+    "feature_audit.csv": {
+      "sha256": "231baac5aee2e72c886b3e26a5531b20869704853a3767d15dcca8e81502cdb1",
+      "size": 1576
+    },
+    "fold_audit.csv": {
+      "sha256": "433b567e48a398849f3470e9e35fc75b77db719e12c2fed32ce4343c36897e50",
+      "size": 976
+    },
+    "frequency_audit.csv": {
+      "sha256": "c2d330fcfe3a552b6477eaf9caa1f776eef0050cab4d055cce2ef3a92cf74531",
+      "size": 507
+    },
+    "frozen_protocol.json": {
+      "sha256": "7c6c09e82b99924698a85fff7eec295dcaa52498471bcb8790580f2af71a5bbc",
+      "size": 1182
+    },
+    "geometry_audit.csv": {
+      "sha256": "808dc6286be9847b32ea467408665a12d488ebf57c63b9c9c45720eb1647ee5e",
+      "size": 503
+    },
+    "leakage_audit.csv": {
+      "sha256": "96c15e564cc52be63186ee750f5ace1db68ab9896a06438c53618a9cebd17eaf",
+      "size": 1824
+    },
+    "oof_direction_predictions.parquet": {
+      "sha256": "175736ccdecfd0089c086f912f71c4943dc6090d711f649b0aab02754d7cc605",
+      "size": 175510
+    },
+    "paired_bootstrap.csv": {
+      "sha256": "3c079f64ce2e8a85c5aef87b4235f9b0522ad468182095cb5d188c4f924db483",
+      "size": 1285
+    },
+    "policy_paths.parquet": {
+      "sha256": "272790cff19c3fb3e5abc2c33dfb990dbc85d45a958a338fee5bff527c9ea8c2",
+      "size": 789348
+    },
+    "predictive_metrics.csv": {
+      "sha256": "9bc4ee45390d650f839f130c4fdef5ef06067778a441d03c27ef13ddaa28146f",
+      "size": 342
+    },
+    "protocol.json": {
+      "sha256": "49e06496eb36aa889812d185e6cd0e80aa69e798931bb9c75267a32620231f6d",
+      "size": 3361
+    },
+    "summary.json": {
+      "sha256": "006cc1c4b2138996dbafe17b67171fd9bd5fefd839f4a01544bcaf0dbaf3b345",
+      "size": 1465
+    }
+  },
+  "input_hash": "b4ff5de4d0766673753ef74e8142a907191826484eff34293ed125f61cdaf4b8",
+  "protocol_hash": "10b6bd36d826b6680a372cd55d2b200bd1532b11b3bd82c1722a38c02363c171",
+  "run_hash": "60001e73fab2a2a7c39c",
+  "source_hash": "664d66889f9c068a6b307ac22e5d7ff711e76636e11b6790a050abeafa4a2a83",
+  "status": "complete",
+  "summary": {
+    "combined_rows_per_model": {
+      "logreg": 2939,
+      "xgboost": 2939
+    },
+    "decision": "smoke only; no economic claim",
+    "direction_feature_count": 28,
+    "effective_bootstrap_draws": 20,
+    "effective_xgb_estimators": 12,
+    "entry_cost_bps": 5.0,
+    "exit_cost_bps": 5.0,
+    "forced_direction": true,
+    "forward_or_lockbox_loaded": false,
+    "frozen_timing_arm": "xgboost_base",
+    "frozen_u_run_hash": "ad36396ae54e17571e81",
+    "input_hash": "b4ff5de4d0766673753ef74e8142a907191826484eff34293ed125f61cdaf4b8",
+    "max_loaded_timestamp": "2025-06-30 23:59:00+00:00",
+    "model_viability": {
+      "logreg": false,
+      "xgboost": false
+    },
+    "oof_rows_per_model": {
+      "logreg": 2939,
+      "xgboost": 2939
+    },
+    "path_completeness": 1.0,
+    "protocol_hash": "10b6bd36d826b6680a372cd55d2b200bd1532b11b3bd82c1722a38c02363c171",
+    "registered_bootstrap_draws": 2000,
+    "registered_xgb_estimators": 300,
+    "research_claim": "smoke_only_no_claim",
+    "round_trip_cost_bps": 10.0,
+    "run_hash": "60001e73fab2a2a7c39c",
+    "scored_activations": 2939,
+    "scored_folds": [
+      "2022H2",
+      "2023H1",
+      "2023H2",
+      "2024H1",
+      "2024H2",
+      "2025H1"
+    ],
+    "selected_model": null,
+    "source_activations": 3431,
+    "source_hash": "664d66889f9c068a6b307ac22e5d7ff711e76636e11b6790a050abeafa4a2a83",
+    "timing_frequency_changed": false,
+    "timing_model_refit": false,
+    "trade_gate_included": false,
+    "warmup_activations": 492
+  }
+}

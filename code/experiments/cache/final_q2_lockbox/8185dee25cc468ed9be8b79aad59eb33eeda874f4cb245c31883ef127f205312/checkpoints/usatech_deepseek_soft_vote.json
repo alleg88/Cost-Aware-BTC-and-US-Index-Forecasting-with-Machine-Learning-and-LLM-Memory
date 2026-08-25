@@ -1,0 +1,7 @@
+{
+  "audit_sha256": "33171d8df86b82c802295641c83179bfcc146f1f91d7681297b3d94b0df2aa65",
+  "candidate_id": "usatech_deepseek_soft_vote",
+  "ledger_sha256": "e2ce6bc8ee245b5f30f0a827dce11e2582363efb9f1cddc58ed5377c3e6e7614",
+  "prediction_index_name": "timestamp",
+  "prediction_sha256": "1bf7f7e44a5d29cb84f8d98104f12ba4fa71bc0394cc970b8173d0bb3b58b082"
+}

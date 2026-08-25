@@ -1,0 +1,52 @@
+protocol_version: reflection-agent-v2.2
+schema_version: "2.0"
+model: deepseek-v4-flash:cloud
+think: high
+stream: false
+temperature: 0.0
+num_predict: 4096
+timeout_seconds: 300
+repair_attempts: 1
+allowed_decisions:
+  - NO_CHANGE
+  - ADD_ALLOW_RULE
+  - REMOVE_ALLOW_RULE
+registered_variants:
+  - reflection_real_memory
+  - reflection_no_memory
+  - reflection_shuffled_memory
+  - static_add_all
+  - union_baseline
+development_start_utc: "2021-01-01T00:00:00Z"
+development_end_utc: "2025-01-01T00:00:00Z"
+h1_start_utc: "2025-01-01T00:00:00Z"
+h1_end_utc: "2025-07-01T00:00:00Z"
+forward_start_utc: "2025-07-01T00:00:00Z"
+forward_end_utc: "2026-04-01T00:00:00Z"
+q2_start_utc: "2026-04-01T00:00:00Z"
+q2_end_utc: "2026-07-01T00:00:00Z"
+episode_min_opportunities: 60
+episode_max_opportunities: 90
+episode_min_reentry_opportunities: 10
+episode_min_per_side: 3
+proposal_min_support: 8
+proposal_min_net_return: 0.02
+shadow_min_reentry_opportunities: 10
+shadow_min_per_side: 3
+shadow_max_opportunities: 60
+max_active_rules: 3
+max_retrieved_memories: 4
+semantic_lifetime_days: 180
+semantic_lifetime_episodes: 6
+minimum_trade_gain_fraction: 0.10
+sortino_noninferiority_margin: 0.10
+max_drawdown_ratio: 1.10
+max_positive_return_concentration: 0.60
+condition_values:
+  side: [LONG, SHORT]
+  member_pattern: [LSTM_ONLY, SVM_ONLY, BOTH_AGREE]
+  episode_bar_bucket: [SECOND, THIRD_PLUS]
+  vol_regime: [LOW, NORMAL, HIGH]
+  trend_regime: [DOWN, FLAT, UP]
+  funding_regime: [NEGATIVE, NEUTRAL, POSITIVE, MISSING]
+  oi_regime: [FALLING, FLAT, RISING, MISSING]

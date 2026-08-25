@@ -1,0 +1,7 @@
+{
+  "audit_sha256": "471980c7f0f86d0a7e347a6c804d323b4119b58bc90620ac4e40524ddaa55afe",
+  "candidate_id": "usa500_deberta_soft_vote",
+  "ledger_sha256": "d679993eae986787a28614de9e858b66a04fd53c33d571e9cec1843304b6a1a6",
+  "prediction_index_name": "timestamp",
+  "prediction_sha256": "9a76b8ce5ac35820230d71aafa899c83286913bbdea8a4a0e0ea8a19105a6b8c"
+}

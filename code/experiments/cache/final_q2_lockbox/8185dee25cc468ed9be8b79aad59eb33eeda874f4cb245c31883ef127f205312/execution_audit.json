@@ -1,0 +1,50 @@
+{
+  "btc_lstm_dz55": {
+    "candidate_decisions": 21,
+    "executed_decisions": 20,
+    "nonoverlap_censored_count": 1,
+    "session_gap_censored_count": 0,
+    "started_flat": true,
+    "terminal_censored_count": 0
+  },
+  "btc_qualified_union_v1": {
+    "candidate_decisions": 25,
+    "executed_decisions": 23,
+    "nonoverlap_censored_count": 2,
+    "session_gap_censored_count": 0,
+    "started_flat": true,
+    "terminal_censored_count": 0
+  },
+  "usa500_best_single_deberta_svm": {
+    "candidate_decisions": 1,
+    "executed_decisions": 1,
+    "nonoverlap_censored_count": 0,
+    "session_gap_censored_count": 0,
+    "started_flat": true,
+    "terminal_censored_count": 0
+  },
+  "usa500_deberta_soft_vote": {
+    "candidate_decisions": 3,
+    "executed_decisions": 3,
+    "nonoverlap_censored_count": 0,
+    "session_gap_censored_count": 0,
+    "started_flat": true,
+    "terminal_censored_count": 0
+  },
+  "usatech_best_single_deepseek_lstm": {
+    "candidate_decisions": 2,
+    "executed_decisions": 2,
+    "nonoverlap_censored_count": 0,
+    "session_gap_censored_count": 0,
+    "started_flat": true,
+    "terminal_censored_count": 0
+  },
+  "usatech_deepseek_soft_vote": {
+    "candidate_decisions": 2,
+    "executed_decisions": 2,
+    "nonoverlap_censored_count": 0,
+    "session_gap_censored_count": 0,
+    "started_flat": true,
+    "terminal_censored_count": 0
+  }
+}

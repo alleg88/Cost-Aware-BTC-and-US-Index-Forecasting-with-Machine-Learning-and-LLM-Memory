@@ -1,0 +1,94 @@
+{
+  "usa500": {
+    "baseline_max_probability_error": {
+      "usa500_best_single_deberta_svm": 0.0,
+      "usa500_deberta_soft_vote": 4.440892098500626e-16
+    },
+    "changed_feature_rows": 5667,
+    "input_audit": {
+      "feature_columns": [
+        "r1",
+        "r5",
+        "r20",
+        "vol_10",
+        "vol_20",
+        "vol_60",
+        "hl_range",
+        "co_range",
+        "rsi_14",
+        "volume",
+        "vol_z",
+        "hour",
+        "dayofweek",
+        "vix_log_close",
+        "vix_r1",
+        "vix_r4",
+        "vix_vol20",
+        "vix_age_minutes",
+        "sent_news_decay",
+        "sent_news_count_24h",
+        "sent_direct_decay",
+        "sent_tone_decay",
+        "sent_macro_decay"
+      ],
+      "feature_rows": 5667,
+      "m15_complete_rows": 5667,
+      "m1_rows": 85047,
+      "q2_max": "2026-06-30T23:45:00+00:00",
+      "q2_min": "2026-04-01T00:00:00+00:00",
+      "vix_m15_complete_rows": 5768,
+      "vix_m1_rows": 86562,
+      "warmup_max": "2026-03-31T23:45:00+00:00"
+    },
+    "signal_changes": {
+      "usa500_best_single_deberta_svm": 0,
+      "usa500_deberta_soft_vote": 3
+    }
+  },
+  "usatech": {
+    "baseline_max_probability_error": {
+      "usatech_best_single_deepseek_lstm": 0.0,
+      "usatech_deepseek_soft_vote": 2.220446049250313e-16
+    },
+    "changed_feature_rows": 5658,
+    "input_audit": {
+      "feature_columns": [
+        "r1",
+        "r5",
+        "r20",
+        "vol_10",
+        "vol_20",
+        "vol_60",
+        "hl_range",
+        "co_range",
+        "rsi_14",
+        "volume",
+        "vol_z",
+        "hour",
+        "dayofweek",
+        "vix_log_close",
+        "vix_r1",
+        "vix_r4",
+        "vix_vol20",
+        "vix_age_minutes",
+        "sent_news_decay",
+        "sent_news_count_24h",
+        "sent_direct_decay",
+        "sent_tone_decay",
+        "sent_macro_decay"
+      ],
+      "feature_rows": 5667,
+      "m15_complete_rows": 5667,
+      "m1_rows": 85047,
+      "q2_max": "2026-06-30T23:45:00+00:00",
+      "q2_min": "2026-04-01T00:00:00+00:00",
+      "vix_m15_complete_rows": 5768,
+      "vix_m1_rows": 86562,
+      "warmup_max": "2026-03-31T23:45:00+00:00"
+    },
+    "signal_changes": {
+      "usatech_best_single_deepseek_lstm": 2,
+      "usatech_deepseek_soft_vote": 0
+    }
+  }
+}

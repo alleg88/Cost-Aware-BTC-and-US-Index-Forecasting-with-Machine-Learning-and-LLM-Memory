@@ -1,0 +1,10 @@
+{
+  "bootstrap_95_lower": -0.035547049190603024,
+  "bootstrap_95_upper": 0.0,
+  "final_no_retuning": true,
+  "index_status": "descriptive transport evidence only; no Q2 promotion is permitted",
+  "interpretation": "BTC Qualified Union did not receive confirmatory support over its frozen LSTM control.",
+  "point_estimate": -0.012273524595301507,
+  "primary_confirmatory_support": false,
+  "primary_estimand": "btc_union_minus_lstm_total_net"
+}

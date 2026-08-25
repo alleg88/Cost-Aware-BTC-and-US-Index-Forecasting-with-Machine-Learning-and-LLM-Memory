@@ -1,0 +1,126 @@
+{
+  "alert_policy": "level_rearm",
+  "arms": [
+    [
+      "logreg_base",
+      "logreg",
+      "base"
+    ],
+    [
+      "logreg_compact",
+      "logreg",
+      "compact_volatility_timing_v1"
+    ],
+    [
+      "xgboost_base",
+      "xgboost",
+      "base"
+    ],
+    [
+      "xgboost_compact",
+      "xgboost",
+      "compact_volatility_timing_v1"
+    ]
+  ],
+  "base_feature_count": 248,
+  "base_reproduction_tolerance": 1e-12,
+  "bootstrap_draws": 2000,
+  "bootstrap_seed": 42,
+  "calendar_features_included": false,
+  "compact_feature_count": 28,
+  "compact_features": [
+    "adaptive_barrier_bps",
+    "past_sigma_5m_bps",
+    "past_rv_15_bps",
+    "past_rv_30_bps",
+    "past_rv_60_bps",
+    "past_rv_120_bps",
+    "rv_ratio_15_60",
+    "rv_ratio_60_120",
+    "past_range_15_bps",
+    "past_range_60_bps",
+    "past_range_120_bps",
+    "range_ratio_15_120",
+    "past_abs_return_15_bps",
+    "past_abs_return_60_bps",
+    "volume_ratio_15_120",
+    "trade_count_ratio_15_120",
+    "range_bps",
+    "realized_vol_12",
+    "activity_ratio",
+    "range_bps_mean_3",
+    "realized_vol_12_mean_3",
+    "window_age_fraction",
+    "channel_regime_age_hours",
+    "channel_width_pct",
+    "volatility_regime_percentile",
+    "channel_center_distance",
+    "nearest_rail_distance_bps",
+    "rail_approach_15m"
+  ],
+  "cooldown_minutes": 60,
+  "derived_compact_features": [
+    "channel_center_distance",
+    "nearest_rail_distance_bps",
+    "rail_approach_15m"
+  ],
+  "development_end_exclusive": "2025-07-01",
+  "development_start": "2021-01-01",
+  "direction_70_is_stress_test": true,
+  "direction_head_trained": false,
+  "entry_cost_bps": 5.0,
+  "feature_sets": [
+    "base",
+    "compact_volatility_timing_v1"
+  ],
+  "forward_or_lockbox_loaded": false,
+  "frozen_p_run_hash": "0474798f6d0eb56e64d3",
+  "frozen_r_run_hash": "f8de389583c836f48140",
+  "hold_minutes": 120,
+  "impulse_features_included": false,
+  "input_hash": "0160f50e3cdc982d67c1353cabfbf461d3a69b555c8f0034b49908d252a18a33",
+  "maximum_frequency_per_day": 3.5,
+  "minimum_frequency_per_day": 2.5,
+  "minimum_path_completeness": 0.99,
+  "models": [
+    "logreg",
+    "xgboost"
+  ],
+  "oof": {
+    "fold": {
+      "calibration_fraction": 0.15,
+      "early_fraction": 0.15,
+      "fit_fraction": 0.7
+    },
+    "model": {
+      "logreg_max_iter": 2000,
+      "n_jobs": 1,
+      "random_seed": 42,
+      "xgb_depth": 3,
+      "xgb_estimators": 300,
+      "xgb_learning_rate": 0.03,
+      "xgb_min_child_weight": 20.0,
+      "xgb_reg_lambda": 10.0
+    }
+  },
+  "other_exit_cost_bps": 5.0,
+  "p_hit_frozen": true,
+  "protocol_hash": "9791d63148e6249045897865323b480c2770fbe4d049b8cd3c07d3b874f29f1d",
+  "run_hash": "ad36396ae54e17571e81",
+  "selection": "pre_registered_domain_contract_no_label_selection",
+  "smoke": false,
+  "source_hash": "f9283d11ffd0757c155be8b81076567315e8e3ea1bec20b5bd1f31fe2ccb7073",
+  "stage": "dev",
+  "stop_multiple_b": 1.0,
+  "study": "notebook_u_volatility_timing_feature_consolidation",
+  "target_activations_per_day": 3.0,
+  "target_exit_cost_bps": 2.0,
+  "target_multiple_b": 2.0,
+  "threshold_grid_size": 51,
+  "timing_heads_refit": [
+    "h15",
+    "h30",
+    "h60"
+  ],
+  "timing_score": "p_t_le_60"
+}

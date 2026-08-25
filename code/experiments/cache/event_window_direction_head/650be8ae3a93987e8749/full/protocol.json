@@ -1,0 +1,174 @@
+{
+  "activation_frequency_optimised": false,
+  "bootstrap_draws": 2000,
+  "bootstrap_seed": 42,
+  "bootstrap_unit": "channel_episode_id",
+  "bounded_development_input_identity": {
+    "absolute_paths_hashed": false,
+    "aggregate_sha256": "f69c6402e8a0b0af1ce3d2c8d12c1df175f3c668c64a8907e8a66d2870b2ef6a",
+    "applicable": true,
+    "applies_to_full_run": true,
+    "detail": "four raw roles filtered to DEVELOPMENT before pandas",
+    "development_end_exclusive": "2025-07-01T00:00:00+00:00",
+    "development_start": "2021-01-01T00:00:00+00:00",
+    "file_metadata_hashed": false,
+    "method": "pyarrow_filtered_canonical_ipc_sha256_v1",
+    "passed": true,
+    "pyarrow_filter_before_pandas": true,
+    "source_fingerprints": {
+      "five_minute": {
+        "content_sha256": "0b4039dc0933e65fe4010e8d8543e5944855bf86e23a199cbd715834c07e9e69",
+        "max_timestamp": "2025-06-30T23:55:00+00:00",
+        "rows": 472683
+      },
+      "hourly": {
+        "content_sha256": "37d515e3871688fb2d5b64792811df2184fff59eb720044b60754ed54f46778c",
+        "max_timestamp": "2025-06-30T23:00:00+00:00",
+        "rows": 39394
+      },
+      "minute": {
+        "content_sha256": "fe7811a710e8e4ccefa75cd471fa125ac69dad5bdffcbe2b6b4a79e8e260e2ac",
+        "max_timestamp": "2025-06-30T23:59:00+00:00",
+        "rows": 2363407
+      },
+      "positioning": {
+        "content_sha256": "34014e21b68e630a570ee7aeee0aab2e3a73910b1cce1e393667dc58b8b9241e",
+        "max_timestamp": "2025-06-30T23:45:00+00:00",
+        "rows": 157562
+      }
+    },
+    "source_roles": [
+      "minute",
+      "five_minute",
+      "hourly",
+      "positioning"
+    ],
+    "whole_file_bytes_hashed": false
+  },
+  "development_end_exclusive": "2025-07-01",
+  "development_start": "2021-01-01",
+  "diagnostic_barriers_bps": [
+    75.0,
+    120.0
+  ],
+  "diagnostic_only_barriers_bps": [
+    75.0,
+    120.0
+  ],
+  "direction_confidence_gate": false,
+  "direction_feature_count": 28,
+  "direction_features": [
+    "raw_log_return",
+    "raw_log_return_mean_3",
+    "raw_log_return_mean_12",
+    "raw_log_return_mean_24",
+    "raw_body_bps",
+    "lower_wick_fraction",
+    "upper_wick_fraction",
+    "raw_taker_imbalance",
+    "raw_taker_imbalance_mean_3",
+    "raw_taker_imbalance_mean_12",
+    "raw_taker_imbalance_delta",
+    "raw_channel_slope",
+    "channel_r2",
+    "channel_width_pct",
+    "raw_channel_position",
+    "raw_distance_mid_bps",
+    "raw_rsi_channel",
+    "raw_oi_chg_15m",
+    "raw_oi_chg_1h",
+    "raw_oi_chg_4h",
+    "raw_oi_accel_1h",
+    "raw_price_oi_interaction",
+    "raw_funding_z",
+    "positioning_stale",
+    "positioning_age_log",
+    "adaptive_barrier_bps",
+    "window_age_fraction",
+    "activation_margin"
+  ],
+  "effective_bootstrap_draws": 2000,
+  "effective_model_config": {
+    "logreg_c": 1.0,
+    "logreg_max_iter": 2000,
+    "n_jobs": 1,
+    "random_seed": 42,
+    "xgb_depth": 3,
+    "xgb_estimators": 300,
+    "xgb_learning_rate": 0.03,
+    "xgb_min_child_weight": 20.0,
+    "xgb_reg_lambda": 10.0
+  },
+  "entry": "native one-minute Open at frozen activation time",
+  "entry_cost_bps": 5.0,
+  "expected_scored_activations": 2939,
+  "expected_source_activations": 3431,
+  "forced_direction": true,
+  "forward_or_lockbox_loaded": false,
+  "frozen_timing_arm": "xgboost_base",
+  "frozen_u_run_hash": "ad36396ae54e17571e81",
+  "hold_minutes": 120,
+  "input_hash": "9eadc67d36440d6ce47c79f5f7f9fa1c8fce3544a7b12a2b1b9bfa9e6e2f4ea5",
+  "minimum_path_completeness": 0.99,
+  "model": {
+    "logreg_c": 1.0,
+    "logreg_max_iter": 2000,
+    "n_jobs": 1,
+    "random_seed": 42,
+    "xgb_depth": 3,
+    "xgb_estimators": 300,
+    "xgb_learning_rate": 0.03,
+    "xgb_min_child_weight": 20.0,
+    "xgb_reg_lambda": 10.0
+  },
+  "models": [
+    "logreg",
+    "xgboost"
+  ],
+  "other_exit_cost_bps": 5.0,
+  "path_interval": "half-open [t,t+120m)",
+  "protocol_hash": "b0bf45379d015f3a0505a5c7caf13233eee74be6a743e38c8de300874a437269",
+  "raw_input_identity_contract": {
+    "absolute_paths_hashed": false,
+    "applies_to_full_run": true,
+    "development_end_exclusive": "2025-07-01T00:00:00+00:00",
+    "development_start": "2021-01-01T00:00:00+00:00",
+    "file_metadata_hashed": false,
+    "method": "pyarrow_filtered_canonical_ipc_sha256_v1",
+    "pyarrow_filter_before_pandas": true,
+    "source_roles": [
+      "minute",
+      "five_minute",
+      "hourly",
+      "positioning"
+    ],
+    "whole_file_bytes_hashed": false
+  },
+  "registered_bootstrap_draws": 2000,
+  "registered_model_config": {
+    "logreg_c": 1.0,
+    "logreg_max_iter": 2000,
+    "n_jobs": 1,
+    "random_seed": 42,
+    "xgb_depth": 3,
+    "xgb_estimators": 300,
+    "xgb_learning_rate": 0.03,
+    "xgb_min_child_weight": 20.0,
+    "xgb_reg_lambda": 10.0
+  },
+  "risk_geometry": "adaptive 1B stop, 2B target, 120 minute hold",
+  "round_trip_cost_bps": 10.0,
+  "run_hash": "650be8ae3a93987e8749",
+  "same_minute_ambiguity": "stop_first",
+  "scored_start": "2022-07-01",
+  "smoke": false,
+  "source_hash": "8c685ce00319489626b9208c35760ff9b0627a397f80e57505b65729aed3c6fe",
+  "stage": "dev",
+  "stop_multiple_b": 1.0,
+  "study": "notebook_v_economic_direction_value_head",
+  "target_exit_cost_bps": 5.0,
+  "target_multiple_b": 2.0,
+  "threshold_search": false,
+  "timing_model_refit": false,
+  "trade_gate_included": false
+}

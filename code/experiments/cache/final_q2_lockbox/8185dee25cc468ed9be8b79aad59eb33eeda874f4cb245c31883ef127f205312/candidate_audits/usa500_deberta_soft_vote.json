@@ -1,0 +1,8 @@
+{
+  "candidate_decisions": 3,
+  "executed_decisions": 3,
+  "nonoverlap_censored_count": 0,
+  "session_gap_censored_count": 0,
+  "started_flat": true,
+  "terminal_censored_count": 0
+}

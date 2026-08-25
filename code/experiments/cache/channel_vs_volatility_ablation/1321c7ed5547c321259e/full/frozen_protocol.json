@@ -1,0 +1,40 @@
+{
+  "bounded_development_input_identity": {
+    "aggregate_sha256": "dd432770b6eb7fb6207f932fa754a440dc1236a9cbbdba867dbab7193132fbfb",
+    "development_end_exclusive": "2025-07-01T00:00:00+00:00",
+    "development_start": "2021-01-01T00:00:00+00:00",
+    "method": "pyarrow_filtered_canonical_ipc_sha256_v1",
+    "source_fingerprints": {
+      "five_minute": {
+        "content_sha256": "0b4039dc0933e65fe4010e8d8543e5944855bf86e23a199cbd715834c07e9e69",
+        "max_timestamp": "2025-06-30T23:55:00+00:00",
+        "rows": 472683
+      },
+      "minute": {
+        "content_sha256": "fe7811a710e8e4ccefa75cd471fa125ac69dad5bdffcbe2b6b4a79e8e260e2ac",
+        "max_timestamp": "2025-06-30T23:59:00+00:00",
+        "rows": 2363407
+      },
+      "positioning": {
+        "content_sha256": "34014e21b68e630a570ee7aeee0aab2e3a73910b1cce1e393667dc58b8b9241e",
+        "max_timestamp": "2025-06-30T23:45:00+00:00",
+        "rows": 157562
+      }
+    }
+  },
+  "forward_or_lockbox_loaded": false,
+  "frozen_j_labels_rr2_sha256": "0d02eb8a2648440c4fb66feb0c8dfd6e3bfc8afcd62567cd5724bc10ee1528b1",
+  "frozen_j_manifest_sha256": "b177a497f3850d37b9970e8b720203cefec1c354376e40a272a31529de34e883",
+  "frozen_j_run_hash": "2c6e19d5eae7ba9ffaaa",
+  "frozen_u_activation_ledger_sha256": "01d724865e634aab225131d8f9fe53ee48d549d90cb011cd2f0368c4094a21ce",
+  "frozen_u_manifest_sha256": "137ca48502422a3ac30ff07c54d429517364a39fb872622bfeca3d0104979897",
+  "frozen_u_run_hash": "ad36396ae54e17571e81",
+  "matched_fold_counts": {
+    "2022H2": 236,
+    "2023H1": 541,
+    "2023H2": 305,
+    "2024H1": 910,
+    "2024H2": 532,
+    "2025H1": 415
+  }
+}

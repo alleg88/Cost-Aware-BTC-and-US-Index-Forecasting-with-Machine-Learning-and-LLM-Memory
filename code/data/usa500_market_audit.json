@@ -1,0 +1,49 @@
+{
+  "ask_repaired_ohlc_rows": 0,
+  "ask_source": "USA500IDXUSD_1 Min_Ask_2021.01.01_2026.08.01.csv",
+  "bid_repaired_ohlc_rows": 0,
+  "bid_source": "USA500IDXUSD_1 Min_Bid_2021.01.01_2026.08.01.csv",
+  "crossed_close_rows": 0,
+  "cutoff_exclusive": "2026-04-01T00:00:00+00:00",
+  "duplicate_timestamps": 0,
+  "end_utc": "2026-03-31T23:59:00+00:00",
+  "grids": {
+    "15min": {
+      "complete_rows": 119832,
+      "end_utc": "2026-03-31T23:45:00+00:00",
+      "max_available_at": "2026-04-01T00:00:00+00:00",
+      "output_sha256": "8c464d071e1773ccc0aadc5e9b2252e15a53470ae821ac6339f168307e54d4da",
+      "rows": 119877,
+      "start_utc": "2021-01-03T23:00:00+00:00"
+    },
+    "1h": {
+      "complete_rows": 29614,
+      "end_utc": "2026-03-31T23:00:00+00:00",
+      "max_available_at": "2026-04-01T00:00:00+00:00",
+      "output_sha256": "ba8709636d350a758846d4b8986305a10b30330bff0afddf0790ae4d47066762",
+      "rows": 30959,
+      "start_utc": "2021-01-03T23:00:00+00:00"
+    },
+    "1m": {
+      "complete_rows": 1798110,
+      "end_utc": "2026-03-31T23:59:00+00:00",
+      "max_available_at": "2026-04-01T00:00:00+00:00",
+      "output_sha256": "aa8336899c9c9f7b98fd81ac0f05854a5e0dea5236ca87665c3a6b0b2dafcbcd",
+      "rows": 1798110,
+      "start_utc": "2021-01-03T23:00:00+00:00"
+    },
+    "5min": {
+      "complete_rows": 359586,
+      "end_utc": "2026-03-31T23:55:00+00:00",
+      "max_available_at": "2026-04-01T00:00:00+00:00",
+      "output_sha256": "7d28eea7d111581a0445dede159edd11fb8ee2dcbf137e2639a05eff4c636615",
+      "rows": 359631,
+      "start_utc": "2021-01-03T23:00:00+00:00"
+    }
+  },
+  "instrument": "USA500IDXUSD",
+  "midpoint_invalid_rows_after_repair": 0,
+  "rows_after_cutoff": 1798110,
+  "rows_removed_by_cutoff": 115436,
+  "start_utc": "2021-01-03T23:00:00+00:00"
+}

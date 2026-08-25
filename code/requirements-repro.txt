@@ -1,0 +1,4 @@
+# Exact direct environment used for final repository verification.
+# Extras pin the Ollama client; fresh Cloud calls require OLLAMA_API_KEY.
+# A live GDELT refresh is optional: pip install -e .[extras,acquisition]
+-e .[extras]

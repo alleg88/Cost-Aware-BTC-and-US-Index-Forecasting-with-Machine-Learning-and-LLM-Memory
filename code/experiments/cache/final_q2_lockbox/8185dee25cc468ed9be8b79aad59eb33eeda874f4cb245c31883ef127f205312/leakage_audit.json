@@ -1,0 +1,9 @@
+{
+  "no_q2_calibration": true,
+  "no_q2_fitting": true,
+  "no_q2_threshold_selection": true,
+  "prediction_bounds_valid": true,
+  "registered_candidates_only": true,
+  "started_flat": true,
+  "warmup_strictly_pre_q2": true
+}

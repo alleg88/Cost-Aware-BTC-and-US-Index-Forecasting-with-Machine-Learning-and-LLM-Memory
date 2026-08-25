@@ -1,0 +1,5 @@
+metric,model,candidate,baseline,point_delta,ci_low,ci_high,draws,bootstrap_unit
+opportunity_rate,logreg,channel,channel_blind,-0.0857434501531133,-0.1035005715644414,-0.06744318729165112,2000,calendar_week
+opportunity_rate,xgboost,channel,channel_blind,-0.08540319836679144,-0.10265326183183404,-0.06746317853270131,2000,calendar_week
+mean_net_r,logreg,channel,channel_blind,-0.0021686156724574426,-0.02451348241989692,0.019627771501443493,2000,calendar_week
+mean_net_r,xgboost,channel,channel_blind,-0.00347393504989809,-0.030780034504716513,0.02183166611262977,2000,calendar_week

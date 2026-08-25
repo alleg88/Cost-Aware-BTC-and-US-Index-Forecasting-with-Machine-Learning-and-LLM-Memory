@@ -1,0 +1,56 @@
+protocol_version: usa500-reflection-weight-agent-v1.0
+schema_version: "1.0"
+protocol_scope: frozen_usa500_ensemble_direction_overlay
+stream_name: usa500
+source_candidate_id: selected_base__directional_majority
+source_arm: selected_base
+source_variant: directional_majority
+source_width_bps: 15
+source_tau: 0.8
+round_trip_cost_bps: 2.0
+model: deepseek-v4-flash:0731-cloud
+required_model_digest: d3f1c87447216481a8001f48c517a51e13bfb141853a8df5e52f81bf765dabc3
+think: low
+ollama_stream: false
+temperature: 0.0
+seed: 42
+num_predict: 4096
+timeout_seconds: 300
+repair_attempts: 1
+direct_batch_size: 10
+h1_start_utc: "2025-01-01T00:00:00Z"
+h1_end_utc: "2025-07-01T00:00:00Z"
+forward_start_utc: "2025-07-01T00:00:00Z"
+forward_end_utc: "2026-04-01T00:00:00Z"
+q2_start_utc: "2026-04-01T00:00:00Z"
+q2_end_utc: "2026-07-01T00:00:00Z"
+model_names:
+  - logreg
+  - decision_tree
+  - random_forest
+  - svm_linear
+  - xgboost_balanced
+  - catboost_balanced
+  - mlp
+  - lstm
+  - gru
+registered_variants:
+  - original_frozen
+  - direct_real_memory
+  - direct_no_memory
+  - direct_shuffled_memory
+  - weekly_real_memory
+  - weekly_no_memory
+  - weekly_shuffled_memory
+  - hedge_weekly
+  - static_h1
+max_memory_cards: 12
+weight_grid: 0.01
+max_model_weight: 0.80
+minimum_material_models: 3
+material_weight: 0.05
+hedge_eta: 0.5
+max_transport_failure_fraction: 0.05
+max_drawdown_absolute_margin: 0.01
+minimum_side_trades: 15
+bootstrap_samples: 2000

@@ -1,0 +1,130 @@
+{
+  "artifacts": {
+    "combined_policy_ledger.parquet": {
+      "sha256": "cf096561875e1de17fe52eade34d37af7a7cad2671fe36a6a89dd5a00335b275",
+      "size": 394412
+    },
+    "concurrency_audit.csv": {
+      "sha256": "ff62b78ce902e6799ab48d6fe6331a96bec6a295f84991d0af0c45c7f8942867",
+      "size": 185
+    },
+    "correlation_audit.csv": {
+      "sha256": "b3d6f52d596774c0775f0f80974ecd87f6cea8e172bfe21b40168b520be45c70",
+      "size": 32235
+    },
+    "direction_dataset.parquet": {
+      "sha256": "024933c5841ebaaedf99ad02f11fc7cc94bce503df0a3aa5ca90d39d0c7573b5",
+      "size": 850258
+    },
+    "economic_metrics.csv": {
+      "sha256": "ce0f0d76b192193a9ca92017952cd0a00259bc9b294538e5dd45d9e91220f9db",
+      "size": 2507
+    },
+    "economic_paths.parquet": {
+      "sha256": "5349c0a9993d31b5f21a5cf89a7833920fd0576def1b88bb3d9229cda756d700",
+      "size": 1052850
+    },
+    "feature_audit.csv": {
+      "sha256": "5036c70318ee3f214c3e4c9538904c8b7aff9d279f9cb8254e8c571e1c6e69c0",
+      "size": 1591
+    },
+    "fold_audit.csv": {
+      "sha256": "433b567e48a398849f3470e9e35fc75b77db719e12c2fed32ce4343c36897e50",
+      "size": 976
+    },
+    "frequency_audit.csv": {
+      "sha256": "c2d330fcfe3a552b6477eaf9caa1f776eef0050cab4d055cce2ef3a92cf74531",
+      "size": 507
+    },
+    "frozen_protocol.json": {
+      "sha256": "763994258312ba6f94a374219d95a27224132c694fe46a53169c8c21bd9e0438",
+      "size": 1236
+    },
+    "geometry_audit.csv": {
+      "sha256": "5a11afad2df27532fdd637dc93a7dee9c0ca83af31de3e56d8485cdf000301ae",
+      "size": 515
+    },
+    "leakage_audit.csv": {
+      "sha256": "be1215ff1e3a2802ab86674afbbea848e0314457ac9db0251aea18c767041850",
+      "size": 1802
+    },
+    "oof_direction_predictions.parquet": {
+      "sha256": "358259cf3217fe346d821ca56c222dffcc3c1296cde1d8e8532ae692eee80ded",
+      "size": 194013
+    },
+    "paired_bootstrap.csv": {
+      "sha256": "669de9a827e03991a51b36aac788d22e1f7822036099e4fc36b2e5c7a6fd9427",
+      "size": 1302
+    },
+    "policy_paths.parquet": {
+      "sha256": "6de937990f502deeeea28be8a1e978c7a11e6eebb892305cc1d0d27aee4dd178",
+      "size": 795330
+    },
+    "predictive_metrics.csv": {
+      "sha256": "8a36f2d207ae1954ed4e59a2fd30f42966a385185b45b3edf4e09da38cd09c20",
+      "size": 342
+    },
+    "protocol.json": {
+      "sha256": "6090c34fc5c0aa88b4eb928f8679b9853e9c6bc1337ba0d4470a7fd4c0cb056a",
+      "size": 3368
+    },
+    "summary.json": {
+      "sha256": "7498237d969d079913d60c79b3b01c230a65421be060e1f807b5b1dc61fd8052",
+      "size": 1482
+    }
+  },
+  "input_hash": "134e0c5ab3095764c4134543eeef69f0da1560105279d0239dd4d7badf54b782",
+  "protocol_hash": "984d0721df6d652ccc21c4b4938c322d20d50f1f768b91329bd4c09521f37420",
+  "run_hash": "f05414b8325b73546969",
+  "source_hash": "664d66889f9c068a6b307ac22e5d7ff711e76636e11b6790a050abeafa4a2a83",
+  "status": "complete",
+  "summary": {
+    "combined_rows_per_model": {
+      "logreg": 2939,
+      "xgboost": 2939
+    },
+    "decision": "negative direction result; add no trade gate",
+    "direction_feature_count": 28,
+    "effective_bootstrap_draws": 2000,
+    "effective_xgb_estimators": 300,
+    "entry_cost_bps": 5.0,
+    "exit_cost_bps": 5.0,
+    "forced_direction": true,
+    "forward_or_lockbox_loaded": false,
+    "frozen_timing_arm": "xgboost_base",
+    "frozen_u_run_hash": "ad36396ae54e17571e81",
+    "input_hash": "134e0c5ab3095764c4134543eeef69f0da1560105279d0239dd4d7badf54b782",
+    "max_loaded_timestamp": "2025-06-30 23:59:00+00:00",
+    "model_viability": {
+      "logreg": false,
+      "xgboost": false
+    },
+    "oof_rows_per_model": {
+      "logreg": 2939,
+      "xgboost": 2939
+    },
+    "path_completeness": 1.0,
+    "protocol_hash": "984d0721df6d652ccc21c4b4938c322d20d50f1f768b91329bd4c09521f37420",
+    "registered_bootstrap_draws": 2000,
+    "registered_xgb_estimators": 300,
+    "research_claim": "development_result",
+    "round_trip_cost_bps": 10.0,
+    "run_hash": "f05414b8325b73546969",
+    "scored_activations": 2939,
+    "scored_folds": [
+      "2022H2",
+      "2023H1",
+      "2023H2",
+      "2024H1",
+      "2024H2",
+      "2025H1"
+    ],
+    "selected_model": null,
+    "source_activations": 3431,
+    "source_hash": "664d66889f9c068a6b307ac22e5d7ff711e76636e11b6790a050abeafa4a2a83",
+    "timing_frequency_changed": false,
+    "timing_model_refit": false,
+    "trade_gate_included": false,
+    "warmup_activations": 492
+  }
+}
