@@ -10,7 +10,7 @@ from experiments.run_event_window_direction_head import READER_ARTIFACTS, RUN_RO
 
 
 CODE_ROOT = Path(__file__).resolve().parents[1]
-OUT = CODE_ROOT / "notebooks" / "V_economic_direction_head.ipynb"
+OUT = CODE_ROOT / "notebooks" / "20_RQ5_C_BTC_economic_direction_head.ipynb"
 EXPECTED_FRAME_COLUMNS: dict[str, tuple[str, ...]] = {
     "geometry_audit.csv": (
         "geometry",

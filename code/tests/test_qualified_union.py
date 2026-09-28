@@ -101,15 +101,16 @@ def test_notebook_03c_is_executed_artifact_reader():
     source = "\n".join(cell.source for cell in notebook.cells).lower()
     for phrase in (
         "qualified union v1",
-        "immutable baseline",
+        "lstm dz55 and linear svm dz75",
         "74",
-        "xgboost remains a challenger",
+        "opposite signals veto the trade",
     ):
         assert phrase in source
     assert "glob.glob" not in source
     assert "simulate_bracket_trades_intrabar" not in source
     code = [cell for cell in notebook.cells if cell.cell_type == "code"]
-    assert code and all(cell.execution_count is not None for cell in code)
+    assert code and "from run_zip import prepare_" in code[0].source
+    assert len(code) > 1 and all(cell.execution_count is not None for cell in code[1:])
     assert not any(
         output.output_type == "error"
         for cell in code

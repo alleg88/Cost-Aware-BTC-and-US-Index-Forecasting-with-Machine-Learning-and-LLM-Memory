@@ -13,7 +13,7 @@ from experiments.run_channel_vs_volatility_ablation import (
 
 
 CODE_ROOT = Path(__file__).resolve().parents[1]
-OUT = CODE_ROOT / "notebooks" / "W_channel_vs_volatility_ablation.ipynb"
+OUT = CODE_ROOT / "notebooks" / "21_RQ5_D_BTC_channel_vs_volatility_ablation.ipynb"
 
 
 def _portable(path: Path) -> str:

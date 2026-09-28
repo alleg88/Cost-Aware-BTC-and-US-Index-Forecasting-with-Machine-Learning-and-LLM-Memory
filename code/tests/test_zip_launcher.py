@@ -4,6 +4,7 @@ import importlib.util
 import json
 from pathlib import Path
 import stat
+import subprocess
 import sys
 import zipfile
 
@@ -36,6 +37,16 @@ def archives(tmp_path, extra=None, changed=False):
     return code, data
 
 
+def test_direct_rebuild_rejects_client_archive_before_extracting(tmp_path, monkeypatch):
+    module = launcher()
+    code, _ = archives(tmp_path)
+    monkeypatch.setattr(module.subprocess, "run", lambda *a, **kw: pytest.fail("Installed client archive"))
+    assert hasattr(module, "prepare_rebuild"), "Direct Run All entrypoint is missing"
+    with pytest.raises(ValueError, match="Release-Rebuild.zip"):
+        module.prepare_rebuild("01_RQ1_A_BTC_data_labels_baseline.ipynb", code)
+    assert not (tmp_path / "Release-Rebuild").exists()
+
+
 def test_extracts_both_archives_and_preserves_edits_on_repeat(tmp_path):
     code, data = archives(tmp_path)
     target = tmp_path / "run"
@@ -53,6 +64,84 @@ def test_extracts_code_without_a_source_archive(tmp_path):
     assert (root / "prepare_project.py").is_file()
     assert not (root / "code/.source_evidence").exists()
     assert launcher().extract_archives(code, None, target) == root
+
+
+def test_extracts_client_without_the_git_snapshot_helper(tmp_path):
+    """The commission's Client needs Python sources, not Git reference setup."""
+    prefix = "cost-aware-market-forecasting/"
+    payload = b"[project]\nname = 'client-example'\n"
+    code = tmp_path / "Release-Client.zip"
+    with zipfile.ZipFile(code, "w") as archive:
+        archive.writestr(prefix + "code/pyproject.toml", payload)
+        archive.writestr(prefix + "release_files.json", json.dumps({
+            "code/pyproject.toml": hashlib.sha256(payload).hexdigest(),
+        }))
+    root = launcher().extract_archives(code, None, tmp_path / "run")
+    assert (root / "code/pyproject.toml").read_bytes() == payload
+    assert not (root / "prepare_project.py").exists()
+    assert not (root / ".git").exists()
+
+
+def test_client_still_requires_a_python_project_before_extraction(tmp_path):
+    prefix = "cost-aware-market-forecasting/"
+    payload = b"Not a Python project"
+    code = tmp_path / "Release-Client.zip"
+    with zipfile.ZipFile(code, "w") as archive:
+        archive.writestr(prefix + "README.md", payload)
+        archive.writestr(prefix + "release_files.json", json.dumps({
+            "README.md": hashlib.sha256(payload).hexdigest(),
+        }))
+    with pytest.raises(ValueError, match="manifest"):
+        launcher().extract_archives(code, None, tmp_path / "run")
+    assert not (tmp_path / "run").exists()
+
+
+def test_client_helper_run_by_itself_shows_instructions_without_setup(tmp_path):
+    """Removing full-project setup must not leave a broken manual entry point."""
+    helper = tmp_path / "run_zip.py"
+    helper.write_bytes((Path(__file__).parents[2] / "run_zip.py").read_bytes())
+    result = subprocess.run([sys.executable, str(helper)], cwd=tmp_path,
+                            capture_output=True, text=True, timeout=20)
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert "code/notebooks" in result.stdout
+    assert "automatically" in result.stdout
+    assert list(tmp_path.iterdir()) == [helper]
+
+
+@pytest.mark.parametrize("packed", [False, True], ids=["extracted", "zip"])
+def test_reader_uses_the_same_input_check_from_folder_or_zip(tmp_path, monkeypatch, packed):
+    """The shared entry point must not install or fit before requesting absent data."""
+    module = launcher()
+    code, _ = archives(tmp_path)
+    source = code if packed else module.extract_archives(code, None, tmp_path / "local")
+    monkeypatch.setattr(subprocess, "run", lambda *a, **k: pytest.fail("Started before data check"))
+    previous = sys.path.copy()
+    try:
+        with pytest.raises(FileNotFoundError) as error:
+            module.prepare_reader("01_RQ1_A_BTC_data_labels_baseline.ipynb", source)
+        assert "data/btcusdt_m15_2024_2025.parquet" in str(error.value)
+        assert "DATA.md" in str(error.value)
+        if packed:
+            assert (tmp_path / "Release-Client" / module.PREFIX / "code/pyproject.toml").is_file()
+    finally:
+        sys.path[:] = previous
+
+
+def test_reader_zip_reuse_preserves_supplied_data(tmp_path, monkeypatch):
+    module = launcher()
+    code, _ = archives(tmp_path)
+    root = module.extract_archives(code, None, tmp_path / "Release-Client")
+    marker = root / "code/user-input.txt"
+    marker.write_text("keep my data")
+    monkeypatch.setattr(subprocess, "run", lambda *a, **k: pytest.fail("Started before data check"))
+    previous = sys.path.copy()
+    try:
+        for _ in range(2):
+            with pytest.raises(FileNotFoundError, match="DATA.md"):
+                module.prepare_reader("01_RQ1_A_BTC_data_labels_baseline.ipynb", code)
+        assert marker.read_text() == "keep my data"
+    finally:
+        sys.path[:] = previous
 
 
 def test_sources_can_be_added_after_code_only_check_without_losing_edits(tmp_path):
@@ -149,6 +238,22 @@ def test_native_launch_uses_current_python_for_setup_checks_and_rebuild(tmp_path
     assert any("experiments.reproduce_notebooks" in command for command in commands)
 
 
+@pytest.mark.parametrize("native", [False, True])
+def test_partial_mode_runs_one_notebook_without_the_full_graph_or_ci(tmp_path, monkeypatch, capsys, native):
+    module = launcher()
+    code, data = archives(tmp_path)
+    code.rename(tmp_path / "cost-aware-market-forecasting-code.zip")
+    data.rename(tmp_path / "cost-aware-market-forecasting-sources.zip")
+    commands = []
+    monkeypatch.setattr(module, "_run", lambda command, cwd, title: commands.append(command))
+    root = module.run("Partial check", native=native, archive_dir=tmp_path, destination=tmp_path / "run")
+    assert (root / "code/.source_evidence/example.csv").is_file()
+    assert sum("experiments.reproduce_partial" in command for command in commands) == 1
+    assert all("--audit-only" in command for command in commands if "experiments.reproduce_source" in command)
+    assert not any("experiments.reproduce_notebooks" in command or "pytest" in command for command in commands)
+    assert "Full rebuild was not run" in capsys.readouterr().out
+
+
 def test_code_only_run_checks_code_without_requesting_source_data(tmp_path, monkeypatch, capsys):
     module = launcher()
     code, _ = archives(tmp_path)
@@ -163,6 +268,72 @@ def test_code_only_run_checks_code_without_requesting_source_data(tmp_path, monk
     assert not any("experiments.source_evidence" in command for command in commands)
     assert not any("experiments.reproduce_notebooks" in command for command in commands)
     assert "source data" in capsys.readouterr().out.lower()
+
+
+@pytest.mark.parametrize("native", [False, True])
+def test_default_setup_does_not_launch_the_full_test_suite(tmp_path, monkeypatch, capsys, native):
+    module = launcher()
+    code, _ = archives(tmp_path)
+    code.rename(tmp_path / "cost-aware-market-forecasting-code.zip")
+    commands = []
+    # Package installation and subprocess execution are external; extraction stays real.
+    monkeypatch.setattr(module, "_run", lambda command, cwd, title: commands.append(command))
+    root = module.run(native=native, archive_dir=tmp_path, destination=tmp_path / "run")
+    assert (root / "prepare_project.py").is_file()
+    audits = [command for command in commands if "experiments.reproduce_tracked" in command]
+    assert len(audits) == 1 and "--audit-only" in audits[0]
+    assert not any("pytest" in command for command in commands)
+    assert "Full tests and model fitting were not run" in capsys.readouterr().out
+
+
+def test_full_tests_are_not_a_user_launch_mode(tmp_path, monkeypatch):
+    module = launcher()
+    code, _ = archives(tmp_path)
+    code.rename(tmp_path / "cost-aware-market-forecasting-code.zip")
+    monkeypatch.setattr(module, "_run", lambda *args: None)
+    with pytest.raises(ValueError):
+        module.run("Run full tests", archive_dir=tmp_path, destination=tmp_path / "run")
+    assert not (tmp_path / "run").exists()
+
+
+@pytest.mark.parametrize("rebuild", [False, True])
+def test_one_named_release_zip_is_sufficient(tmp_path, monkeypatch, rebuild):
+    """Rebuild must consume embedded sources; client must never start fitting."""
+    module = launcher()
+    code, data = archives(tmp_path)
+    with zipfile.ZipFile(code) as archive:
+        contents = {name: archive.read(name) for name in archive.namelist()}
+    if rebuild:
+        with zipfile.ZipFile(data) as archive:
+            contents.update({name: archive.read(name) for name in archive.namelist()})
+        contents[module.PREFIX + "/code/.source_evidence/source_evidence_manifest.json"] = b"{}"
+    manifest_name = module.PREFIX + "/release_files.json"
+    contents[manifest_name] = json.dumps({
+        name.removeprefix(module.PREFIX + "/"): hashlib.sha256(value).hexdigest()
+        for name, value in contents.items() if name != manifest_name
+    }).encode()
+    release = tmp_path / ("Release-Rebuild.zip" if rebuild else "Release-Client.zip")
+    with zipfile.ZipFile(release, "w") as archive:
+        for name, value in contents.items():
+            archive.writestr(name, value)
+    commands = []
+    monkeypatch.setattr(module, "_run", lambda command, cwd, title: commands.append(command))
+    action = "Rebuild results" if rebuild else "Check installation"
+    root = module.run(action, native=True, archive_dir=tmp_path, destination=tmp_path / "run")
+    assert (root / "prepare_project.py").is_file()
+    assert (root / "code/.source_evidence/example.csv").is_file() == rebuild
+    assert any("experiments.source_evidence" in command for command in commands) == rebuild
+    assert any("experiments.reproduce_source" in command and "--audit-only" not in command for command in commands) == rebuild
+    assert any("experiments.reproduce_notebooks" in command for command in commands) == rebuild
+    assert all("--audit-only" in command for command in commands if "experiments.reproduce_tracked" in command)
+
+
+def test_renamed_client_zip_cannot_start_a_rebuild(tmp_path):
+    code, _ = archives(tmp_path)
+    code.rename(tmp_path / "Release-Rebuild.zip")
+    with pytest.raises(ValueError, match="source"):
+        launcher().run("Rebuild results", archive_dir=tmp_path, destination=tmp_path / "run")
+    assert not (tmp_path / "run").exists()
 
 
 def test_rebuild_requires_sources_before_creating_or_installing(tmp_path):

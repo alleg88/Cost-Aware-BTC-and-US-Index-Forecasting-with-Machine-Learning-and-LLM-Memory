@@ -7,7 +7,7 @@ import nbformat
 
 
 CODE_ROOT = Path(__file__).resolve().parents[1]
-NOTEBOOK = CODE_ROOT / "notebooks" / "01_data_labels_and_baseline.ipynb"
+NOTEBOOK = CODE_ROOT / "notebooks" / "01_RQ1_A_BTC_data_labels_baseline.ipynb"
 
 
 def main() -> int:

@@ -1,6 +1,6 @@
-# Notebook V reproducibility
+# Notebook RQ5_C reproducibility
 
-Notebook V is a deterministic BTC development experiment. It reads the frozen Notebook U
+Notebook RQ5_C is a deterministic BTC development experiment. It reads the frozen Notebook RQ5_B
 activations and bounded inputs ending before 1 July 2025; later rows cannot enter its
 identity.
 

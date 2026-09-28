@@ -8,7 +8,7 @@ from notebook_assertions import assert_artifact_reader, assert_later_period_guar
 
 
 CODE_ROOT = Path(__file__).resolve().parents[1]
-NOTEBOOK = CODE_ROOT / "notebooks" / "04g_lstm_gmadl_shadow.ipynb"
+NOTEBOOK = CODE_ROOT / "notebooks" / "09_RQ2_F_BTC_LSTM_GMADL_shadow.ipynb"
 
 
 def test_notebook_04g_is_executed_artifact_only_paired_shadow_reader():
@@ -27,10 +27,10 @@ def test_notebook_04g_is_executed_artifact_only_paired_shadow_reader():
         assert forbidden not in source
 
     code_cells = [cell for cell in notebook.cells if cell.cell_type == "code"]
-    assert code_cells
-    assert "google.colab" in code_cells[0].source
-    assert "drive.mount" in code_cells[0].source
-    assert all(cell.execution_count is not None for cell in code_cells)
+    assert len(code_cells) > 1
+    assert "from run_zip import prepare_" in code_cells[0].source
+    assert NOTEBOOK.name in code_cells[0].source
+    assert all(cell.execution_count is not None for cell in code_cells[1:])
     assert not any(
         output.output_type == "error"
         for cell in code_cells

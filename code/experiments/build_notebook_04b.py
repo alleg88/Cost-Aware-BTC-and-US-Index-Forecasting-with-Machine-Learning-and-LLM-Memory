@@ -8,7 +8,7 @@ from nbclient import NotebookClient
 
 
 CODE_ROOT = Path(__file__).resolve().parents[1]
-NOTEBOOK = CODE_ROOT / "notebooks" / "04b_xgboost_strong_move_admission.ipynb"
+NOTEBOOK = CODE_ROOT / "notebooks" / "10_RQ2_D_BTC_XGBoost_strong_move_admission.ipynb"
 KERNEL = {"display_name": "MSC Code", "language": "python", "name": "msc-code"}
 COLAB_SETUP = """# Google Colab / local setup
 import os, sys, subprocess

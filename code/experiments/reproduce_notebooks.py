@@ -1,4 +1,4 @@
-"""Execute the canonical dissertation notebooks and verify their saved outputs."""
+"""Execute the canonical project notebooks and verify their saved outputs."""
 
 from __future__ import annotations
 

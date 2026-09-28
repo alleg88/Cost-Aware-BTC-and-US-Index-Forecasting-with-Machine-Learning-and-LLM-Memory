@@ -21,7 +21,7 @@ import nbformat as nbf
 from experiments.notebook_hygiene import canonical_colab_setup
 
 CODE_ROOT = Path(__file__).resolve().parents[1]
-OUT = CODE_ROOT / "notebooks" / "A_channel_strategy.ipynb"
+OUT = CODE_ROOT / "notebooks" / "23_RQ5_A_BTC_channel_strategy.ipynb"
 
 SETUP = '''\
 import json, sys

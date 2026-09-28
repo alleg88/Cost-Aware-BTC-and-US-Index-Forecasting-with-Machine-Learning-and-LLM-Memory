@@ -11,7 +11,7 @@ from experiments.build_notebook_07 import build_notebook
 
 @pytest.mark.parametrize("saved", [False, True])
 def test_artifact_paths_resolve_inside_the_result_directory_not_cwd(tmp_path, monkeypatch, saved):
-    notebook = (nbformat.read(Path(__file__).parents[1] / "notebooks" / "07_final_q2_lockbox.ipynb", 4)
+    notebook = (nbformat.read(Path(__file__).parents[1] / "notebooks" / "22_Lockbox_Q2_2026.ipynb", 4)
                 if saved else build_notebook())
     function = next(node for node in ast.walk(ast.parse(_code_source(notebook)))
                     if isinstance(node, ast.FunctionDef) and node.name == "resolve_bound_path")
@@ -81,7 +81,7 @@ def test_first_reader_cell_validates_manifest_and_all_artifact_hashes_first() ->
         if "artifact-validation" in cell.metadata.get("tags", [])
     )
 
-    assert "# Google Colab / local setup" in notebook.cells[0].source
+    assert "from run_zip import prepare_reader" in notebook.cells[0].source
     assert "manifest_sha256" in first
     assert "artifact_hashes" in first
     assert "resolve_bound_path" in first

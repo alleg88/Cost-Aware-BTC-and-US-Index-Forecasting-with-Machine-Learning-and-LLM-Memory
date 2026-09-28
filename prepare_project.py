@@ -47,8 +47,11 @@ def prepare(root: Path) -> None:
     git("config", "core.autocrlf", "false")
     git("config", "core.safecrlf", "false")
     git("config", "core.longpaths", "true")
+    references = [name for name in sorted(manifest)
+                  if not name.startswith("code/.source_evidence/")
+                  and not (name.startswith("code/data/") and Path(name).suffix in {".csv", ".parquet", ".zip"})]
     git("add", "-f", "--pathspec-from-file=-", "--pathspec-file-nul",
-        data=b"\0".join(name.encode("utf-8") for name in sorted(manifest)) + b"\0")
+        data=b"\0".join(name.encode("utf-8") for name in references) + b"\0")
     git("-c", "user.name=Research artifact", "-c", "user.email=artifact@example.invalid",
         "-c", "commit.gpgSign=false", "-c", "core.hooksPath=", "commit", "--no-verify",
         "-m", "Research snapshot")

@@ -36,8 +36,8 @@ def _fingerprint(payload: Mapping[str, Any]) -> str:
 def write_notebook02b_handoff(path: str | Path = HANDOFF_PATH) -> Path:
     upstream = load_pipeline_handoff(PIPELINE_HANDOFF)
     payload: dict[str, Any] = {
-        "upstream_notebook": "02b_catboost_economic_optuna.ipynb",
-        "downstream_notebook": "02d_all_model_sentiment.ipynb",
+        "upstream_notebook": "03_RQ1_C_BTC_CatBoost_economic_objectives.ipynb",
+        "downstream_notebook": "13_RQ3_B_BTC_nine_model_sentiment_ablation.ipynb",
         "decision": "fixed_baseline_retained",
         "decision_reason": "F1 and economic tuning did not produce a robust profitable improvement after costs",
         "objective": "baseline",

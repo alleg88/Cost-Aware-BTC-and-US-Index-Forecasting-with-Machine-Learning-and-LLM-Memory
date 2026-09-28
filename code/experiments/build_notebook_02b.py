@@ -14,7 +14,7 @@ from experiments.notebook02b_handoff import (
 
 
 CODE_ROOT = Path(__file__).resolve().parents[1]
-NOTEBOOK = CODE_ROOT / "notebooks" / "02b_catboost_economic_optuna.ipynb"
+NOTEBOOK = CODE_ROOT / "notebooks" / "03_RQ1_C_BTC_CatBoost_economic_objectives.ipynb"
 ARM_NAMES_FOR_BUILD = {
     "baseline": "Fixed baseline",
     "F1": "F1-tuned",

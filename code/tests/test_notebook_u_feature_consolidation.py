@@ -20,7 +20,7 @@ def _builder():
 def _built(tmp_path: Path, run_root: Path):
     builder = _builder()
     path = builder.build_notebook(
-        output=tmp_path / "U_volatility_timing_feature_consolidation.ipynb",
+        output=tmp_path / "19_RQ5_B_BTC_volatility_feature_consolidation.ipynb",
         run_root=run_root,
     )
     return path, nbformat.read(path, as_version=4)

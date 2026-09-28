@@ -20,7 +20,7 @@ def _builder():
 def _built(tmp_path: Path, run_root: Path):
     builder = _builder()
     path = builder.build_notebook(
-        output=tmp_path / "V_economic_direction_head.ipynb",
+        output=tmp_path / "20_RQ5_C_BTC_economic_direction_head.ipynb",
         run_root=run_root,
     )
     return path, nbformat.read(path, as_version=4)
@@ -160,7 +160,7 @@ def test_notebook_v_loads_completed_smoke_when_executed_from_repo_root(
     result = runner.run_direction_head(run_root=run_root, smoke=True)
     monkeypatch.setattr(builder, "CODE_ROOT", code_root)
     path = builder.build_notebook(
-        output=code_root / "notebooks" / "V_economic_direction_head.ipynb",
+        output=code_root / "notebooks" / "20_RQ5_C_BTC_economic_direction_head.ipynb",
         run_root=run_root,
     )
 

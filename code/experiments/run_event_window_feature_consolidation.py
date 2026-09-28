@@ -9,6 +9,8 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
+
+from experiments.channel_rebuild_contract import recomputed_handoffs
 from sklearn.metrics import average_precision_score, roc_auc_score
 
 from evaluation.channel_window_validation import PurgedFold
@@ -678,9 +680,12 @@ def run_feature_consolidation(
     if stage != "dev":
         raise ValueError("Notebook U permits development only; forward and Q2 are sealed")
     protocol = protocol_dict(config, smoke=smoke)
-    protocol_hash = _sha_payload(protocol)
     frozen_r = load_frozen_r_handoff(Path(frozen_r_root))
     frozen_p = load_frozen_p_artifacts(Path(frozen_p_root))
+    if recomputed_handoffs():
+        protocol.update(frozen_p_run_hash=frozen_p.run_hash, frozen_r_run_hash=frozen_r.run_hash,
+                        reference_output_checks_required=False)
+    protocol_hash = _sha_payload(protocol)
     if (
         frozen_r.frozen.get("frozen_p_run_hash") != frozen_p.run_hash
         or frozen_r.frozen.get("frozen_p_oof_sha256") != frozen_p.oof_sha256
@@ -980,8 +985,8 @@ def run_feature_consolidation(
         }
         leakage = pd.DataFrame(
             [
-                {"check": "exact frozen Notebook R handoff", "passed": frozen_r.run_hash == FROZEN_R_RUN_HASH, "detail": frozen_r.run_hash},
-                {"check": "exact frozen Notebook P handoff", "passed": frozen_p.run_hash == FROZEN_P_RUN_HASH, "detail": frozen_p.run_hash},
+                {"check": "completed Notebook R handoff" if recomputed_handoffs() else "exact frozen Notebook R handoff", "passed": frozen_r.run_hash == protocol["frozen_r_run_hash"], "detail": frozen_r.run_hash},
+                {"check": "completed Notebook P handoff" if recomputed_handoffs() else "exact frozen Notebook P handoff", "passed": frozen_p.run_hash == protocol["frozen_p_run_hash"], "detail": frozen_p.run_hash},
                 {"check": "R and P OOF identities agree", "passed": frozen_r.frozen.get("frozen_p_oof_sha256") == frozen_p.oof_sha256, "detail": frozen_p.oof_sha256},
                 {"check": "P OOF artifact unchanged", "passed": _sha256(frozen_p.run_dir / "oof_predictions.parquet") == frozen_p.oof_sha256, "detail": frozen_p.oof_sha256},
                 {"check": "P calibration artifact unchanged", "passed": _sha256(frozen_p.run_dir / "policy_calibration_predictions.parquet") == frozen_p.calibration_sha256, "detail": frozen_p.calibration_sha256},

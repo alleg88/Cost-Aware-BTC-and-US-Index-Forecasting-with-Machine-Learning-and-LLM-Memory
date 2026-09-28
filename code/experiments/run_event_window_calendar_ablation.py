@@ -9,6 +9,8 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
+
+from experiments.channel_rebuild_contract import recomputed_handoffs, selected_run_hash, validate_recomputed_development
 from sklearn.metrics import average_precision_score, roc_auc_score
 
 from evaluation.channel_window_validation import PurgedFold
@@ -712,9 +714,10 @@ def load_frozen_r_handoff(run_root: Path = FROZEN_R_ROOT) -> FrozenRArtifacts:
     """Validate every registered artifact from the exact completed Notebook R run."""
     root = Path(run_root)
     pointer = _read_json(root / "latest_dev.json")
-    expected_relative = f"{FROZEN_R_RUN_HASH}/full"
+    expected_hash = selected_run_hash(pointer, FROZEN_R_RUN_HASH)
+    expected_relative = f"{expected_hash}/full"
     if (
-        pointer.get("run_hash") != FROZEN_R_RUN_HASH
+        pointer.get("run_hash") != expected_hash
         or pointer.get("relative_path") != expected_relative
     ):
         raise ValueError("frozen Notebook R pointer changed")
@@ -725,7 +728,7 @@ def load_frozen_r_handoff(run_root: Path = FROZEN_R_ROOT) -> FrozenRArtifacts:
     protocol_hash = str(pointer.get("protocol_hash", ""))
     if (
         state.get("status") != "complete"
-        or state.get("run_hash") != FROZEN_R_RUN_HASH
+        or state.get("run_hash") != expected_hash
         or state.get("protocol_hash") != protocol_hash
     ):
         raise ValueError("frozen Notebook R state is incomplete or changed")
@@ -745,16 +748,19 @@ def load_frozen_r_handoff(run_root: Path = FROZEN_R_ROOT) -> FrozenRArtifacts:
     protocol = _read_json(run_dir / "protocol.json")
     frozen = _read_json(run_dir / "frozen_protocol.json")
     summary = _read_json(run_dir / "summary.json")
+    validate_recomputed_development(protocol)
+    expected_p = protocol.get("frozen_p_run_hash") if recomputed_handoffs() else FROZEN_P_RUN_HASH
     if (
         state.get("summary") != summary
-        or summary.get("frozen_p_run_hash") != FROZEN_P_RUN_HASH
-        or frozen.get("frozen_p_run_hash") != FROZEN_P_RUN_HASH
+        or not expected_p
+        or summary.get("frozen_p_run_hash") != expected_p
+        or frozen.get("frozen_p_run_hash") != expected_p
         or summary.get("level_rearm_selected_for_direction_head") is not True
         or summary.get("forward_or_lockbox_loaded") is not False
     ):
         raise ValueError("frozen Notebook R methodological handoff changed")
     return FrozenRArtifacts(
-        run_hash=FROZEN_R_RUN_HASH,
+        run_hash=expected_hash,
         protocol_hash=protocol_hash,
         run_dir=run_dir,
         protocol=protocol,

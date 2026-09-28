@@ -12,7 +12,7 @@ from experiments.notebook_hygiene import canonical_colab_setup
 
 
 CODE_ROOT = Path(__file__).resolve().parents[1]
-NOTEBOOK_PATH = CODE_ROOT / "notebooks" / "07_final_q2_lockbox.ipynb"
+NOTEBOOK_PATH = CODE_ROOT / "notebooks" / "22_Lockbox_Q2_2026.ipynb"
 STATE_ROOT = CODE_ROOT / "experiments" / "cache" / "final_q2_lockbox"
 
 

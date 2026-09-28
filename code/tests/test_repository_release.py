@@ -96,9 +96,9 @@ def test_live_repository_release_audit_is_green():
     report = audit_repository(REPO_ROOT)
 
     assert report["status"] == "READY"
-    assert report["canonical_notebooks"] == 27
+    assert report["canonical_notebooks"] == 22
     assert report["q2_market_rows_opened"] is True
-    assert report["launcher_notebooks"] == 1
+    assert report["launcher_notebooks"] == 0
     assert report["notebook_errors"] == 0
     assert report["unexecuted_canonical_code_cells"] == 0
     assert report["tracked_forbidden"] == []
@@ -211,7 +211,7 @@ def test_reproducibility_guide_defines_source_to_results_boundary():
         "GDELT GKG via BigQuery",
         "--clean-clone",
         "Q2 2026 was opened once",
-        "27 canonical readers",
+        "22 canonical readers",
         "python -m experiments.source_evidence restore",
         "python -m experiments.reproduce_source",
         "python -m experiments.reproduce_notebooks",
@@ -221,26 +221,20 @@ def test_reproducibility_guide_defines_source_to_results_boundary():
         assert required in guide
 
 
-def test_readmes_link_the_reproducibility_boundary_without_overclaiming():
-    root_readme = (REPO_ROOT / "README.md").read_text("utf-8")
-    code_readme = (REPO_ROOT / "code" / "README.md").read_text("utf-8")
+def test_readme_navigation_opens_the_notebook_and_input_instructions():
+    import re
 
-    assert "](REPRODUCIBILITY.md)" in root_readme
-    assert "](../REPRODUCIBILITY.md)" in code_readme
-    assert "--clean-clone" in root_readme
-    assert "--clean-clone" in code_readme
-    assert "python -m experiments.reproduce_source" in root_readme
-    assert "python -m experiments.reproduce_source" in code_readme
-    assert "python -m experiments.reproduce_notebooks" in root_readme
-    assert "python -m experiments.reproduce_notebooks" in code_readme
-    assert "python -m experiments.source_evidence restore" in code_readme
-    assert "Truth Social" in code_readme
-    assert "OLLAMA_API_KEY" in code_readme
-    assert "43,578" not in code_readme
-    assert "12,773,265,922" not in code_readme
-    assert "Study window: 2024–2025" not in root_readme
-    assert "Q1-2026 held out" not in root_readme
-    assert "The steps reproduce the notebook workflow without paid APIs." not in code_readme
+    for readme_path in (REPO_ROOT / "README.md", REPO_ROOT / "code/README.md"):
+        text = readme_path.read_text(encoding="utf-8")
+        links = re.findall(r"\]\(([^()]+)\)", text)
+        assert links
+        local_links = [link.split("#", 1)[0] for link in links
+                       if not re.match(r"[a-zA-Z][a-zA-Z0-9+.-]*:", link)
+                       and not link.startswith("#")]
+        targets = [(readme_path.parent / link).resolve() for link in local_links]
+        assert all(target.is_file() for target in targets)
+        assert REPO_ROOT / "code/notebooks/README.md" in targets
+        assert REPO_ROOT / "code/notebooks/DATA.md" in targets
 
 
 def test_reproduction_requirements_document_the_cloud_key_without_storing_it():

@@ -52,9 +52,7 @@ def main() -> int:
         ]
     )
     if not args.audit_only:
-        with tempfile.TemporaryDirectory(
-            prefix=".reproduce_tmp_", dir=CODE_ROOT
-        ) as temp_dir:
+        with tempfile.TemporaryDirectory(prefix=".reproduce_tmp_") as temp_dir:
             _run(
                 [
                     sys.executable,

@@ -10,9 +10,10 @@ from pathlib import Path
 import sys
 from tempfile import TemporaryDirectory
 from textwrap import dedent
+from typing import TYPE_CHECKING
 
-import nbformat
-from nbclient import NotebookClient
+if TYPE_CHECKING:
+    import nbformat
 
 
 CODE_ROOT = Path(__file__).resolve().parents[1]
@@ -23,39 +24,34 @@ NOTEBOOK_EXTRA_DEPENDENCIES: dict[str, tuple[str, ...]] = {}
 
 NOTEBOOK_SEQUENCES = {
     "Bitcoin": (
-        "01_data_labels_and_baseline.ipynb",
-        "01b_positioning_ablation.ipynb",
-        "02b_catboost_economic_optuna.ipynb",
-        "02c_sentiment_data_and_methodology.ipynb",
-        "02d_all_model_sentiment.ipynb",
-        "02e_all_model_sentiment_policy.ipynb",
-        "03_all_model_stacking.ipynb",
-        "03a_stacking_forward.ipynb",
-        "03c_qualified_union_ensemble.ipynb",
-        "04a_svm_temperature_calibration.ipynb",
-        "04b_xgboost_strong_move_admission.ipynb",
-        "04d_unified_2021_ensemble.ipynb",
-        "04g_lstm_gmadl_shadow.ipynb",
-        "04h_union_v1_episode_reentry.ipynb",
-        "05c_causal_policy_router_agent.ipynb",
+        "01_RQ1_A_BTC_data_labels_baseline.ipynb",
+        "02_RQ1_B_BTC_positioning_ablation.ipynb",
+        "03_RQ1_C_BTC_CatBoost_economic_objectives.ipynb",
+        "12_RQ3_A_BTC_sentiment_data_methodology.ipynb",
+        "13_RQ3_B_BTC_nine_model_sentiment_ablation.ipynb",
+        "14_RQ3_C_BTC_sentiment_policy_ablation.ipynb",
+        "06_RQ2_A_BTC_all_model_stacking.ipynb",
+        "07_RQ2_B_BTC_stacking_forward_validation.ipynb",
+        "08_RQ2_C_BTC_qualified_union_ensemble.ipynb",
+        "09_RQ2_F_BTC_LSTM_GMADL_shadow.ipynb",
+        "18_RQ4_A_BTC_LLM_policy_router.ipynb",
     ),
     "Indices": (
-        "06a_index_nine_models.ipynb",
-        "06b_index_vix.ipynb",
-        "06c_index_deberta.ipynb",
-        "06d_index_llm.ipynb",
-        "06g_index_all_model_ensemble.ipynb",
-        "06i_index_comparison.ipynb",
+        "04_RQ1_E_indices_nine_model_benchmark.ipynb",
+        "05_RQ1_F_indices_VIX_ablation.ipynb",
+        "15_RQ3_D_indices_DeBERTa_sentiment.ipynb",
+        "16_RQ3_E_indices_LLM_sentiment.ipynb",
+        "10_RQ2_H_indices_all_model_ensemble.ipynb",
+        "11_RQ2_I_indices_policy_comparison.ipynb",
     ),
     "Channels": (
-        "A_channel_strategy.ipynb",
-        "U_volatility_timing_feature_consolidation.ipynb",
-        "V_economic_direction_head.ipynb",
-        "W_channel_vs_volatility_ablation.ipynb",
+        "19_RQ5_B_BTC_volatility_feature_consolidation.ipynb",
+        "20_RQ5_C_BTC_economic_direction_head.ipynb",
+        "21_RQ5_D_BTC_channel_vs_volatility_ablation.ipynb",
     ),
     "Final confirmation": (
-        "07_final_q2_lockbox.ipynb",
-        "07a_q2_sentiment_sensitivity.ipynb",
+        "22_Lockbox_Q2_2026.ipynb",
+        "17_RQ3_F_indices_Q2_sentiment_sensitivity.ipynb",
     ),
 }
 
@@ -99,30 +95,34 @@ def current_python_kernel():
                 os.environ["JUPYTER_PATH"] = previous
 
 
-def canonical_colab_setup(extra_dependencies: tuple[str, ...] = ()) -> str:
-    dependencies = tuple(dict.fromkeys((*BASE_COLAB_DEPENDENCIES, *extra_dependencies)))
-    quoted = ", ".join(repr(dependency) for dependency in dependencies)
+def canonical_colab_setup(
+    extra_dependencies: tuple[str, ...] = (), *, notebook_name: str | None = None,
+    rebuild: bool = False,
+) -> str:
+    archive = "Release-Rebuild.zip" if rebuild else "Release-Client.zip"
+    prepare = "prepare_rebuild" if rebuild else "prepare_reader"
+    purpose = ("project code and rebuild inputs). Choose this ZIP to calculate this notebook."
+               if rebuild else "project code). Choose this ZIP; data files are requested next.")
+    archive_source = ('next((p / "Release-Rebuild.zip" for p in (base, *base.parents) '
+                      'if (p / "Release-Rebuild.zip").is_file()), base / "Release-Rebuild.zip")'
+                      if rebuild else 'base / "Release-Client.zip"')
     return dedent(
         f'''\
-        # Google Colab / local setup
-        import os, sys, subprocess
+        # Notebook setup
+        import sys
         from pathlib import Path
-        if "google.colab" in sys.modules:
-            from google.colab import drive
-            drive.mount("/content/drive", force_remount=False)
-            CODE_ROOT = Path("/content/drive/MyDrive/msc project/code")
-            subprocess.check_call([
-                sys.executable, "-m", "pip", "install", "-q", "--no-deps", "-e",
-                str(CODE_ROOT), {quoted},
-            ])
-        else:
-            CODE_ROOT = next(
-                path for path in (Path.cwd(), *Path.cwd().parents)
-                if (path / "pyproject.toml").exists()
-            )
-        os.chdir(CODE_ROOT)
-        sys.path.insert(0, str(CODE_ROOT))
-        CODE = CODE_ROOT
+        base = Path.cwd()
+        source = next((p for p in (base, *base.parents) if (p / "code/pyproject.toml").is_file()), {archive_source})
+        if not source.exists() and "google.colab" in sys.modules:
+            from google.colab import files
+            print("Required file: {archive} ({purpose}", flush=True)
+            files.upload(target_dir=str(base))
+        if not source.exists():
+            raise FileNotFoundError("Supply {archive}, or open the extracted code/notebooks folder.")
+        sys.path.insert(0, str(source / "cost-aware-market-forecasting" if source.is_file() else source))
+        sys.modules.pop("run_zip", None)
+        from run_zip import {prepare}
+        CODE = CODE_ROOT = {prepare}({notebook_name!r}, source, {extra_dependencies!r})
         '''
     ).strip()
 
@@ -132,6 +132,7 @@ def _is_setup_cell(cell: nbformat.NotebookNode) -> bool:
         return False
     source = cell.source
     markers = (
+        "# Notebook setup",
         "# Google Colab / local setup",
         "# Auto-setup for Google Colab / Local environment",
         "# >>> Set this to your code/ folder path",
@@ -147,8 +148,20 @@ def normalize_notebook(
     extra_dependencies: tuple[str, ...] = (),
 ) -> bool:
     """Put one canonical setup cell first while preserving reader content."""
+    import nbformat
+
     notebook = nbformat.read(path, as_version=4)
-    source = canonical_colab_setup(extra_dependencies)
+    if path.name == "18_RQ4_A_BTC_LLM_policy_router.ipynb" and any(
+        cell.cell_type == "code"
+        and "loader.prepare(" in cell.source
+        and "manifest_sha256" in cell.source
+        for cell in notebook.cells
+    ):
+        nbformat.validate(notebook)
+        return False
+    rebuild = any(cell.cell_type == "code" and "from run_zip import prepare_rebuild" in cell.source
+                  for cell in notebook.cells if _is_setup_cell(cell))
+    source = canonical_colab_setup(extra_dependencies, notebook_name=path.name, rebuild=rebuild)
     setup_indexes = [
         index for index, cell in enumerate(notebook.cells) if _is_setup_cell(cell)
     ]
@@ -194,6 +207,8 @@ def normalize_all(notebook_root: Path = NOTEBOOK_ROOT) -> list[Path]:
 
 
 def execution_order(sequence_names: tuple[str, ...] | None = None) -> tuple[str, ...]:
+    if sequence_names is None:
+        return tuple(sorted(name for sequence in NOTEBOOK_SEQUENCES.values() for name in sequence))
     names = sequence_names or tuple(NOTEBOOK_SEQUENCES)
     unknown = [name for name in names if name not in NOTEBOOK_SEQUENCES]
     if unknown:
@@ -212,6 +227,9 @@ def execute_notebook(
     timeout: int = 900,
 ) -> Path:
     """Execute one reader in a clean kernel and write only a completed result."""
+    import nbformat
+    from nbclient import NotebookClient
+
     notebook = nbformat.read(path, as_version=4)
     with current_python_kernel() as kernel_name:
         executed = NotebookClient(

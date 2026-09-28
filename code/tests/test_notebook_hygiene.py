@@ -6,7 +6,6 @@ import nbformat
 from jupyter_client.kernelspec import KernelSpecManager
 
 from experiments.notebook_hygiene import (
-    BASE_COLAB_DEPENDENCIES,
     NOTEBOOK_SEQUENCES,
     canonical_colab_setup,
     current_python_kernel,
@@ -22,39 +21,34 @@ NOTEBOOK_ROOT = CODE_ROOT / "notebooks"
 
 EXPECTED_SEQUENCES = {
     "Bitcoin": (
-        "01_data_labels_and_baseline.ipynb",
-        "01b_positioning_ablation.ipynb",
-        "02b_catboost_economic_optuna.ipynb",
-        "02c_sentiment_data_and_methodology.ipynb",
-        "02d_all_model_sentiment.ipynb",
-        "02e_all_model_sentiment_policy.ipynb",
-        "03_all_model_stacking.ipynb",
-        "03a_stacking_forward.ipynb",
-        "03c_qualified_union_ensemble.ipynb",
-        "04a_svm_temperature_calibration.ipynb",
-        "04b_xgboost_strong_move_admission.ipynb",
-        "04d_unified_2021_ensemble.ipynb",
-        "04g_lstm_gmadl_shadow.ipynb",
-        "04h_union_v1_episode_reentry.ipynb",
-        "05c_causal_policy_router_agent.ipynb",
+        "01_RQ1_A_BTC_data_labels_baseline.ipynb",
+        "02_RQ1_B_BTC_positioning_ablation.ipynb",
+        "03_RQ1_C_BTC_CatBoost_economic_objectives.ipynb",
+        "12_RQ3_A_BTC_sentiment_data_methodology.ipynb",
+        "13_RQ3_B_BTC_nine_model_sentiment_ablation.ipynb",
+        "14_RQ3_C_BTC_sentiment_policy_ablation.ipynb",
+        "06_RQ2_A_BTC_all_model_stacking.ipynb",
+        "07_RQ2_B_BTC_stacking_forward_validation.ipynb",
+        "08_RQ2_C_BTC_qualified_union_ensemble.ipynb",
+        "09_RQ2_F_BTC_LSTM_GMADL_shadow.ipynb",
+        "18_RQ4_A_BTC_LLM_policy_router.ipynb",
     ),
     "Indices": (
-        "06a_index_nine_models.ipynb",
-        "06b_index_vix.ipynb",
-        "06c_index_deberta.ipynb",
-        "06d_index_llm.ipynb",
-        "06g_index_all_model_ensemble.ipynb",
-        "06i_index_comparison.ipynb",
+        "04_RQ1_E_indices_nine_model_benchmark.ipynb",
+        "05_RQ1_F_indices_VIX_ablation.ipynb",
+        "15_RQ3_D_indices_DeBERTa_sentiment.ipynb",
+        "16_RQ3_E_indices_LLM_sentiment.ipynb",
+        "10_RQ2_H_indices_all_model_ensemble.ipynb",
+        "11_RQ2_I_indices_policy_comparison.ipynb",
     ),
     "Channels": (
-        "A_channel_strategy.ipynb",
-        "U_volatility_timing_feature_consolidation.ipynb",
-        "V_economic_direction_head.ipynb",
-        "W_channel_vs_volatility_ablation.ipynb",
+        "19_RQ5_B_BTC_volatility_feature_consolidation.ipynb",
+        "20_RQ5_C_BTC_economic_direction_head.ipynb",
+        "21_RQ5_D_BTC_channel_vs_volatility_ablation.ipynb",
     ),
     "Final confirmation": (
-        "07_final_q2_lockbox.ipynb",
-        "07a_q2_sentiment_sensitivity.ipynb",
+        "22_Lockbox_Q2_2026.ipynb",
+        "17_RQ3_F_indices_Q2_sentiment_sensitivity.ipynb",
     ),
 }
 
@@ -62,7 +56,7 @@ EXPECTED_SEQUENCES = {
 def test_canonical_sequences_are_explicit_disjoint_and_exhaustive():
     assert NOTEBOOK_SEQUENCES == EXPECTED_SEQUENCES
     registered = [name for sequence in NOTEBOOK_SEQUENCES.values() for name in sequence]
-    assert len(registered) == len(set(registered)) == 27
+    assert len(registered) == len(set(registered)) == 22
     actual = {
         path.name
         for path in NOTEBOOK_ROOT.glob("*.ipynb")
@@ -82,16 +76,10 @@ def test_reader_ledger_names_every_registered_notebook():
     assert missing == []
 
 
-def test_reader_ledger_presents_bitcoin_then_indices_then_channels():
+def test_notebook_instructions_follow_the_default_run_order():
     readme = (NOTEBOOK_ROOT / "README.md").read_text(encoding="utf-8")
-    headings = [readme.index(f"## {name}") for name in EXPECTED_SEQUENCES]
-    assert headings == sorted(headings)
-    for index, (sequence_name, notebooks) in enumerate(EXPECTED_SEQUENCES.items()):
-        start = headings[index]
-        end = headings[index + 1] if index + 1 < len(headings) else len(readme)
-        positions = [readme.index(f"`{name}`") for name in notebooks]
-        assert positions == sorted(positions)
-        assert all(start < position < end for position in positions)
+    positions = [readme.index(f"`{name}`") for name in execution_order()]
+    assert positions == sorted(positions)
 
 
 def test_normalizer_replaces_one_old_setup_and_preserves_reader_cells(tmp_path):
@@ -117,14 +105,13 @@ def test_normalizer_replaces_one_old_setup_and_preserves_reader_cells(tmp_path):
     assert normalize_notebook(path, extra_dependencies=("xgboost==3.2.0",)) is True
     normalized = nbformat.read(path, as_version=4)
     assert normalized.cells[0].cell_type == "code"
-    assert normalized.cells[0].source == canonical_colab_setup(("xgboost==3.2.0",))
+    assert normalized.cells[0].source == canonical_colab_setup(("xgboost==3.2.0",), notebook_name="reader.ipynb")
     assert normalized.cells[1].source == "# Reader title"
     assert "reader_state = 42" in normalized.cells[2].source
     assert [cell.source for cell in normalized.cells].count("## Method") == 1
     assert [cell.source for cell in normalized.cells].count("answer = 42") == 1
     assert "old-bootstrap" not in "\n".join(cell.source for cell in normalized.cells)
-    for dependency in (*BASE_COLAB_DEPENDENCIES, "xgboost==3.2.0"):
-        assert dependency in normalized.cells[0].source
+    assert "xgboost==3.2.0" in normalized.cells[0].source
 
     first_bytes = path.read_bytes()
     assert normalize_notebook(path, extra_dependencies=("xgboost==3.2.0",)) is False
@@ -145,11 +132,32 @@ def test_notebook_json_is_valid_after_normalization(tmp_path):
     nbformat.validate(nbformat.read(path, as_version=4))
 
 
+def test_normalizer_preserves_direct_rebuild_instead_of_switching_to_client(tmp_path):
+    path = tmp_path / "reader.ipynb"
+    notebook = nbformat.v4.new_notebook(cells=[
+        nbformat.v4.new_code_cell(canonical_colab_setup(notebook_name=path.name, rebuild=True)),
+        nbformat.v4.new_code_cell("print(42)"),
+    ])
+    nbformat.write(notebook, path)
+    original = path.read_bytes()
+    assert normalize_notebook(path) is False
+    assert path.read_bytes() == original
+
+
+def test_normalizer_preserves_published_llm_inputs_and_saved_outputs(tmp_path):
+    path = tmp_path / "18_RQ4_A_BTC_LLM_policy_router.ipynb"
+    original = (NOTEBOOK_ROOT / path.name).read_bytes()
+    path.write_bytes(original)
+
+    assert normalize_notebook(path) is False
+    assert path.read_bytes() == original
+
+
 def test_execution_order_flattens_all_reader_sequences():
     expected = tuple(
         name for sequence in EXPECTED_SEQUENCES.values() for name in sequence
     )
-    assert execution_order() == expected
+    assert execution_order() == tuple(sorted(expected))
     assert execution_order(("Indices", "Channels")) == (
         *EXPECTED_SEQUENCES["Indices"],
         *EXPECTED_SEQUENCES["Channels"],
@@ -205,8 +213,8 @@ def test_execute_all_rejects_a_resume_point_outside_the_selected_sequence(tmp_pa
     try:
         execute_all(
             ("Indices",),
+            start_at="08_RQ2_C_BTC_qualified_union_ensemble.ipynb",
             notebook_root=NOTEBOOK_ROOT,
-            start_at="A_channel_strategy.ipynb",
         )
     except ValueError as error:
         assert "outside the selected sequence" in str(error)

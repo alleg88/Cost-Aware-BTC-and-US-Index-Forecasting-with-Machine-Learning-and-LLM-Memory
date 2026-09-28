@@ -5,7 +5,7 @@ import nbformat
 from notebook_assertions import assert_artifact_reader, numeric_column, tables
 
 
-NOTEBOOK = Path(__file__).parents[1] / "notebooks" / "02c_sentiment_data_and_methodology.ipynb"
+NOTEBOOK = Path(__file__).parents[1] / "notebooks" / "12_RQ3_A_BTC_sentiment_data_methodology.ipynb"
 
 
 def test_sentiment_reader_reports_data_without_fitting_forecasts():

@@ -52,18 +52,38 @@ def test_index_graph_registers_the_same_isolated_pipeline_for_both_streams():
 def test_channel_graph_uses_the_frozen_handoffs_before_rebuilding_u_v_w():
     graph = load_graph(REBUILD_TASKS)
     tasks = graph.task_map()
+    compact = json.loads(REBUILD_TASKS.read_text(encoding="utf-8")).get(
+        "result_comparison"
+    ) == "not_required"
 
     assert tasks["channel.study"].module == "experiments.channel_study"
     assert tasks["channel.ranking"].args == (
         "--events",
         f"experiments/cache/channel_study/{CHANNEL_TAG}/events.parquet",
     )
-    assert tasks["channel.stage_handoffs"].module == "experiments.rebuild_remaining"
     assert tasks["channel.u"].module == "experiments.run_event_window_feature_consolidation"
     assert tasks["channel.v"].module == "experiments.run_event_window_direction_head"
     assert tasks["channel.w"].module == "experiments.run_channel_vs_volatility_ablation"
     order = graph.topological_order()
-    assert order.index("channel.stage_handoffs") < order.index("channel.u")
+    if compact:
+        assert "channel.stage_handoffs" not in tasks
+        assert [
+            task_id
+            for task_id in order
+            if task_id in {"channel.j", "channel.m", "channel.n", "channel.o", "channel.p", "channel.q", "channel.r"}
+        ] == [
+            "channel.j",
+            "channel.m",
+            "channel.n",
+            "channel.o",
+            "channel.p",
+            "channel.q",
+            "channel.r",
+        ]
+        assert order.index("channel.r") < order.index("channel.u")
+    else:
+        assert tasks["channel.stage_handoffs"].module == "experiments.rebuild_remaining"
+        assert order.index("channel.stage_handoffs") < order.index("channel.u")
     assert order.index("channel.u") < order.index("channel.v")
     assert order.index("channel.u") < order.index("channel.w")
 

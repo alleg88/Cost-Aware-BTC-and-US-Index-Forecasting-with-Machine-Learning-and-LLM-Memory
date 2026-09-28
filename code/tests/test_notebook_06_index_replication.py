@@ -19,12 +19,12 @@ from experiments.build_notebook_06 import (
 
 CODE_ROOT = Path(__file__).parents[1]
 EXPECTED = {
-    "nine_models": CODE_ROOT / "notebooks" / "06a_index_nine_models.ipynb",
-    "vix": CODE_ROOT / "notebooks" / "06b_index_vix.ipynb",
-    "deberta": CODE_ROOT / "notebooks" / "06c_index_deberta.ipynb",
-    "llm": CODE_ROOT / "notebooks" / "06d_index_llm.ipynb",
-    "ensemble": CODE_ROOT / "notebooks" / "06g_index_all_model_ensemble.ipynb",
-    "comparison": CODE_ROOT / "notebooks" / "06i_index_comparison.ipynb",
+    "nine_models": CODE_ROOT / "notebooks" / "04_RQ1_E_indices_nine_model_benchmark.ipynb",
+    "vix": CODE_ROOT / "notebooks" / "05_RQ1_F_indices_VIX_ablation.ipynb",
+    "deberta": CODE_ROOT / "notebooks" / "15_RQ3_D_indices_DeBERTa_sentiment.ipynb",
+    "llm": CODE_ROOT / "notebooks" / "16_RQ3_E_indices_LLM_sentiment.ipynb",
+    "ensemble": CODE_ROOT / "notebooks" / "10_RQ2_H_indices_all_model_ensemble.ipynb",
+    "comparison": CODE_ROOT / "notebooks" / "11_RQ2_I_indices_policy_comparison.ipynb",
 }
 DISPLAY_MODELS = {
     "LogReg",
@@ -453,13 +453,14 @@ def test_executed_readers_are_compact_and_error_free():
 )
 def test_executed_forward_result_tables_show_every_model(name: str, groups: int):
     notebook = nbformat.read(EXPECTED[name], as_version=4)
-    cells = [
-        cell
+    required_columns = {"Index", "Model", "H1 status", "Forward status", "Trades", "Net %", "Sharpe", "Sortino"}
+    tables = [
+        table
         for cell in notebook.cells
-        if cell.cell_type == "code" and "# forward-all-models" in cell.source
+        if cell.cell_type == "code"
+        for table in _cell_tables(cell)
+        if required_columns.issubset(table.columns)
     ]
-    assert len(cells) == 1
-    tables = _cell_tables(cells[0])
     assert len(tables) == 1
     table = tables[0]
     assert "H1 status" in table.columns
@@ -502,38 +503,49 @@ def test_executed_readers_render_no_missing_or_vendor_tokens():
             )
 
 
-def test_every_executed_table_has_one_sentence_above_and_below():
+def test_every_executed_table_has_brief_caption_and_one_final_notebook_takeaway():
     for name, path in EXPECTED.items():
         notebook = nbformat.read(path, as_version=4)
+        visible = [cell.source for cell in notebook.cells if cell.cell_type == "markdown"]
         for index, cell in enumerate(notebook.cells):
-            if cell.cell_type != "code" or not _cell_tables(cell):
-                continue
-            assert index > 0 and notebook.cells[index - 1].cell_type == "markdown"
-            method = notebook.cells[index - 1].source.strip()
-            assert _is_one_sentence(method, "Method:"), (name, method)
-            takeaways = [
-                line.strip()
-                for output in cell.get("outputs", [])
-                if output.get("output_type") == "stream"
-                for line in str(output.get("text", "")).splitlines()
-                if line.strip().startswith("Takeaway:")
-            ]
-            assert len(takeaways) == 1, (name, takeaways)
-            assert _is_one_sentence(takeaways[0], "Takeaway:"), (
-                name,
-                takeaways[0],
+            caption = (
+                notebook.cells[index - 1].source.strip()
+                if index > 0 and notebook.cells[index - 1].cell_type == "markdown"
+                else ""
             )
+            for output in cell.get("outputs", []):
+                data = output.get("data", {})
+                if "text/markdown" in data:
+                    caption = data["text/markdown"].strip()
+                    visible.append(caption)
+                if output.get("output_type") == "stream":
+                    visible.append(str(output.get("text", "")))
+                if "<table" not in data.get("text/html", "").lower():
+                    continue
+                assert 5 <= len(caption.split()) <= 100, (name, index, caption)
+                assert not caption.startswith("#"), (name, index, caption)
+                assert re.search(r"[.!?]$", caption), (name, index, caption)
+                caption = ""
+        assert notebook.cells[-1].cell_type == "markdown", name
+        closing = notebook.cells[-1].source.strip()
+        assert closing.startswith("## Results\n"), name
+        takeaway = closing.split("\n\n")[-1]
+        assert _is_one_sentence(takeaway, "Takeaway:"), (name, takeaway)
+        assert len(re.findall(r"Takeaway:", "\n".join(visible), flags=re.IGNORECASE)) == 1, name
 
 
 def test_executed_vix_family_effects_are_numeric_and_ranked_best_first():
     notebook = nbformat.read(EXPECTED["vix"], as_version=4)
-    cells = [
-        cell
+    required_columns = {"Index", "Model", "Price-only gate net %", "Price + VIX gate net %", "Gate net delta (pp)"}
+    tables = [
+        table
         for cell in notebook.cells
-        if cell.cell_type == "code" and "# vix-numeric-table" in cell.source
+        if cell.cell_type == "code"
+        for table in _cell_tables(cell)
+        if required_columns.issubset(table.columns)
     ]
-    assert len(cells) == 1
-    table = _cell_tables(cells[0])[0]
+    assert len(tables) == 1
+    table = tables[0]
     values = pd.to_numeric(table["Gate net delta (pp)"], errors="raise")
     price = pd.to_numeric(table["Price-only gate net %"], errors="raise")
     vix = pd.to_numeric(table["Price + VIX gate net %"], errors="raise")

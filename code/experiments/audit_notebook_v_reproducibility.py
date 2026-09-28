@@ -220,7 +220,7 @@ def audit_repository(
         *registered,
         Path(__file__).resolve(),
         root / "experiments" / "build_notebook_v.py",
-        root / "notebooks" / "V_economic_direction_head.ipynb",
+        root / "notebooks" / "20_RQ5_C_BTC_economic_direction_head.ipynb",
         root / "notebooks" / "V_REPRODUCIBILITY.md",
         root / "requirements-v-repro.txt",
         root / ".python-version",

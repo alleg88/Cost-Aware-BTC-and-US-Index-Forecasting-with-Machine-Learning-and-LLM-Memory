@@ -23,7 +23,7 @@ def test_master_reproduction_executes_selected_readers_then_audits(monkeypatch):
     result = module.reproduce_notebooks(
         sequence_names=("Bitcoin",),
         timeout=123,
-        start_at="01_data_labels_and_baseline.ipynb",
+        start_at="01_RQ1_A_BTC_data_labels_baseline.ipynb",
     )
 
     assert calls == [
@@ -31,7 +31,7 @@ def test_master_reproduction_executes_selected_readers_then_audits(monkeypatch):
             "execute",
             ("Bitcoin",),
             123,
-            "01_data_labels_and_baseline.ipynb",
+            "01_RQ1_A_BTC_data_labels_baseline.ipynb",
         ),
         ("audit", module.REPOSITORY_ROOT),
     ]

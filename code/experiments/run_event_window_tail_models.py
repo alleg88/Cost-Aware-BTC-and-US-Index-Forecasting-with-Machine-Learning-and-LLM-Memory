@@ -11,6 +11,8 @@ from typing import Callable
 import numpy as np
 import pandas as pd
 
+from experiments.channel_rebuild_contract import recomputed_handoffs, selected_run_hash
+
 from evaluation.event_window_tail_policy import (
     episode_pair_bootstrap,
     matched_count_diagnostic,
@@ -335,16 +337,17 @@ def load_frozen_j_artifacts(
     """Validate every frozen Notebook J artifact before exposing its frames."""
     root = Path(run_root)
     pointer = _read_json(root / "latest_dev.json")
-    if pointer.get("run_hash") != FROZEN_J_RUN_HASH:
+    expected_hash = selected_run_hash(pointer, FROZEN_J_RUN_HASH)
+    if pointer.get("run_hash") != expected_hash:
         raise ProtocolMismatchError("frozen Notebook J run hash changed")
-    expected_relative = f"{FROZEN_J_RUN_HASH}/full"
+    expected_relative = f"{expected_hash}/full"
     if pointer.get("relative_path") != expected_relative:
         raise ProtocolMismatchError("frozen Notebook J pointer must select the full run")
     run_dir = (root / expected_relative).resolve()
     if not run_dir.is_relative_to(root.resolve()):
         raise ProtocolMismatchError("frozen Notebook J path escaped its run root")
     state = _read_json(run_dir / "run_state.json")
-    if state.get("status") != "complete" or state.get("run_hash") != FROZEN_J_RUN_HASH:
+    if state.get("status") != "complete" or state.get("run_hash") != expected_hash:
         raise ProtocolMismatchError("frozen Notebook J run is not complete")
     if state.get("protocol_hash") != pointer.get("protocol_hash"):
         raise ProtocolMismatchError("frozen Notebook J protocol identity changed")
@@ -385,10 +388,11 @@ def load_frozen_j_artifacts(
     selected = pd.read_parquet(run_dir / "selected_trades.parquet")
     if int(summary.get("manifest_windows", -1)) != 14_510:
         raise ProtocolMismatchError("frozen Notebook J summary manifest count changed")
-    if int(summary.get("attempted_trades", -1)) != 1_448:
+    expected_attempts = len(selected) if recomputed_handoffs() else 1_448
+    if int(summary.get("attempted_trades", -1)) != expected_attempts:
         raise ProtocolMismatchError("frozen Notebook J reference attempt count changed")
     return FrozenJArtifacts(
-        run_hash=FROZEN_J_RUN_HASH,
+        run_hash=expected_hash,
         run_dir=run_dir,
         manifest_sha256=_sha256(run_dir / "window_manifest.parquet"),
         input_hash=str(state.get("input_hash", "")),

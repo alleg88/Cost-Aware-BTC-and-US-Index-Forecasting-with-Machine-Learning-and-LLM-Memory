@@ -3,7 +3,7 @@ from pathlib import Path
 import nbformat
 
 
-NOTEBOOK = Path(__file__).resolve().parents[1] / "notebooks" / "01_data_labels_and_baseline.ipynb"
+NOTEBOOK = Path(__file__).resolve().parents[1] / "notebooks" / "01_RQ1_A_BTC_data_labels_baseline.ipynb"
 NOTEBOOKS_DIR = NOTEBOOK.parent
 
 
@@ -82,14 +82,14 @@ def test_active_notebook_series_excludes_one_second_execution_audit():
 def test_active_sentiment_chain_is_sequential_and_old_notebook_04_is_removed():
     readme = (NOTEBOOKS_DIR / "README.md").read_text(encoding="utf-8")
     chain = [
-        "02b_catboost_economic_optuna.ipynb",
-        "02c_sentiment_data_and_methodology.ipynb",
-        "02d_all_model_sentiment.ipynb",
-        "02e_all_model_sentiment_policy.ipynb",
-        "03_all_model_stacking.ipynb",
-        "03a_stacking_forward.ipynb",
+        "03_RQ1_C_BTC_CatBoost_economic_objectives.ipynb",
+        "12_RQ3_A_BTC_sentiment_data_methodology.ipynb",
+        "13_RQ3_B_BTC_nine_model_sentiment_ablation.ipynb",
+        "14_RQ3_C_BTC_sentiment_policy_ablation.ipynb",
+        "06_RQ2_A_BTC_all_model_stacking.ipynb",
+        "07_RQ2_B_BTC_stacking_forward_validation.ipynb",
     ]
-    positions = [readme.index(name) for name in chain]
+    positions = [readme.index(name) for name in sorted(chain)]
     assert positions == sorted(positions)
     assert all((NOTEBOOKS_DIR / name).exists() for name in chain)
     assert not (NOTEBOOKS_DIR / "02c_all_model_sentiment.ipynb").exists()

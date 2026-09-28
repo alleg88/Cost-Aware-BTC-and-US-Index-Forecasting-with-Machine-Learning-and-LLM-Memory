@@ -15,7 +15,7 @@ from experiments.run_event_window_feature_consolidation import (
 
 
 CODE_ROOT = Path(__file__).resolve().parents[1]
-OUT = CODE_ROOT / "notebooks" / "U_volatility_timing_feature_consolidation.ipynb"
+OUT = CODE_ROOT / "notebooks" / "19_RQ5_B_BTC_volatility_feature_consolidation.ipynb"
 EXPECTED_FRAME_COLUMNS: dict[str, tuple[str, ...]] = {
     "compact_feature_audit.csv": (
         "feature",

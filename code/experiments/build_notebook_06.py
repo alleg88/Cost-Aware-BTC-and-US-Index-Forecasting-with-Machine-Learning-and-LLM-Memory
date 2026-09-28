@@ -12,12 +12,12 @@ from experiments.notebook_hygiene import canonical_colab_setup
 
 CODE_ROOT = Path(__file__).resolve().parents[1]
 NOTEBOOK_PATHS = {
-    "nine_models": CODE_ROOT / "notebooks" / "06a_index_nine_models.ipynb",
-    "vix": CODE_ROOT / "notebooks" / "06b_index_vix.ipynb",
-    "deberta": CODE_ROOT / "notebooks" / "06c_index_deberta.ipynb",
-    "llm": CODE_ROOT / "notebooks" / "06d_index_llm.ipynb",
-    "ensemble": CODE_ROOT / "notebooks" / "06g_index_all_model_ensemble.ipynb",
-    "comparison": CODE_ROOT / "notebooks" / "06i_index_comparison.ipynb",
+    "nine_models": CODE_ROOT / "notebooks" / "04_RQ1_E_indices_nine_model_benchmark.ipynb",
+    "vix": CODE_ROOT / "notebooks" / "05_RQ1_F_indices_VIX_ablation.ipynb",
+    "deberta": CODE_ROOT / "notebooks" / "15_RQ3_D_indices_DeBERTa_sentiment.ipynb",
+    "llm": CODE_ROOT / "notebooks" / "16_RQ3_E_indices_LLM_sentiment.ipynb",
+    "ensemble": CODE_ROOT / "notebooks" / "10_RQ2_H_indices_all_model_ensemble.ipynb",
+    "comparison": CODE_ROOT / "notebooks" / "11_RQ2_I_indices_policy_comparison.ipynb",
 }
 MODEL_LABELS = {
     "logreg": "LogReg",

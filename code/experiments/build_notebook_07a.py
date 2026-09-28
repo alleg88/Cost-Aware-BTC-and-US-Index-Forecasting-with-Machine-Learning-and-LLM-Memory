@@ -12,7 +12,7 @@ from experiments.notebook_hygiene import canonical_colab_setup
 
 
 CODE_ROOT = Path(__file__).resolve().parents[1]
-NOTEBOOK_PATH = CODE_ROOT / "notebooks" / "07a_q2_sentiment_sensitivity.ipynb"
+NOTEBOOK_PATH = CODE_ROOT / "notebooks" / "17_RQ3_F_indices_Q2_sentiment_sensitivity.ipynb"
 RESULT_ROOT = CODE_ROOT / "experiments" / "cache" / "q2_sentiment_sensitivity" / "results"
 
 

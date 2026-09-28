@@ -1,4 +1,4 @@
-"""Run checks from the code ZIP; add the source ZIP to rebuild results."""
+"""Start Release-Client.zip or rebuild from the self-contained Release-Rebuild.zip."""
 from __future__ import annotations
 
 import argparse
@@ -16,7 +16,7 @@ from tempfile import TemporaryDirectory
 from zipfile import ZipFile
 
 PREFIX = "cost-aware-market-forecasting"
-ACTIONS = ("Check installation", "Rebuild results")
+ACTIONS = ("Check installation", "Partial check", "Rebuild results")
 
 
 def _sha(path: Path) -> str:
@@ -58,7 +58,7 @@ def extract_archives(code_zip: Path, data_zip: Path | None, destination: Path) -
             if archive.testzip() is not None:
                 raise ValueError("Damaged ZIP; download the archive again.")
         manifest = json.loads(code.read(PREFIX + "/release_files.json"))
-        if not isinstance(manifest, dict) or not {"prepare_project.py", "code/pyproject.toml"} <= manifest.keys():
+        if not isinstance(manifest, dict) or "code/pyproject.toml" not in manifest:
             raise ValueError("The code ZIP is missing its file manifest.")
         expected_names = {PREFIX + "/" + name for name in manifest} | {PREFIX + "/release_files.json"}
         if {item.filename for item in code.infolist() if not item.is_dir()} != expected_names:
@@ -97,6 +97,48 @@ def extract_archives(code_zip: Path, data_zip: Path | None, destination: Path) -
     return root
 
 
+def prepare_reader(notebook_name: str, source: Path,
+                   extra_dependencies: tuple[str, ...] = ()) -> Path:
+    """Use the same reader preparation from an extracted project or its ZIP."""
+    source = Path(source).resolve()
+    root = extract_archives(source, None, source.parent / "Release-Client") if source.is_file() else source
+    code_root = root / "code"
+    if not (code_root / "pyproject.toml").is_file():
+        raise FileNotFoundError("Open code/notebooks from the extracted Release-Client.zip.")
+    sys.path.insert(0, str(code_root))
+    from experiments.notebook_runtime import prepare_notebook
+
+    return prepare_notebook(notebook_name, code_root, extra_dependencies)
+
+
+def prepare_rebuild(notebook_name: str, source: Path,
+                    extra_dependencies: tuple[str, ...] = ()) -> Path:
+    """Run the selected experiment's producers, then continue ordinary notebook cells."""
+    source = Path(source).resolve()
+    if source.is_file():
+        with ZipFile(source) as archive:
+            if PREFIX + "/code/.source_evidence/source_evidence_manifest.json" not in archive.namelist():
+                raise ValueError("Choose Release-Rebuild.zip: the Client archive has no rebuild inputs.")
+        print("Checking and unpacking Release-Rebuild.zip...", flush=True)
+        root = extract_archives(source, None, source.parent / "Release-Rebuild")
+    else:
+        root = source
+    code_root = root / "code"
+    if not (code_root / ".source_evidence/source_evidence_manifest.json").is_file():
+        raise ValueError("Open a notebook from Release-Rebuild.zip; its source inputs are required.")
+    if not (code_root / "pyproject.toml").is_file() or not (root / "prepare_project.py").is_file():
+        raise ValueError("Incomplete Release-Rebuild.zip; extract or upload the full archive.")
+    _run([sys.executable, str(root / "prepare_project.py")], root, "Verifying the extracted project...")
+    sys.path.insert(0, str(code_root))
+    from experiments.notebook_runtime import prepare_notebook
+    from experiments.notebook_rebuild import rebuild_notebook_inputs
+
+    print("Preparing packages in this notebook's Python kernel (no developer test suite)...", flush=True)
+    prepare_notebook(None, code_root, extra_dependencies)
+    rebuild_notebook_inputs(notebook_name, code_root)
+    return code_root
+
+
 def _run(command: list[str], cwd: Path, title: str) -> None:
     print(title, flush=True)
     with (cwd / "run.log").open("a", encoding="utf-8") as log:
@@ -114,15 +156,26 @@ def run(action: str = "Check installation", *, archive_dir: Path = Path.cwd(),
         raise ValueError(f"Choose one of: {', '.join(ACTIONS)}")
     if shutil.which("git") is None:
         raise RuntimeError("Git is required. Colab includes it; locally, install Git and reopen the terminal.")
-    code_zip = Path(archive_dir) / f"{PREFIX}-code.zip"
-    data_zip = Path(archive_dir) / f"{PREFIX}-sources.zip"
-    if not code_zip.is_file():
-        raise ValueError(f"Upload {PREFIX}-code.zip before running this cell.")
-    if not data_zip.is_file():
-        if action == "Rebuild results":
-            raise ValueError(f"Rebuild results also requires {PREFIX}-sources.zip. Upload both ZIPs.")
-        data_zip = None
-    print("Checking and unpacking ZIPs...", flush=True)
+    archive_dir = Path(archive_dir)
+    needs_rebuild = action in {"Partial check", "Rebuild results"}
+    release_name = "Release-Rebuild.zip" if needs_rebuild else "Release-Client.zip"
+    code_zip = archive_dir / release_name
+    data_zip = None
+    embedded_sources = False
+    if code_zip.is_file():
+        with ZipFile(code_zip) as package:
+            embedded_sources = PREFIX + "/code/.source_evidence/source_evidence_manifest.json" in package.namelist()
+    else:
+        # Existing two-archive exports remain usable from the command line.
+        code_zip = archive_dir / f"{PREFIX}-code.zip"
+        if not code_zip.is_file():
+            raise ValueError(f"Place {release_name} beside the starter notebook before running it.")
+        legacy_sources = archive_dir / f"{PREFIX}-sources.zip"
+        if needs_rebuild and legacy_sources.is_file():
+            data_zip = legacy_sources
+    if needs_rebuild and not embedded_sources and data_zip is None:
+        raise ValueError(f"{action} requires sources. Use Release-Rebuild.zip, not the client ZIP.")
+    print(f"Checking and unpacking {code_zip.name}...", flush=True)
     root = extract_archives(code_zip, data_zip, destination)
     code = root / "code"
     if native:
@@ -143,25 +196,41 @@ def run(action: str = "Check installation", *, archive_dir: Path = Path.cwd(),
         _run([*uv_command, "pip", "install", "--python", str(python), "-r", "requirements-repro.txt"], code,
              "Installing project dependencies...")
     _run([str(python), str(root / "prepare_project.py")], root, "Preparing the project...")
-    if data_zip is not None:
+    if data_zip is not None or embedded_sources:
         _run([str(python), "-m", "experiments.source_evidence", "verify", "--source", ".source_evidence",
               "--manifest", ".source_evidence/source_evidence_manifest.json"], code, "Checking source data...")
     else:
         print("Code-only check: source data are not loaded or verified.", flush=True)
-    _run([str(python), "-m", "experiments.reproduce_tracked"], code, "Checking installation and running tests (several minutes)...")
+    checks = [str(python), "-m", "experiments.reproduce_tracked"]
+    _run([*checks, "--audit-only"], code, "Checking packages and project files (no full test suite)...")
     _run([str(python), "-m", "experiments.reproduce_source", "--audit-only"], code, "Checking the calculation sequence...")
     if action == "Rebuild results":
         _run([str(python), "-m", "experiments.reproduce_source"], code, "Rebuilding results (this can take many hours)...")
         _run([str(python), "-m", "experiments.reproduce_notebooks"], code, "Updating the result notebooks...")
-    print("Results rebuilt." if action == "Rebuild results" else "Installation checks passed; calculations were not rerun.", flush=True)
+    if action == "Partial check":
+        _run([str(python), "-m", "experiments.reproduce_partial"], code,
+             "Executing the complete first notebook from supplied inputs (not the full project)...")
+    if action == "Rebuild results":
+        print("Results rebuilt.", flush=True)
+    elif action == "Partial check":
+        print("Partial check passed. Full rebuild was not run.", flush=True)
+        print(f"New notebook and diagnostic report: {root / 'partial-check'}", flush=True)
+    else:
+        print("Installation ready. Full tests and model fitting were not run.", flush=True)
     print(f"Notebooks: {code / 'notebooks'}", flush=True)
     return root
 
 
 if __name__ == "__main__":
+    if not Path(__file__).with_name("prepare_project.py").is_file():
+        print("Open a notebook in code/notebooks. This helper unpacks the ZIP automatically in Colab; do not run it separately.")
+        raise SystemExit(0)
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--rebuild", action="store_true", help="also refit models and rebuild all results")
-    parser.add_argument("--archives", type=Path, default=Path.cwd(), help="folder containing the code ZIP and optional source ZIP")
+    modes = parser.add_mutually_exclusive_group()
+    modes.add_argument("--rebuild", action="store_true", help="use Release-Rebuild.zip to refit models and rebuild results")
+    modes.add_argument("--partial", action="store_true", help="use Release-Rebuild.zip to execute only the first notebook")
+    parser.add_argument("--archives", type=Path, default=Path.cwd(), help="folder containing the release ZIP")
     parser.add_argument("--output", type=Path, default=Path.cwd() / "market-forecasting-run")
     args = parser.parse_args()
-    run("Rebuild results" if args.rebuild else "Check installation", archive_dir=args.archives, destination=args.output)
+    action = "Rebuild results" if args.rebuild else "Partial check" if args.partial else "Check installation"
+    run(action, archive_dir=args.archives, destination=args.output)

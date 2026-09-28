@@ -5,7 +5,7 @@ import nbformat
 from notebook_assertions import assert_artifact_reader, numeric_column, tables
 
 
-NOTEBOOK = Path(__file__).parents[1] / "notebooks" / "02b_catboost_economic_optuna.ipynb"
+NOTEBOOK = Path(__file__).parents[1] / "notebooks" / "03_RQ1_C_BTC_CatBoost_economic_objectives.ipynb"
 
 
 def test_matched_comparison_retains_all_nine_rows_at_each_stage():

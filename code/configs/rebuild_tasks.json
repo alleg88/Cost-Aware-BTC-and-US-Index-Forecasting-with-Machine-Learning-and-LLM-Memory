@@ -3,13 +3,26 @@
   "sources": [
     ".source_evidence",
     "source_evidence_manifest.json",
+    "sentiment/raw/index_deepseek_identity.json",
     "configs/final_q2_lockbox_protocol.json",
     "configs/final_q2_lockbox_manifest.json",
     "experiments/cache/final_q2_lockbox/OPENED.json",
     "experiments/cache/final_q2_lockbox/8185dee25cc468ed9be8b79aad59eb33eeda874f4cb245c31883ef127f205312",
-    "experiments/cache/q2_sentiment_sensitivity"
+    "experiments/cache/q2_sentiment_sensitivity",
+    "experiments/cache/reflection_ensemble_v5"
   ],
   "tasks": [
+    {
+      "id": "btc.agent_weights_verify",
+      "depends_on": [],
+      "module": "experiments.rq4_ensemble_reader",
+      "environment": {"MSC_CANONICAL_OFFLINE": "1"},
+      "args": ["--report", ".rebuild/btc_agent_weights_verified.json"],
+      "inputs": ["experiments/cache/reflection_ensemble_v5"],
+      "outputs": [".rebuild/btc_agent_weights_verified.json"],
+      "profile": "canonical",
+      "comparison": "exact"
+    },
     {
       "id": "source.verify",
       "depends_on": [],

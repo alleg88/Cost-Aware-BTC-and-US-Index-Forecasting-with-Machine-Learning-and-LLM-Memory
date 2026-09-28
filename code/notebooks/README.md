@@ -1,60 +1,58 @@
-# Notebook reading order
+# Notebook instructions
 
-The repository contains three independent development sequences followed by a final confirmation reader and one explicitly supplementary sensitivity. Each notebook is an executed, reader-facing experiment: methodology appears before results and heavy computation lives in `../experiments/`.
+Open the 22 notebooks in numerical order (01-22), in Jupyter, VS Code or Google Colab. Saved tables and figures appear when a notebook opens.
 
-For Google Colab, start with [00_run_in_colab.ipynb](00_run_in_colab.ipynb), the first notebook in this folder. Select **CPU**, then **Runtime → Run all**. Choose the code ZIP when prompted; setup uses Colab's native Python and reruns reuse the upload. **Check installation** works with code alone; **Rebuild results** requires both ZIPs. Locally, run each result notebook from its first cell after setup.
+Each notebook explains its method, displays its results and ends with a takeaway.
+Choose a topic below or follow the numerical order. The filename labels RQ1–RQ5
+identify the five comparison groups.
 
-## Bitcoin
+## Run a notebook
 
-The numbered BTC sequence progresses from data and single models to sentiment, ensembles and Reflection Agents.
+1. For calculations, open the matching notebook from **Rebuild**.
+2. In Colab, select **File > Upload notebook**, then **Runtime > Run all**. Upload **Release-Rebuild.zip** when prompted.
+3. Locally, open `code/notebooks/` from the extracted ZIP, or keep the supplied `notebooks/` folder beside the ZIP. Select **Run all**.
+4. Follow the progress in the first cell. Save the completed notebook to keep the new results.
 
-| Notebook | Purpose and current conclusion |
-|---|---|
-| `01_data_labels_and_baseline.ipynb` | M15 data, causal price/order-flow/positioning features, blocking CV and the frozen dead-zone handoff. |
-| `01b_positioning_ablation.ipynb` | Paired funding/open-interest ablation; weak positive input diagnostic, not a standalone edge. |
-| `02b_catboost_economic_optuna.ipynb` | Matched CatBoost objectives, H1 policy calibration and frozen-forward economics. |
-| `02c_sentiment_data_and_methodology.ipynb` | Sentiment provenance, causal matching and the exact DeBERTa/LLM feature contract. |
-| `02d_all_model_sentiment.ipynb` | Raw nine-model price/DeBERTa/LLM comparison under one time-series protocol. |
-| `02e_all_model_sentiment_policy.ipynb` | H1 confidence/TP/SL calibration followed by frozen-forward policy comparison. |
-| `03_all_model_stacking.ipynb` | All-nine Logistic Regression stack construction and H1 selection. |
-| `03a_stacking_forward.ipynb` | Frozen-forward stack evaluation; the stack is rejected against the best single model. |
-| `03c_qualified_union_ensemble.ipynb` | Frozen Union v1: LSTM DZ55 plus Linear SVM DZ75 with conflict veto. |
-| `04a_svm_temperature_calibration.ipynb` | Six-temperature SVM check; identity temperature is retained. |
-| `04b_xgboost_strong_move_admission.ipynb` | Guarded XGBoost satellite; no H1 policy qualifies. |
-| `04d_unified_2021_ensemble.ipynb` | Shared 2021 XGBoost/LSTM/SVM protocol; profitable high-volume candidate fails two-sided stability. |
-| `04g_lstm_gmadl_shadow.ipynb` | Paired GMADL LSTM shadow; frequency rises but economics worsen. |
-| `04h_union_v1_episode_reentry.ipynb` | Same-side episode re-entry; trade count rises and incremental trades lose money. |
-| `05c_causal_policy_router_agent.ipynb` | Final weekly policy router; real memory passes H1 gates but fails development value/volume promotion. |
+Local requirements: Python 3.11 or newer, Git and internet access. Allow several hours and several GB of free space for larger experiments.
 
-## Indices
+For Client reruns, supply the files listed in [DATA.md](DATA.md).
 
-The index replication applies one 2024 OOF → H1 2025 calibration → July 2025–March 2026 descriptive forward protocol separately to USA500 and USATECH. The April–June 2026 run is complete: BTC is the sole confirmatory stream and the index rows are descriptive transport checks.
+## RQ1: Individual models
 
-| Notebook | Purpose and current conclusion |
-|---|---|
-| `06a_index_nine_models.ipynb` | Nine price models; USA500 Decision Tree leads the descriptive forward table. |
-| `06b_index_vix.ipynb` | Numeric price-only versus price-plus-VIX admission; relative gains do not imply absolute profitability. |
-| `06c_index_deberta.ipynb` | Matched DeBERTa features with H1 and forward results for nine individual models. |
-| `06d_index_llm.ipynb` | LLM matched/full features, exact batch-10 prompt/schema and results for nine individual models. |
-| `06g_index_all_model_ensemble.ipynb` | Nine-base-model probability average, 5/9 directional vote and causal logistic meta-model; neither best-ranked H1 ensemble exceeds its eligible single-model control. |
-| `06i_index_comparison.ipynb` | Net-ranked synthesis of original, side-calibrated, coverage-first, nine-model ensemble and channel policies. |
+- [`01_RQ1_A_BTC_data_labels_baseline.ipynb`](01_RQ1_A_BTC_data_labels_baseline.ipynb): BTC data, labels and baseline.
+- [`02_RQ1_B_BTC_positioning_ablation.ipynb`](02_RQ1_B_BTC_positioning_ablation.ipynb): BTC positioning ablation.
+- [`03_RQ1_C_BTC_CatBoost_economic_objectives.ipynb`](03_RQ1_C_BTC_CatBoost_economic_objectives.ipynb): BTC CatBoost economic objectives.
+- [`04_RQ1_E_indices_nine_model_benchmark.ipynb`](04_RQ1_E_indices_nine_model_benchmark.ipynb): Index nine-model benchmark.
+- [`05_RQ1_F_indices_VIX_ablation.ipynb`](05_RQ1_F_indices_VIX_ablation.ipynb): Index VIX ablation.
 
-## Channels
+## RQ2: Ensembles
 
-Notebook A defines the causal channel construction; U, V and W retain the final volatility/timing, direction and matched ablation evidence. The decision grid is 5 minutes with native 1-minute execution; no retained channel policy establishes robust positive net-of-cost economics.
+- [`06_RQ2_A_BTC_all_model_stacking.ipynb`](06_RQ2_A_BTC_all_model_stacking.ipynb): BTC all-model stacking.
+- [`07_RQ2_B_BTC_stacking_forward_validation.ipynb`](07_RQ2_B_BTC_stacking_forward_validation.ipynb): BTC stacking forward validation.
+- [`08_RQ2_C_BTC_qualified_union_ensemble.ipynb`](08_RQ2_C_BTC_qualified_union_ensemble.ipynb): BTC Qualified Union ensemble.
+- [`09_RQ2_F_BTC_LSTM_GMADL_shadow.ipynb`](09_RQ2_F_BTC_LSTM_GMADL_shadow.ipynb): BTC LSTM GMADL ensemble shadow.
+- [`10_RQ2_H_indices_all_model_ensemble.ipynb`](10_RQ2_H_indices_all_model_ensemble.ipynb): Index all-model ensemble.
+- [`11_RQ2_I_indices_policy_comparison.ipynb`](11_RQ2_I_indices_policy_comparison.ipynb): Index policy comparison.
 
-| Notebook | Purpose and current conclusion |
-|---|---|
-| `A_channel_strategy.ipynb` | Causal hourly channel construction and mechanical entry feasibility; no promotion. |
-| `U_volatility_timing_feature_consolidation.ipynb` | Exact 28-feature volatility/timing contract; rejected against the frozen control. |
-| `V_economic_direction_head.ipynb` | Forced LONG/SHORT direction at every activation; economically non-viable. |
-| `W_channel_vs_volatility_ablation.ipynb` | Final matched channel-versus-volatility comparison; both net arms are negative. |
+## RQ3: Sentiment
 
-## Final confirmation and supplementary sensitivity
+- [`12_RQ3_A_BTC_sentiment_data_methodology.ipynb`](12_RQ3_A_BTC_sentiment_data_methodology.ipynb): BTC sentiment data and methodology.
+- [`13_RQ3_B_BTC_nine_model_sentiment_ablation.ipynb`](13_RQ3_B_BTC_nine_model_sentiment_ablation.ipynb): BTC nine-model sentiment ablation.
+- [`14_RQ3_C_BTC_sentiment_policy_ablation.ipynb`](14_RQ3_C_BTC_sentiment_policy_ablation.ipynb): BTC sentiment policy ablation.
+- [`15_RQ3_D_indices_DeBERTa_sentiment.ipynb`](15_RQ3_D_indices_DeBERTa_sentiment.ipynb): Index DeBERTa sentiment.
+- [`16_RQ3_E_indices_LLM_sentiment.ipynb`](16_RQ3_E_indices_LLM_sentiment.ipynb): Index LLM sentiment.
+- [`17_RQ3_F_indices_Q2_sentiment_sensitivity.ipynb`](17_RQ3_F_indices_Q2_sentiment_sensitivity.ipynb): Index Q2 sentiment-feed sensitivity.
 
-Notebook 07 reports the frozen six-policy Q2 2026 evaluation. Notebook 07a then changes only fresh sentiment-feed availability while retaining the same frozen index policies, prices, VIX and costs.
+## RQ4: LLM ensemble weights and memory
 
-| Notebook | Purpose and current conclusion |
-|---|---|
-| `07_final_q2_lockbox.ipynb` | Hash-verified Q2 confirmation: BTC Qualified Union does not outperform its frozen LSTM control; the USA500 all-nine vote and USATECH LLM LSTM are positive descriptive transport results. |
-| `07a_q2_sentiment_sensitivity.ipynb` | Supplementary completed-feed replay: USA500 ensemble improves by 0.028 percentage points and adds one short trade, USATECH LLM-LSTM loses 0.728 percentage points, and the other two frozen policies are unchanged. |
+- [`18_RQ4_A_BTC_LLM_policy_router.ipynb`](18_RQ4_A_BTC_LLM_policy_router.ipynb): weekly weights over nine BTC models using real, absent or shuffled four-week outcome memory, compared with Hedge and a fixed LSTM. In Colab, Run All downloads verified published inputs directly. See [DATA.md](DATA.md) for rerunning details.
+
+## RQ5: Channels and volatility
+
+- [`19_RQ5_B_BTC_volatility_feature_consolidation.ipynb`](19_RQ5_B_BTC_volatility_feature_consolidation.ipynb): BTC volatility and timing feature consolidation.
+- [`20_RQ5_C_BTC_economic_direction_head.ipynb`](20_RQ5_C_BTC_economic_direction_head.ipynb): BTC economic direction head.
+- [`21_RQ5_D_BTC_channel_vs_volatility_ablation.ipynb`](21_RQ5_D_BTC_channel_vs_volatility_ablation.ipynb): BTC channel-versus-volatility ablation.
+
+## Lockbox: Q2 2026 results
+
+- [`22_Lockbox_Q2_2026.ipynb`](22_Lockbox_Q2_2026.ipynb): Q2 2026 lockbox confirmation.

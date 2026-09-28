@@ -222,6 +222,7 @@ class RebuildContext:
     state_root: Path
     profile: str = "canonical"
     env: Mapping[str, str] | None = None
+    runtime_identity: str = ""
 
 
 @dataclass(frozen=True)
@@ -326,11 +327,17 @@ def execute_graph(
     graph: RebuildGraph,
     context: RebuildContext,
     selected_tasks: Sequence[str] | None = None,
+    *,
+    force_tasks: Sequence[str] = (),
+    stream: bool = False,
 ) -> RebuildReport:
     graph.validate_artifacts()
     code_root = Path(context.code_root).resolve(strict=True)
     state_root = Path(context.state_root).resolve()
     selected = _selected_ids(graph, context.profile, selected_tasks)
+    forced = set(force_tasks)
+    if not forced.issubset(selected):
+        raise GraphError(f"forced tasks are outside the selected graph: {sorted(forced - selected)}")
     tasks = graph.task_map()
     executed: list[str] = []
     skipped: list[str] = []
@@ -350,12 +357,15 @@ def execute_graph(
                 "inputs": input_hashes,
                 "commit": _git_head(Path(context.repository_root)),
                 "profile": context.profile,
+                "runtime": context.runtime_identity,
             }
         )
         output_paths = {relative: _task_path(code_root, relative) for relative in task.outputs}
         state_path = state_root / f"{task.id}.json"
-        if _state_matches(state_path, task_identity, output_paths):
+        if task.id not in forced and _state_matches(state_path, task_identity, output_paths):
             skipped.append(task.id)
+            if stream:
+                print(f"REUSE {task.id} (matching inputs and output hashes)", flush=True)
             continue
 
         command = [sys.executable, "-m", task.module, *task.args]
@@ -363,26 +373,44 @@ def execute_graph(
         if context.env is not None or task.environment:
             task_environment = dict(os.environ if context.env is None else context.env)
             task_environment.update(task.environment)
-        result = subprocess.run(
-            command,
-            cwd=code_root,
-            env=task_environment,
-            check=False,
-            capture_output=True,
-            text=True,
-            shell=False,
-        )
-        if result.returncode != 0:
+        if stream:
+            print(f"RUN {task.id}", flush=True)
+            state_root.mkdir(parents=True, exist_ok=True)
+            task_environment = dict(os.environ if task_environment is None else task_environment)
+            task_environment.update(PYTHONUNBUFFERED="1", PYTHONIOENCODING="utf-8")
+            with (state_root / f"{task.id}.log").open("w", encoding="utf-8") as log:
+                with subprocess.Popen(command, cwd=code_root, env=task_environment,
+                                      stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+                                      text=True, encoding="utf-8", errors="replace", bufsize=1) as process:
+                    try:
+                        for line in process.stdout:
+                            print(line, end="", flush=True)
+                            log.write(line)
+                            log.flush()
+                        returncode = process.wait()
+                    except BaseException:
+                        process.terminate()
+                        try:
+                            process.wait(timeout=5)
+                        except subprocess.TimeoutExpired:
+                            process.kill()
+                            process.wait()
+                        raise
+        else:
+            result = subprocess.run(command, cwd=code_root, env=task_environment,
+                                    check=False, capture_output=True, text=True, shell=False)
+            returncode = result.returncode
+        if returncode != 0:
             _atomic_json(
                 state_path,
                 {
                     "status": "failed",
                     "task_id": task.id,
                     "task_identity": task_identity,
-                    "returncode": int(result.returncode),
+                    "returncode": int(returncode),
                 },
             )
-            raise TaskExecutionError(f"task {task.id} failed with exit code {result.returncode}")
+            raise TaskExecutionError(f"task {task.id} failed with exit code {returncode}")
         missing_outputs = [relative for relative, path in output_paths.items() if not path.exists()]
         if missing_outputs:
             _atomic_json(
@@ -406,6 +434,8 @@ def execute_graph(
             },
         )
         executed.append(task.id)
+        if stream:
+            print(f"DONE {task.id}", flush=True)
     return RebuildReport(executed=tuple(executed), skipped=tuple(skipped))
 
 

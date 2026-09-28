@@ -56,4 +56,4 @@ jobs:
         run: python -m experiments.reproduce_notebooks --help
 
       - name: Run tracked clean-clone suite
-        run: python -m pytest -q -p no:cacheprovider --clean-clone --basetemp=.pytest_tmp_ci
+        run: python -m pytest -q -p no:cacheprovider --clean-clone --basetemp="${RUNNER_TEMP}/pytest-reproducibility"

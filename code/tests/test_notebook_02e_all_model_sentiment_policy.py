@@ -7,7 +7,7 @@ from notebook_assertions import assert_descending, tables
 NOTEBOOK = (
     Path(__file__).resolve().parents[1]
     / "notebooks"
-    / "02e_all_model_sentiment_policy.ipynb"
+    / "14_RQ3_C_BTC_sentiment_policy_ablation.ipynb"
 )
 
 
@@ -20,17 +20,19 @@ def _load():
 def test_notebook_02e_documents_the_frozen_protocol():
     _, source = _load()
     for phrase in (
-        "continues Notebook 02d",
-        "same nine model families",
-        "No sentiment**, **DeBERTa**, **LLM-matched** and **LLM-full",
-        "180-day history",
-        "fixed 15-minute horizon",
+        "predictions from Notebook 13",
+        "nine model families, four sentiment arms",
+        "No sentiment is the market-only control",
+        "DeBERTa and LLM-matched each add six sentiment columns",
+        "LLM-full adds nine",
+        "180-day training history",
+        "one-M15-bar hold",
         "5 bps per side",
-        "January–June 2025",
-        "six causal prediction blocks",
-        "33 pre-declared policies",
-        "July-2025–March-2026",
-        "One-minute candles are used only",
+        "For each H1-2025 month, models fit only preceding data and predict that month",
+        "six causal monthly blocks",
+        "33 fixed policies",
+        "July 2025-March 2026",
+        "one-minute candles resolve barrier execution",
     ):
         assert phrase.lower() in source.lower()
 
@@ -126,7 +128,8 @@ def test_notebook_02e_is_executed_without_errors():
     notebook, _ = _load()
     code_cells = [cell for cell in notebook.cells if cell.cell_type == "code"]
     assert code_cells
-    assert all(cell.execution_count is not None for cell in code_cells)
+    assert "from run_zip import prepare_" in code_cells[0].source
+    assert len(code_cells) > 1 and all(cell.execution_count is not None for cell in code_cells[1:])
     assert not any(
         output.output_type == "error"
         for cell in code_cells

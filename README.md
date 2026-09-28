@@ -1,94 +1,53 @@
-# Cost-Aware BTC and US Index Forecasting with Machine Learning and LLM Memory
+# Cost-aware BTC and US index forecasting
 
-[Read notebooks](code/notebooks/README.md) · [Download code and data](https://github.com/alleg88/Cost-Aware-BTC-and-US-Index-Forecasting-with-Machine-Learning-and-LLM-Memory/releases/tag/v1.0.0) · [Reproduce the study](REPRODUCIBILITY.md)
+Do better forecasts produce better trading returns after costs? This project
+compares machine learning models, ensembles, news sentiment, LLM memory and
+price-channel signals on Bitcoin and two US equity-index proxies.
 
-**3 markets · 9 model families · 27 executed notebooks**
+**3 markets · 9 model families · 22 notebooks with saved results**
 
-Reproducible research code for short-horizon directional prediction on BTCUSDT,
-USA500 and USATECH. The implementation compares nine machine-learning families,
-sentiment features, ensembles, channel/volatility signals and host-controlled LLM
-routing under chronological evaluation and transaction costs.
+[Explore the notebooks](code/notebooks/README.md) ·
+[Download](https://github.com/alleg88/Cost-Aware-BTC-and-US-Index-Forecasting-with-Machine-Learning-and-LLM-Memory/releases/latest) ·
+[Run the code](REPRODUCIBILITY.md)
 
-## Study boundary
+## Start here
 
-- Core predictions use three classes: short, flat and long.
-- Model selection uses 2024 chronological out-of-fold evidence.
-- Policy calibration uses January-June 2025; the forward period is July 2025-March 2026.
-- The final Q2 interval is `[2026-04-01, 2026-07-01)` and was opened once under a frozen protocol.
-- BTC is the confirmatory stream; USA500 and USATECH are descriptive cross-market checks.
-- Reported trading results are net of the registered costs: 10 bps BTC, 2 bps USA500
-  and 3 bps USATECH per round trip.
+Open the [first notebook](code/notebooks/01_RQ1_A_BTC_data_labels_baseline.ipynb)
+for data and labels, or the [final test](code/notebooks/22_Lockbox_Q2_2026.ipynb)
+for the held-out Q2 2026 results. Tables, charts and explanations are saved in
+each notebook; viewing them requires no installation, account or data download.
 
-The exact research questions and evidence boundaries are in
-[PROJECT-PLAN.md](PROJECT-PLAN.md).
-
-## Repository layout
-
-| Path | Contents |
+| Notebooks | Comparison |
 |---|---|
-| `code/` | Python package, experiment runners, tests and executed notebooks |
-| `PROJECT-PLAN.md` | Implemented study protocol and research questions |
-| `REPRODUCIBILITY.md` | Installation, data, verification and rerun instructions |
+| 01–05 | Individual models, market positioning and volatility inputs |
+| 06–11 | Single models versus ensembles |
+| 12–17 | Market-only inputs versus news sentiment |
+| 18 | LLM ensemble weights with real, absent and shuffled outcome memory |
+| 19–21 | Price-channel entry timing and trade direction |
+| 22 | Previously selected policies on an unseen quarter |
 
-## Quick start
+## What the results show
 
-**Start in Google Colab:** open [00_run_in_colab.ipynb](code/notebooks/00_run_in_colab.ipynb),
-the first notebook in `code/notebooks`. Extract it from the code ZIP and
-open it in Colab via **File → Upload notebook**. Select **CPU**, then **Runtime → Run all**.
-When **Choose files** appears, select the **code ZIP**, not the notebook or `run_zip.py`.
-Wait for the upload to finish; setup continues automatically.
-It uses Colab's own Python and installs only missing packages.
-Rerunning cells reuses the ZIP; changing or deleting the runtime removes uploaded files.
-**Check installation** works without the source ZIP.
-For the full calculation, upload both ZIPs and choose **Rebuild results**. No API key is
-needed for the supplied data and frozen LLM responses.
-Colab versions can differ from the fixed local environment; recalculated values may differ.
+Prediction quality and trading returns can rank models differently. The added
+methods did not establish a reliable benefit after costs under the tested conditions.
+The two-model LSTM/SVM ensemble's earlier advantage did not persist in the final
+Q2 test: both BTC policies lost money. The US index results were mixed and based
+on very few final-test trades.
 
-**Local setup:**
+## Data and evaluation
 
-Requirements: Python 3.12.10 and Git. Download the named code ZIP from
-[v1.0.0](https://github.com/alleg88/Cost-Aware-BTC-and-US-Index-Forecasting-with-Machine-Learning-and-LLM-Memory/releases/tag/v1.0.0),
-extract it, then run `python prepare_project.py` from the extracted project root.
-The source ZIP is optional for checks; extract it into the same folder for a full rebuild.
-Use the prepared code ZIP, not GitHub's automatic Source code
-archive. A Git clone can proceed directly to environment setup.
+BTCUSDT candles and positioning come from Binance; the US index and volatility
+proxies come from Dukascopy. Additional inputs include timestamped news and
+economic events. Training precedes testing, and each addition has a defined control.
+Trading returns deduct fixed round-trip costs of 10 basis points for BTC,
+2 for USA500 and 3 for USATECH. Variable slippage, market impact and live delays
+were not simulated. See the [evaluation protocol](METHODOLOGY.md).
 
-From the project root, create an environment:
+## Download or rerun
 
-```bash
-cd code
-python -m venv .venv
-```
+- **Release-Client.zip:** a small download with Python code and saved notebook results.
+- **Release-Rebuild.zip:** code and additional inputs for recalculation; larger runs
+  need internet access, several GB of disk space and hours of computation.
 
-Windows: `.venv\Scripts\activate`; macOS/Linux: `source .venv/bin/activate`.
-Then install and verify:
-
-```bash
-python -m pip install --upgrade pip
-python -m pip install -r requirements-repro.txt
-python -m experiments.reproduce_tracked
-python -m experiments.reproduce_source --audit-only
-```
-
-`reproduce_tracked` checks the environment, release evidence and the registered
-`pytest --clean-clone` suite. The source audit validates the dependency graph without
-downloading data or fitting models. See the
-[running guide](REPRODUCIBILITY.md) for data setup and additional options.
-
-## Rebuild calculations
-
-Numerical reconstruction needs the hash-verified source bundle in
-`code/.source_evidence/` (included in the data ZIP). Run:
-
-```bash
-python -m experiments.reproduce_source
-python -m experiments.reproduce_notebooks
-```
-
-Public Binance archives are downloaded automatically. The portable bundle supplies the
-registered index/VIX exports, news and direct-event snapshots, and frozen provider
-responses that cannot be recreated byte-for-byte. Fresh LLM calls require
-`OLLAMA_API_KEY`; no secret is stored in the repository.
-
-The saved notebooks can be read immediately; refitting the full study needs substantial
-runtime, disk space and internet access for public data and model downloads.
+Use the [running guide](REPRODUCIBILITY.md) for local or Colab setup and the
+[input guide](code/notebooks/DATA.md) for individual notebook reruns.

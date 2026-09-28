@@ -45,6 +45,40 @@ def test_zip_preparation_tracks_only_verified_files_and_is_idempotent(tmp_path):
     assert (tmp_path / "README.md").read_text("utf-8") == "User edit\n"
 
 
+@pytest.mark.parametrize("relative", [
+    "code/.source_evidence/files/input.csv",
+    "code/data/btcusdt_m15_2024_2025.parquet",
+    "code/data/btcusdt_positioning_m15_2024_2026.parquet",
+])
+def test_embedded_rebuild_inputs_are_verified_but_not_git_references(tmp_path, relative):
+    expected = snapshot(tmp_path)
+    source = tmp_path / relative
+    source.parent.mkdir(parents=True)
+    source.write_bytes(b"value\n1\n")
+    manifest_path = tmp_path / "release_files.json"
+    manifest = json.loads(manifest_path.read_text())
+    manifest[relative] = hashlib.sha256(source.read_bytes()).hexdigest()
+    manifest_path.write_text(json.dumps(manifest))
+    bootstrap_module().prepare(tmp_path)
+    assert subprocess.check_output(["git", "ls-files"], cwd=tmp_path, text=True).splitlines() == expected
+    assert source.read_bytes() == b"value\n1\n"
+
+
+def test_corrupt_partial_input_is_rejected_before_git_initialisation(tmp_path):
+    snapshot(tmp_path)
+    source = tmp_path / "code/data/btcusdt_m15_2024_2025.parquet"
+    source.parent.mkdir()
+    source.write_bytes(b"supplied input")
+    manifest_path = tmp_path / "release_files.json"
+    manifest = json.loads(manifest_path.read_text())
+    manifest["code/data/btcusdt_m15_2024_2025.parquet"] = hashlib.sha256(source.read_bytes()).hexdigest()
+    manifest_path.write_text(json.dumps(manifest))
+    source.write_bytes(b"modified input")
+    with pytest.raises(ValueError, match="Archive checksum mismatch"):
+        bootstrap_module().prepare(tmp_path)
+    assert not (tmp_path / ".git").exists()
+
+
 @pytest.mark.parametrize("kind", ["changed", "missing", "escape", "git_path", "empty"])
 def test_zip_preparation_rejects_bad_manifest_before_creating_git(tmp_path, kind):
     snapshot(tmp_path)

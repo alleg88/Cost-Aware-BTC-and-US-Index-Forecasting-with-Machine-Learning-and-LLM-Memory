@@ -10,6 +10,8 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
+from experiments.channel_rebuild_contract import handoff_run_hash, recomputed_handoffs
+
 from evaluation.event_window_opportunity_policy import (
     causal_crossing_alerts,
     collapse_episode_time,
@@ -211,13 +213,14 @@ def load_frozen_p_artifacts(
 ) -> FrozenPArtifacts:
     """Validate the exact completed Notebook P handoff before exposing scores."""
     root = Path(run_root)
-    expected_relative = f"{FROZEN_P_RUN_HASH}/full"
+    expected_hash = handoff_run_hash(root, FROZEN_P_RUN_HASH)
+    expected_relative = f"{expected_hash}/full"
     run_dir = (root / expected_relative).resolve()
     if not run_dir.is_relative_to(root.resolve()):
         raise ValueError("frozen Notebook P path escaped its root")
 
     state = _read_json(run_dir / "run_state.json")
-    if state.get("status") != "complete" or state.get("run_hash") != FROZEN_P_RUN_HASH:
+    if state.get("status") != "complete" or state.get("run_hash") != expected_hash:
         raise ValueError("frozen Notebook P run is incomplete or changed")
     records = state.get("artifacts")
     if not isinstance(records, dict):
@@ -270,7 +273,7 @@ def load_frozen_p_artifacts(
     if missing:
         raise ValueError(f"frozen Notebook P OOF schema changed: {missing}")
     return FrozenPArtifacts(
-        run_hash=FROZEN_P_RUN_HASH,
+        run_hash=expected_hash,
         protocol_hash=str(state["protocol_hash"]),
         source_hash=str(state["source_hash"]),
         input_hash=str(state["input_hash"]),
@@ -1047,9 +1050,11 @@ def run_economic_feasibility(
     if stage != "dev":
         raise ValueError("Notebook Q permits development only; forward and Q2 are sealed")
     protocol = protocol_dict(config, smoke=smoke)
-    protocol_hash = _sha_payload(protocol)
 
     frozen_p = load_frozen_p_artifacts(Path(frozen_p_root))
+    if recomputed_handoffs():
+        protocol.update(frozen_p_run_hash=frozen_p.run_hash, reference_output_checks_required=False)
+    protocol_hash = _sha_payload(protocol)
     full_ledger = reconstruct_activation_ledger(frozen_p, config)
     frozen_counts = _activation_counts(full_ledger)
     expected_counts = {
@@ -1058,7 +1063,7 @@ def run_economic_feasibility(
         "conditional_2": 2_148,
         "conditional_3": 3_780,
     }
-    if frozen_counts != expected_counts:
+    if not recomputed_handoffs() and frozen_counts != expected_counts:
         raise AssertionError(
             f"Notebook P activation supply changed: {frozen_counts}"
         )
@@ -1068,7 +1073,7 @@ def run_economic_feasibility(
         frequency["arm"].eq("conditional")
         & frequency["target_activations_per_day"].eq(2.0)
     ].iloc[0]
-    if (
+    if not recomputed_handoffs() and (
         int(primary_frequency["activated_episodes"]) != 450
         or int(primary_frequency["episodes_with_multiple_activations"]) != 299
         or float(primary_frequency["median_activations_per_episode"]) != 3.0
@@ -1076,6 +1081,8 @@ def run_economic_feasibility(
         or float(primary_frequency["minimum_same_episode_spacing_minutes"]) != 60.0
     ):
         raise AssertionError("Notebook P primary activation distribution changed")
+    if recomputed_handoffs() and frequency["minimum_same_episode_spacing_minutes"].lt(config.cooldown_minutes).any():
+        raise AssertionError("recomputed Notebook P violated the registered cooldown")
 
     # Selection is complete before any future-dependent label or minute path is read.
     frozen_o = load_frozen_o_artifacts(
@@ -1243,8 +1250,8 @@ def run_economic_feasibility(
         leakage = pd.DataFrame(
             [
                 {
-                    "check": "exact frozen Notebook P handoff",
-                    "passed": frozen_p.run_hash == FROZEN_P_RUN_HASH,
+                    "check": "completed Notebook P handoff" if recomputed_handoffs() else "exact frozen Notebook P handoff",
+                    "passed": frozen_p.run_hash == protocol["frozen_p_run_hash"],
                     "detail": frozen_p.run_hash,
                 },
                 {

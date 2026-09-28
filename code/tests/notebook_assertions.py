@@ -51,7 +51,9 @@ def numeric_column(table, name):
 
 def assert_artifact_reader(notebook):
     code = [cell for cell in notebook.cells if cell.cell_type == "code"]
-    assert code and all(cell.execution_count is not None for cell in code)
+    # The environment-specific launcher has no saved run; result cells do.
+    assert "from run_zip import prepare_" in code[0].source
+    assert len(code) > 1 and all(cell.execution_count is not None for cell in code[1:])
     assert not any(o.output_type == "error" for cell in code for o in cell.get("outputs", []))
     tree = ast.parse("\n".join(cell.source for cell in code))
     assert not any(isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute)

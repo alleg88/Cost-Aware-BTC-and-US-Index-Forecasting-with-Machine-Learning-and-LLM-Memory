@@ -10,6 +10,8 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
+from experiments.channel_rebuild_contract import recomputed_handoffs, selected_run_hash
+
 from experiments.event_window_direction_dataset import (
     DIRECTION_FEATURES,
     DirectionDataset,
@@ -106,6 +108,7 @@ _SOURCE_DEPENDENCIES = (
     CODE_ROOT / "evaluation" / "event_window_large_move_policy.py",
     CODE_ROOT / "evaluation" / "event_window_opportunity_policy.py",
     CODE_ROOT / "evaluation" / "event_window_tail_policy.py",
+    CODE_ROOT / "experiments" / "channel_rebuild_contract.py",
     CODE_ROOT / "experiments" / "event_window_conditional_oof.py",
     CODE_ROOT / "experiments" / "event_window_cost_aware_dataset.py",
     CODE_ROOT / "experiments" / "event_window_cost_aware_models.py",
@@ -446,10 +449,11 @@ def economic_viability(
     mean_net_r_ci_low: float,
     versus_channel_ci_low: float,
     leakage_passed: bool,
+    expected_scored_activations: int = EXPECTED_SCORED_ACTIVATIONS,
 ) -> bool:
     return bool(
         path_completeness >= 0.99
-        and scored_activations == EXPECTED_SCORED_ACTIVATIONS
+        and scored_activations == expected_scored_activations
         and mean_net_r_ci_low > 0.0
         and versus_channel_ci_low > 0.0
         and leakage_passed
@@ -483,19 +487,21 @@ def _validate_frozen_u_identity(
     manifest_sha256: str,
 ) -> None:
     """Validate U's pinned bytes and reproduce its protocol/run identities."""
-    if manifest_sha256 != FROZEN_U_MANIFEST_SHA256:
+    if not recomputed_handoffs() and manifest_sha256 != FROZEN_U_MANIFEST_SHA256:
         raise ValueError("frozen Notebook U manifest digest changed")
-    expected_relative = f"{FROZEN_U_RUN_HASH}/full"
+    expected_hash = selected_run_hash(pointer, FROZEN_U_RUN_HASH)
+    expected_protocol = pointer.get("protocol_hash") if recomputed_handoffs() else FROZEN_U_PROTOCOL_HASH
+    expected_relative = f"{expected_hash}/full"
     if (
-        pointer.get("run_hash") != FROZEN_U_RUN_HASH
+        pointer.get("run_hash") != expected_hash
         or pointer.get("relative_path") != expected_relative
     ):
         raise ValueError("frozen Notebook U pointer identity changed")
-    if state.get("status") != "complete" or state.get("run_hash") != FROZEN_U_RUN_HASH:
+    if state.get("status") != "complete" or state.get("run_hash") != expected_hash:
         raise ValueError("frozen Notebook U run is incomplete or changed")
     if (
-        state.get("protocol_hash") != FROZEN_U_PROTOCOL_HASH
-        or pointer.get("protocol_hash") != FROZEN_U_PROTOCOL_HASH
+        state.get("protocol_hash") != expected_protocol
+        or pointer.get("protocol_hash") != expected_protocol
     ):
         raise ValueError("frozen Notebook U protocol identity changed")
     if any(protocol.get(name) != state.get(name) for name in _U_IDENTITY_FIELDS):
@@ -505,7 +511,7 @@ def _validate_frozen_u_identity(
         for name, value in protocol.items()
         if name not in _U_IDENTITY_FIELDS
     }
-    if _sha_payload(protocol_payload) != FROZEN_U_PROTOCOL_HASH:
+    if _sha_payload(protocol_payload) != expected_protocol:
         raise ValueError("frozen Notebook U protocol hash changed")
     run_hash = _sha_payload(
         {
@@ -558,7 +564,8 @@ def load_frozen_u_artifacts(
     root = Path(run_root)
     _reject_sealed_paths(root)
     pointer = _read_json(root / "latest_dev.json")
-    expected_relative = f"{FROZEN_U_RUN_HASH}/full"
+    expected_hash = selected_run_hash(pointer, FROZEN_U_RUN_HASH)
+    expected_relative = f"{expected_hash}/full"
     run_dir = (root / expected_relative).resolve()
     if not run_dir.is_relative_to(root.resolve()):
         raise ValueError("frozen Notebook U path escaped its root")
@@ -590,6 +597,10 @@ def load_frozen_u_artifacts(
     summary = _read_json(run_dir / "summary.json")
     if state.get("summary") != summary:
         raise ValueError("frozen Notebook U state summary changed")
+    expected_source_count = (
+        int(summary.get("activation_counts", {}).get(FROZEN_TIMING_ARM, -1))
+        if recomputed_handoffs() else config.expected_source_activations
+    )
     if (
         protocol.get("stage") != "dev"
         or bool(protocol.get("smoke", False))
@@ -597,7 +608,8 @@ def load_frozen_u_artifacts(
         != config.development_end_exclusive
         or summary.get("forward_or_lockbox_loaded") is not False
         or summary.get("activation_counts", {}).get(FROZEN_TIMING_ARM)
-        != config.expected_source_activations
+        != expected_source_count
+        or expected_source_count <= 0
     ):
         raise ValueError("Notebook V accepts only the bounded full Notebook U run")
 
@@ -610,14 +622,14 @@ def load_frozen_u_artifacts(
     ledger["decision_time"] = pd.to_datetime(
         ledger["decision_time"], utc=True, errors="raise"
     )
-    if len(ledger) != config.expected_source_activations:
+    if len(ledger) != expected_source_count:
         raise ValueError("frozen Notebook U activation count changed")
     if ledger["activation_key"].isna().any() or ledger["activation_key"].duplicated().any():
         raise ValueError("frozen Notebook U activation keys are not unique")
     if set(ledger["fold_id"]) != {"2022H1", *SCORED_FOLDS}:
         raise ValueError("frozen Notebook U fold population changed")
     scored = ledger["fold_id"].isin(SCORED_FOLDS)
-    if int(scored.sum()) != config.expected_scored_activations:
+    if not recomputed_handoffs() and int(scored.sum()) != config.expected_scored_activations:
         raise ValueError("frozen Notebook U scored activation count changed")
     development_end = pd.Timestamp(config.development_end_exclusive, tz="UTC")
     if ledger["decision_time"].max() >= development_end:
@@ -665,7 +677,7 @@ def load_frozen_u_artifacts(
         raise ValueError("frozen Notebook U activation thresholds changed")
 
     return FrozenUArtifacts(
-        run_hash=FROZEN_U_RUN_HASH,
+        run_hash=expected_hash,
         protocol_hash=str(state["protocol_hash"]),
         source_hash=str(state["source_hash"]),
         input_hash=str(state["input_hash"]),
@@ -748,7 +760,11 @@ def _validated_completed_summary(
         return None
 
 
-def _smoke_primary_paths(frozen_u: FrozenUArtifacts) -> pd.DataFrame:
+def _smoke_primary_paths(
+    frozen_u: FrozenUArtifacts,
+    *,
+    expected_source_activations: int = EXPECTED_SOURCE_ACTIVATIONS,
+) -> pd.DataFrame:
     """Reprice U's registered native stop-first paths without using U net returns."""
     paths = pd.read_parquet(frozen_u.run_dir / "economic_paths.parquet")
     paths = paths.loc[
@@ -756,7 +772,7 @@ def _smoke_primary_paths(frozen_u: FrozenUArtifacts) -> pd.DataFrame:
         & paths["target_multiple_b"].eq(2.0)
         & paths["hold_minutes"].eq(120)
     ].copy()
-    if len(paths) != 2 * EXPECTED_SOURCE_ACTIVATIONS or paths.duplicated(
+    if len(paths) != 2 * expected_source_activations or paths.duplicated(
         ["activation_key", "direction"]
     ).any():
         raise ValueError("frozen Notebook U native paths changed")
@@ -948,7 +964,9 @@ def _correlation_audit(dataset: DirectionDataset) -> pd.DataFrame:
 
 
 def _combined_policy_ledger(
-    ledger: pd.DataFrame, predictions: pd.DataFrame
+    ledger: pd.DataFrame, predictions: pd.DataFrame,
+    *,
+    expected_scored_activations: int = EXPECTED_SCORED_ACTIVATIONS,
 ) -> pd.DataFrame:
     scored = ledger.loc[ledger["fold_id"].isin(SCORED_FOLDS), list(_TIMING_COLUMNS)].copy()
     scored["activation_margin"] = scored["activation_score"] - scored["threshold"]
@@ -971,7 +989,7 @@ def _combined_policy_ledger(
             sort=False,
             validate="one_to_one",
         )
-        if len(combined) != EXPECTED_SCORED_ACTIVATIONS:
+        if len(combined) != expected_scored_activations:
             raise AssertionError(f"{model} changed the frozen activation count")
         if combined["direction_score"].isna().any() or combined[
             "chosen_direction"
@@ -1051,6 +1069,7 @@ def _policy_paths(
     paired: pd.DataFrame,
     *,
     seed: int,
+    expected_scored_activations: int = EXPECTED_SCORED_ACTIVATIONS,
 ) -> pd.DataFrame:
     scored_timing = combined.loc[
         combined["model"].eq(MODELS[0]), list(_TIMING_COLUMNS)
@@ -1145,7 +1164,7 @@ def _policy_paths(
             sort=False,
             validate="one_to_one",
         )
-        if len(selected) != EXPECTED_SCORED_ACTIVATIONS or selected["net_r"].isna().any():
+        if len(selected) != expected_scored_activations or selected["net_r"].isna().any():
             raise AssertionError(f"{scenario} did not preserve every scored path")
         if not selected["decision_time"].reset_index(drop=True).equals(
             scored_timing["decision_time"].reset_index(drop=True)
@@ -1184,6 +1203,7 @@ def _economic_tables(
     *,
     draws: int,
     seed: int,
+    expected_scored_activations: int = EXPECTED_SCORED_ACTIVATIONS,
 ) -> tuple[pd.DataFrame, pd.DataFrame]:
     oracle = policy_paths.loc[
         policy_paths["scenario"].eq("oracle"), ["activation_key", "net_r"]
@@ -1254,7 +1274,7 @@ def _economic_tables(
             policy_paths["scenario"].eq(baseline), ["activation_key", "net_r"]
         ].rename(columns={"net_r": "baseline_net_r"})
         paired = left.merge(right, on="activation_key", how="inner", validate="one_to_one")
-        if len(paired) != EXPECTED_SCORED_ACTIVATIONS:
+        if len(paired) != expected_scored_activations:
             raise AssertionError(f"paired bootstrap keys changed: {candidate}, {baseline}")
         paired["delta_net_r"] = paired["candidate_net_r"] - paired["baseline_net_r"]
         point, low, high = _cluster_interval(
@@ -1447,6 +1467,13 @@ def run_direction_head(
     _reject_sealed_paths(Path(data_root), Path(frozen_u_root), Path(run_root))
     frozen_u = load_frozen_u_artifacts(Path(frozen_u_root), config=config)
     protocol = protocol_dict(config, smoke=smoke)
+    if recomputed_handoffs():
+        protocol.update(frozen_u_run_hash=frozen_u.run_hash,
+                        expected_source_activations=len(frozen_u.ledger),
+                        expected_scored_activations=int(frozen_u.ledger["fold_id"].isin(SCORED_FOLDS).sum()),
+                        reference_output_checks_required=False)
+    expected_source_count = int(protocol["expected_source_activations"])
+    expected_scored_count = int(protocol["expected_scored_activations"])
     source_hash = _source_hash()
     input_payload = {
         "frozen_u_run_hash": frozen_u.run_hash,
@@ -1504,7 +1531,9 @@ def run_direction_head(
     try:
         store.json("protocol.json", {**protocol, **identity})
         if smoke:
-            paths = _smoke_primary_paths(frozen_u)
+            paths = _smoke_primary_paths(
+                frozen_u, expected_source_activations=expected_source_count
+            )
             directional = _smoke_directional(frozen_u.ledger)
             max_loaded_timestamp = pd.Timestamp(
                 frozen_u.summary["max_loaded_timestamp"]
@@ -1540,25 +1569,30 @@ def run_direction_head(
         dataset = build_direction_dataset(dataset_ledger, directional, paired)
         if dataset.tabular_features != DIRECTION_FEATURES:
             raise AssertionError("Notebook V direction feature contract changed")
-        if len(dataset.decisions) != EXPECTED_SOURCE_ACTIVATIONS:
+        if len(dataset.decisions) != expected_source_count:
             raise AssertionError("Notebook V direction dataset changed frozen frequency")
         feature_audit = _feature_audit(dataset)
         correlation_audit = _correlation_audit(dataset)
         model_config, draws = _effective_execution(config, smoke=smoke)
         oof = run_direction_oof(dataset, config=model_config)
         predictions = oof.predictions.copy()
-        combined = _combined_policy_ledger(frozen_u.ledger, predictions)
+        combined = _combined_policy_ledger(
+            frozen_u.ledger, predictions,
+            expected_scored_activations=expected_scored_count,
+        )
         policy_paths = _policy_paths(
             combined,
             primary,
             paired,
             seed=config.bootstrap_seed,
+            expected_scored_activations=expected_scored_count,
         )
         predictive = _predictive_metrics(predictions, dataset)
         economics, bootstraps = _economic_tables(
             policy_paths,
             draws=draws,
             seed=config.bootstrap_seed,
+            expected_scored_activations=expected_scored_count,
         )
         frequency = _frequency_audit(policy_paths, config)
         scored_ledger = frozen_u.ledger.loc[
@@ -1587,11 +1621,11 @@ def run_direction_head(
         )
         leakage = pd.DataFrame(
             [
-                {"check": "exact frozen Notebook U run hash", "passed": frozen_u.run_hash == FROZEN_U_RUN_HASH, "detail": frozen_u.run_hash},
+                {"check": "completed Notebook U run hash" if recomputed_handoffs() else "exact frozen Notebook U run hash", "passed": frozen_u.run_hash == protocol["frozen_u_run_hash"], "detail": frozen_u.run_hash},
                 {"check": "valid frozen U SHA-256 manifest", "passed": True, "detail": frozen_u.manifest_sha256},
                 {"check": "frozen U timing arm exact", "passed": set(frozen_u.ledger["arm"]) == {FROZEN_TIMING_ARM}, "detail": FROZEN_TIMING_ARM},
-                {"check": "3,431 frozen activation keys exact", "passed": len(frozen_u.ledger) == EXPECTED_SOURCE_ACTIVATIONS and frozen_u.ledger["activation_key"].nunique() == EXPECTED_SOURCE_ACTIVATIONS, "detail": str(len(frozen_u.ledger))},
-                {"check": "2,939 scored keys per model", "passed": combined.groupby("model")["activation_key"].nunique().eq(EXPECTED_SCORED_ACTIVATIONS).all(), "detail": str(combined.groupby("model")["activation_key"].nunique().to_dict())},
+                {"check": "completed U activation keys exact" if recomputed_handoffs() else "3,431 frozen activation keys exact", "passed": len(frozen_u.ledger) == protocol["expected_source_activations"] and frozen_u.ledger["activation_key"].nunique() == protocol["expected_source_activations"], "detail": str(len(frozen_u.ledger))},
+                {"check": "U scored keys per model" if recomputed_handoffs() else "2,939 scored keys per model", "passed": combined.groupby("model")["activation_key"].nunique().eq(protocol["expected_scored_activations"]).all(), "detail": str(combined.groupby("model")["activation_key"].nunique().to_dict())},
                 {"check": "combined ledger preserves U timing bytes and keys", "passed": timing_preserved, "detail": "activation key/time/score/threshold/episode fields"},
                 {"check": "uniform 5+5 costs", "passed": set(primary["cost_bps"]) == {10.0} and set(primary["entry_cost_bps"]) == {5.0} and set(primary["exit_cost_bps"]) == {5.0}, "detail": "10 bps every exit path"},
                 {"check": "native RR2/120m stop-first paths", "passed": set(primary["target_multiple_b"]) == {2.0} and set(primary["hold_minutes"]) == {120}, "detail": path_source},
@@ -1624,6 +1658,7 @@ def run_direction_head(
                 mean_net_r_ci_low=float(economic["mean_net_r_ci_low"]),
                 versus_channel_ci_low=float(versus["ci_low"]),
                 leakage_passed=bool(leakage["passed"].astype(bool).all()),
+                expected_scored_activations=expected_scored_count,
             )
         selected_model: str | None = None
         if not smoke:

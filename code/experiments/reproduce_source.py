@@ -60,6 +60,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--audit-only", action="store_true")
     parser.add_argument("--report", type=Path, default=Path(".rebuild/report.json"))
     args = parser.parse_args(argv)
+    no_compare = args.no_compare or json.loads(args.graph.read_text(encoding="utf-8")).get("result_comparison") == "not_required"
 
     audit = audit_payload(args.graph)
     if args.audit_only:
@@ -78,7 +79,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     execution = execute_graph(graph, context, selected_tasks=args.task)
     task_ids = (*execution.executed, *execution.skipped)
     comparisons = []
-    if not args.no_compare:
+    if not no_compare:
         tasks = graph.task_map()
         comparisons = [
             compare_task_to_git(
@@ -96,7 +97,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         "profile": args.profile,
         "executed": list(execution.executed),
         "skipped": list(execution.skipped),
-        "reference": None if args.no_compare else args.reference,
+        "reference": None if no_compare else args.reference,
+        "numerical_equivalence_checked": bool(comparisons),
         "comparisons": [item.to_dict() for item in comparisons],
         "different_tasks": differences,
     }

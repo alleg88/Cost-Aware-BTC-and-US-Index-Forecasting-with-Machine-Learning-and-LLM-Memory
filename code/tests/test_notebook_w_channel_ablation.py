@@ -16,7 +16,7 @@ def _builder():
 def _build(tmp_path: Path):
     builder = _builder()
     path = builder.build_notebook(
-        output=tmp_path / "W_channel_vs_volatility_ablation.ipynb",
+        output=tmp_path / "21_RQ5_D_BTC_channel_vs_volatility_ablation.ipynb",
         run_root=tmp_path / "missing",
     )
     return path, nbformat.read(path, as_version=4)

@@ -12,7 +12,7 @@ from zipfile import BadZipFile, ZipFile
 
 import nbformat
 
-from experiments.notebook_hygiene import NOTEBOOK_SEQUENCES
+from experiments.notebook_hygiene import NOTEBOOK_SEQUENCES, canonical_colab_setup
 from experiments.clean_clone_tests import load_local_evidence_nodeids
 
 
@@ -126,24 +126,23 @@ def _notebook_audit(code_root: Path) -> dict[str, int]:
     if actual != set(canonical) or len(canonical) != len(set(canonical)):
         raise ReleaseAuditError("canonical notebook catalog mismatch")
     launcher = notebook_root / "00_run_in_colab.ipynb"
-    if not launcher.is_file():
-        raise ReleaseAuditError("00_run_in_colab.ipynb is missing")
 
     errors = 0
     unexecuted = 0
     for name in canonical:
         notebook = nbformat.read(notebook_root / name, as_version=4)
-        for cell in notebook.cells:
+        for index, cell in enumerate(notebook.cells):
             if cell.cell_type != "code":
                 continue
-            if cell.execution_count is None:
+            setup = index == 0 and cell.source == canonical_colab_setup(notebook_name=name)
+            if cell.execution_count is None and not setup:
                 unexecuted += 1
             errors += sum(
                 output.get("output_type") == "error" for output in cell.get("outputs", [])
             )
     return {
         "canonical_notebooks": len(canonical),
-        "launcher_notebooks": 1,
+        "launcher_notebooks": int(launcher.is_file()),
         "notebook_errors": int(errors),
         "unexecuted_canonical_code_cells": int(unexecuted),
     }
@@ -185,7 +184,7 @@ def audit_repository(repo_root: Path) -> dict[str, object]:
         "tracked_forbidden": forbidden,
         "problems": problems,
         "q2_market_rows_opened": bool(
-            nbformat.read(code_root / "notebooks" / "07_final_q2_lockbox.ipynb", as_version=4)
+            nbformat.read(code_root / "notebooks" / "22_Lockbox_Q2_2026.ipynb", as_version=4)
             .metadata.get("final_q2_lockbox")
             == "COMPLETE"
         ),

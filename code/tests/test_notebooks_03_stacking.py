@@ -11,8 +11,8 @@ from experiments.all_model_stacking import DEFAULT_ROOT
 
 
 CODE_ROOT = Path(__file__).resolve().parents[1]
-NOTEBOOK_03 = CODE_ROOT / "notebooks" / "03_all_model_stacking.ipynb"
-NOTEBOOK_03A = CODE_ROOT / "notebooks" / "03a_stacking_forward.ipynb"
+NOTEBOOK_03 = CODE_ROOT / "notebooks" / "06_RQ2_A_BTC_all_model_stacking.ipynb"
+NOTEBOOK_03A = CODE_ROOT / "notebooks" / "07_RQ2_B_BTC_stacking_forward_validation.ipynb"
 
 
 def test_all_model_stacking_artifacts_are_complete_and_sealed():
@@ -50,33 +50,37 @@ def test_notebook_03_contains_only_construction_and_h1_selection():
     notebook, source = _source(NOTEBOOK_03)
     for phrase in (
         "all nine fixed model families",
-        "18 independent inputs",
-        "no optuna is used",
-        "five 2024 blockingtimeseriessplit oof blocks",
-        "33 fixed confidence/tp/sl policies",
-        "forward results are not opened in this notebook",
+        "18 inputs",
+        "fixed `standardscaler + l2 logisticregression(c=0.1, class_weight='balanced')`",
+        "five 2024 blocked out-of-fold sets",
+        "add only completed months before predicting the next month",
+        "33 confidence/tp/sl policies",
+        "forward performance is reported in notebook 07",
     ):
         assert phrase in source.lower()
+    assert "optuna" not in source.lower()
     assert "forward_summary.parquet" not in source
     assert [len(table) - 1 for table in tables(notebook)] == [4, 36, 12]
     code = [cell for cell in notebook.cells if cell.cell_type == "code"]
-    assert code and all(cell.execution_count is not None for cell in code)
+    assert "from run_zip import prepare_" in code[0].source
+    assert len(code) > 1 and all(cell.execution_count is not None for cell in code[1:])
     assert not any(output.output_type == "error" for cell in code for output in cell.get("outputs", []))
 
 
 def test_notebook_03a_contains_only_frozen_forward_and_decision():
     notebook, source = _source(NOTEBOOK_03A)
     for phrase in (
-        "continues notebook 03",
-        "12 h1-frozen candidates",
-        "cannot change here",
-        "development-forward evaluation",
-        "reject the all-nine logistic regression stack",
+        "12 h1-selected candidates",
+        "dz, confidence threshold, tp/sl and the 15-minute hold remain fixed",
+        "meta-learner uses 2024 out-of-fold and completed h1 predictions",
+        "development-forward comparison",
+        "does not support replacing the single-model controls with all-nine stacking",
     ):
         assert phrase in source.lower()
     assert [len(table) - 1 for table in tables(notebook)] == [12, 3]
     code = [cell for cell in notebook.cells if cell.cell_type == "code"]
-    assert code and all(cell.execution_count is not None for cell in code)
+    assert "from run_zip import prepare_" in code[0].source
+    assert len(code) > 1 and all(cell.execution_count is not None for cell in code[1:])
     assert not any(output.output_type == "error" for cell in code for output in cell.get("outputs", []))
 
 

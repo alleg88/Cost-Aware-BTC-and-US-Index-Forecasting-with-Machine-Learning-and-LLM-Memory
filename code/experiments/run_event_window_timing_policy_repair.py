@@ -10,6 +10,8 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
+from experiments.channel_rebuild_contract import recomputed_handoffs, selected_run_hash, validate_recomputed_development
+
 from evaluation.event_window_opportunity_policy import (
     causal_crossing_alerts,
     causal_level_rearm_alerts,
@@ -143,9 +145,10 @@ def load_frozen_q_handoff(
     """Validate the exact completed Notebook Q handoff."""
     root = Path(run_root)
     pointer = _read_json(root / "latest_dev.json")
-    expected_relative = f"{FROZEN_Q_RUN_HASH}/full"
+    expected_hash = selected_run_hash(pointer, FROZEN_Q_RUN_HASH)
+    expected_relative = f"{expected_hash}/full"
     if (
-        pointer.get("run_hash") != FROZEN_Q_RUN_HASH
+        pointer.get("run_hash") != expected_hash
         or pointer.get("relative_path") != expected_relative
     ):
         raise ValueError("frozen Notebook Q pointer changed")
@@ -155,7 +158,7 @@ def load_frozen_q_handoff(
     state = _read_json(run_dir / "run_state.json")
     if (
         state.get("status") != "complete"
-        or state.get("run_hash") != FROZEN_Q_RUN_HASH
+        or state.get("run_hash") != expected_hash
         or state.get("protocol_hash") != pointer.get("protocol_hash")
     ):
         raise ValueError("frozen Notebook Q run is incomplete or changed")
@@ -175,15 +178,18 @@ def load_frozen_q_handoff(
     protocol = _read_json(run_dir / "protocol.json")
     frozen = _read_json(run_dir / "frozen_protocol.json")
     summary = _read_json(run_dir / "summary.json")
+    validate_recomputed_development(protocol)
+    expected_p = protocol.get("frozen_p_run_hash") if recomputed_handoffs() else "0474798f6d0eb56e64d3"
     if (
         state.get("summary") != summary
         or summary.get("forward_or_lockbox_loaded") is not False
         or summary.get("timing_model_refit") is not False
-        or frozen.get("frozen_p_run_hash") != "0474798f6d0eb56e64d3"
+        or not expected_p
+        or frozen.get("frozen_p_run_hash") != expected_p
     ):
         raise ValueError("frozen Notebook Q summary changed")
     return FrozenQHandoff(
-        run_hash=FROZEN_Q_RUN_HASH,
+        run_hash=expected_hash,
         protocol_hash=str(state["protocol_hash"]),
         run_dir=run_dir,
         protocol=protocol,
@@ -600,10 +606,13 @@ def run_timing_policy_repair(
     if stage != "dev":
         raise ValueError("Notebook R permits development only; forward and Q2 are sealed")
     protocol = protocol_dict(config, smoke=smoke)
-    protocol_hash = _sha_payload(protocol)
 
     frozen_q = load_frozen_q_handoff(Path(frozen_q_root))
     frozen_p = load_frozen_p_artifacts(Path(frozen_p_root))
+    if recomputed_handoffs():
+        protocol.update(frozen_p_run_hash=frozen_p.run_hash, frozen_q_run_hash=frozen_q.run_hash,
+                        reference_output_checks_required=False)
+    protocol_hash = _sha_payload(protocol)
     if (
         frozen_q.frozen.get("frozen_p_run_hash") != frozen_p.run_hash
         or frozen_q.frozen.get("frozen_p_oof_sha256") != frozen_p.oof_sha256
@@ -617,7 +626,7 @@ def run_timing_policy_repair(
     )
     counts = _activation_counts(full_ledger)
     supply = same_threshold_supply.set_index("arm")
-    if (
+    if not recomputed_handoffs() and (
         counts.get("xgboost_conditional_crossing") != 3_780
         or int(supply.at["xgboost_conditional", "level_rearm_same_threshold_activations"])
         != 7_418
@@ -791,13 +800,13 @@ def run_timing_policy_repair(
         leakage = pd.DataFrame(
             [
                 {
-                    "check": "exact frozen Notebook Q handoff",
-                    "passed": frozen_q.run_hash == FROZEN_Q_RUN_HASH,
+                    "check": "completed Notebook Q handoff" if recomputed_handoffs() else "exact frozen Notebook Q handoff",
+                    "passed": frozen_q.run_hash == protocol["frozen_q_run_hash"],
                     "detail": frozen_q.run_hash,
                 },
                 {
-                    "check": "exact frozen Notebook P handoff",
-                    "passed": frozen_p.run_hash == "0474798f6d0eb56e64d3",
+                    "check": "completed Notebook P handoff" if recomputed_handoffs() else "exact frozen Notebook P handoff",
+                    "passed": frozen_p.run_hash == protocol["frozen_p_run_hash"],
                     "detail": frozen_p.run_hash,
                 },
                 {

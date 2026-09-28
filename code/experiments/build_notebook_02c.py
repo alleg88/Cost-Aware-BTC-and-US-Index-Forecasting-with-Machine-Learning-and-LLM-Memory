@@ -7,7 +7,7 @@ import nbformat as nbf
 
 
 CODE_ROOT = Path(__file__).resolve().parents[1]
-NOTEBOOK = CODE_ROOT / "notebooks" / "02c_sentiment_data_and_methodology.ipynb"
+NOTEBOOK = CODE_ROOT / "notebooks" / "12_RQ3_A_BTC_sentiment_data_methodology.ipynb"
 
 
 def build_notebook(path: Path = NOTEBOOK) -> Path:

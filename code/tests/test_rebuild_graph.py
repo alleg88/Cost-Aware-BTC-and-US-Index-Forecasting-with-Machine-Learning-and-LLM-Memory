@@ -213,3 +213,54 @@ def test_task_environment_is_part_of_identity_and_reaches_subprocess(tmp_path):
     assert report.executed == ("environment",)
     assert graph.tasks[0].to_dict()["environment"] == {"MSC_CANONICAL_OFFLINE": "1"}
     assert (context.code_root / "environment.txt").read_text(encoding="utf-8") == "1"
+
+
+def test_visible_run_reports_child_output_and_reuses_only_upstream(tmp_path, capsys):
+    _module(tmp_path, "source", "from pathlib import Path\nPath('built.txt').write_text('built')\n")
+    _module(tmp_path, "reader", "from pathlib import Path\nprint('fitting selected model', flush=True)\nPath('result.json').write_text('{}')\n")
+    context = _context(tmp_path)
+    (context.code_root / "raw.txt").write_text("raw")
+    execute_graph(_graph(), context)
+
+    report = execute_graph(_graph(), context, selected_tasks=["reader"],
+                           force_tasks=["reader"], stream=True)
+
+    assert report.executed == ("reader",)
+    assert report.skipped == ("source",)
+    output = capsys.readouterr().out
+    assert "REUSE source" in output and "RUN reader" in output
+    assert "fitting selected model" in output and "DONE reader" in output
+    assert "fitting selected model" in (context.state_root / "reader.log").read_text()
+
+
+def test_visible_failure_keeps_diagnostic_in_output_and_log(tmp_path, capsys):
+    _module(tmp_path, "source", "print('input has invalid timestamps', flush=True)\nraise SystemExit(7)\n")
+    context = _context(tmp_path)
+    (context.code_root / "raw.txt").write_text("raw")
+    with pytest.raises(TaskExecutionError, match="exit code 7"):
+        execute_graph(_graph(), context, selected_tasks=["source"], stream=True)
+    assert "input has invalid timestamps" in capsys.readouterr().out
+    assert "input has invalid timestamps" in (context.state_root / "source.log").read_text()
+
+
+def test_selected_branch_does_not_execute_an_unrelated_reader(tmp_path):
+    _module(tmp_path, "source", "from pathlib import Path\nPath('built.txt').write_text('built')\n")
+    _module(tmp_path, "reader", "raise AssertionError('unrelated notebook ran')\n")
+    context = _context(tmp_path)
+    (context.code_root / "raw.txt").write_text("raw")
+    report = execute_graph(_graph(), context, selected_tasks=["source"])
+    assert report.executed == ("source",)
+    assert not (context.code_root / "result.json").exists()
+
+
+def test_changed_kernel_packages_invalidate_upstream_receipts(tmp_path):
+    from dataclasses import replace
+
+    _module(tmp_path, "source", "from pathlib import Path\nPath('built.txt').write_text('built')\n")
+    context = _context(tmp_path)
+    (context.code_root / "raw.txt").write_text("raw")
+    first = replace(context, runtime_identity="python-and-packages-A")
+    second = replace(context, runtime_identity="python-and-packages-B")
+    execute_graph(_graph(), first, selected_tasks=["source"])
+    assert execute_graph(_graph(), first, selected_tasks=["source"]).skipped == ("source",)
+    assert execute_graph(_graph(), second, selected_tasks=["source"]).executed == ("source",)

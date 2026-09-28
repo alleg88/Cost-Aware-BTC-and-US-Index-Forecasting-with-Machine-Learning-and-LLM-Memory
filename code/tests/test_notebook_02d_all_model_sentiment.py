@@ -7,7 +7,7 @@ from notebook_assertions import assert_descending, tables
 
 
 CODE_ROOT = Path(__file__).resolve().parents[1]
-NOTEBOOK = CODE_ROOT / "notebooks" / "02d_all_model_sentiment.ipynb"
+NOTEBOOK = CODE_ROOT / "notebooks" / "13_RQ3_B_BTC_nine_model_sentiment_ablation.ipynb"
 
 
 def _source():
@@ -61,7 +61,8 @@ def test_raw_sentiment_artifacts_use_all_models_and_fixed_candidate_zero():
 def test_notebook_02d_is_executed_without_errors():
     notebook, _ = _source()
     code_cells = [cell for cell in notebook.cells if cell.cell_type == "code"]
-    assert code_cells and all(cell.execution_count is not None for cell in code_cells)
+    assert "from run_zip import prepare_" in code_cells[0].source
+    assert len(code_cells) > 1 and all(cell.execution_count is not None for cell in code_cells[1:])
     assert not any(
         output.output_type == "error"
         for cell in code_cells

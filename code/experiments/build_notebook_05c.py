@@ -1,441 +1,265 @@
-"""Build and execute the causal full-information policy-router artifact reader."""
+"""Build notebook18: nine-model LLM ensemble weights and memory controls."""
 from __future__ import annotations
-
+import json
 from pathlib import Path
-
 import nbformat as nbf
 from nbclient import NotebookClient
 
-
 CODE_ROOT = Path(__file__).resolve().parents[1]
-NOTEBOOK_PATH = CODE_ROOT / "notebooks" / "05c_causal_policy_router_agent.ipynb"
-KERNEL = {
-    "display_name": "MSC Project (Python 3.12)",
-    "language": "python",
-    "name": "msc-code",
-}
-COLAB_SETUP = """# Google Colab / local setup
-import os, sys, subprocess
+NOTEBOOK_PATH = CODE_ROOT / "notebooks/18_RQ4_A_BTC_LLM_policy_router.ipynb"
+PUBLICATION = CODE_ROOT / "configs/rq4_colab_publication.json"
+KERNEL = {"display_name": "Python 3", "language": "python", "name": "msc-code"}
+
+
+def md(source, *, tags=()):
+    return nbf.v4.new_markdown_cell(source.strip(), metadata={"tags": list(tags)})
+
+
+def code(source, *, tags=()):
+    metadata = {"tags": list(tags)}
+    if "result-figure" in tags:
+        metadata["scrolled"] = False
+    return nbf.v4.new_code_cell(source.strip(), metadata=metadata)
+
+
+def setup_source():
+    publication = json.loads(PUBLICATION.read_text(encoding="utf-8")) if PUBLICATION.is_file() else {}
+    return '''# Load notebook18 from the project or Google Drive.
+import sys, hashlib, importlib.util
 from pathlib import Path
+from tempfile import gettempdir
+from urllib.request import urlopen
+
 if "google.colab" in sys.modules:
-    from google.colab import drive
-    drive.mount("/content/drive", force_remount=False)
-    CODE_ROOT = Path("/content/drive/MyDrive/msc project/code")
-    subprocess.check_call([sys.executable, "-m", "pip", "install", "-q", "--no-deps", "-e", str(CODE_ROOT), "catboost==1.2.10", "rapidfuzz==3.14.3"])
+    publication = ''' + repr(publication) + '''
+    if not publication.get("manifest_id"):
+        raise FileNotFoundError("The published RQ4 input manifest is required for Colab.")
+    helper = Path(gettempdir()) / "colab_rq4_inputs.py"
+    if not helper.is_file() or hashlib.sha256(helper.read_bytes()).hexdigest() != publication["loader_sha256"]:
+        helper.write_bytes(urlopen("https://drive.usercontent.google.com/download?export=download&confirm=t&id=" + publication["loader_id"], timeout=60).read())
+    assert hashlib.sha256(helper.read_bytes()).hexdigest() == publication["loader_sha256"]
+    spec = importlib.util.spec_from_file_location("colab_rq4_inputs", helper)
+    loader = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(loader)
+    CODE = CODE_ROOT = loader.prepare(
+        "https://drive.usercontent.google.com/download?export=download&confirm=t&id=" + publication["manifest_id"], publication["manifest_sha256"])
 else:
-    CODE_ROOT = next(p for p in (Path.cwd(), *Path.cwd().parents) if (p / "pyproject.toml").exists())
-os.chdir(CODE_ROOT); sys.path.insert(0, str(CODE_ROOT)); CODE = CODE_ROOT
-"""
-
-
-def md(source: str, *, tags: tuple[str, ...] = ()):
-    cell = nbf.v4.new_markdown_cell(source.strip())
-    if tags:
-        cell.metadata["tags"] = list(tags)
-    return cell
-
-
-def code(source: str, *, tags: tuple[str, ...] = ()):
-    cell = nbf.v4.new_code_cell(source.strip())
-    if tags:
-        cell.metadata["tags"] = list(tags)
-    return cell
+    candidates = (Path.cwd(), *Path.cwd().parents)
+    CODE = CODE_ROOT = next((p if (p / "pyproject.toml").is_file() else p / "code")
+                            for p in candidates if (p / "pyproject.toml").is_file() or (p / "code/pyproject.toml").is_file())
+    if str(CODE_ROOT) not in sys.path:
+        sys.path.insert(0, str(CODE_ROOT))
+'''
 
 
 def build_notebook():
-    cells = [
-        code(COLAB_SETUP),
-        md(
-            """
-# 05c - Causal full-information policy-router Reflection Agent
+    cells = [md("""
+# 18 - RQ4_A: BTC LLM ensemble weights and memory
 
-## Question and frozen decision
+## Methodology
 
-Can a bounded DeepSeek router add LONG and SHORT trades to immutable Union v1
-without violating preregistered cost and risk limits?
+DeepSeek assigns weekly weights to nine forecasting models. RealMemory uses
+four completed seven-day outcome cards; NoMemory receives empty history;
+ShuffledMemory permutes model identities. All three share current market
+information. Hedge is the adaptive control; fixed LSTM is an additional reference.
 
-**Result:** coverage increased, but the development non-inferiority gates failed;
-Union v1 remains frozen. This executed reader fits nothing, makes no Cloud call
-and cannot access the sealed 2026-Q2 lockbox.
-"""
-        ),
-        code(
-            """
-from pathlib import Path
+The four adaptive variants use DZ65 probabilities, confidence 0.55, next-M15-open
+entry, TP150/SL100, one-bar holding and 5 bp per side. Qualified Union handles
+failed LLM answers. LSTM retains DZ55, confidence 0.75 and TP200/SL100.
+
+All four variants run in **2024**, **January–June 2025** and **July 2025–March 2026**.
+H1 selects the trading rule and Hedge learning rate. The 2024 replay is diagnostic;
+the last period is the principal exploratory comparison on previously examined data.
+Q2-2026 rows are excluded.
+"""), code(setup_source()), code("""
+import json
 from html import escape
-import hashlib, json, os
-
-import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
-from IPython.display import HTML, display
+import matplotlib.pyplot as plt
+from IPython.display import HTML, Markdown, display
+from experiments.rq4_ensemble_reader import verify_reader
 
-CODE_ROOT = next(path for path in (Path.cwd(), *Path.cwd().parents) if (path / "pyproject.toml").is_file())
-os.chdir(CODE_ROOT)
-CACHE = CODE_ROOT / "experiments" / "cache" / "reflection_policy_router_v4"
-
-from experiments.reconcile_reflection_policy_router import reconcile_final_experiment
-from reflection_agent.v4.config import load_v4_config
-from reflection_agent.v4.contracts import RouterChoice
-from reflection_agent.v4.policies import POLICY_DESCRIPTIONS, POLICY_IDS
-from reflection_agent.v4.prompts import ROUTER_TASK_PROMPT, SYSTEM_PROMPT_V4, prompt_hashes
-
-def sha256_file(path):
-    digest = hashlib.sha256()
-    with Path(path).open("rb") as handle:
-        for block in iter(lambda: handle.read(1024 * 1024), b""):
-            digest.update(block)
-    return digest.hexdigest()
-
-sealed_manifest = json.loads((CACHE / "final_report_manifest.json").read_text(encoding="utf-8"))
-for name, expected in sealed_manifest.items():
-    assert sha256_file(CACHE / name) == expected
-stored_report = json.loads((CACHE / "final_report.json").read_text(encoding="utf-8"))
-for name, expected in stored_report["table_artifacts"].items():
-    assert sha256_file(CACHE / name) == expected
-live_report = reconcile_final_experiment(CACHE)
-assert live_report == {key: value for key, value in stored_report.items() if key != "table_artifacts"}
-assert stored_report["artifact_hashes_verified"] is True
-assert stored_report["union_invariant_across_variants"] is True
-assert stored_report["lockbox_2026_q2_used"] is False
-
-preflight = json.loads((CACHE / "preflight.json").read_text(encoding="utf-8"))
-config = load_v4_config(CODE_ROOT / "configs" / "reflection_agent_v4.yaml")
-assert preflight["passed"] is True
-assert preflight["model"] == config.model
-assert preflight["model_digest"] == config.required_model_digest
-assert preflight["prompt_hashes"] == prompt_hashes()
-assert preflight["implementation_hash"] == stored_report["implementation_hash"]
-
-results = pd.read_parquet(CACHE / "results_table.parquet")
-gates = pd.read_parquet(CACHE / "coverage_gates.parquet")
+CACHE = CODE_ROOT / "experiments/cache/reflection_ensemble_v5"
+audit = verify_reader(CACHE)
+protocol = json.loads((CACHE / "protocol.json").read_text(encoding="utf-8"))
+data_manifest = json.loads((CACHE / "data_manifest.json").read_text(encoding="utf-8"))
+summary = pd.read_parquet(CACHE / "summary.parquet")
+decisions = pd.read_parquet(CACHE / "weight_decisions.parquet")
 comparisons = pd.read_parquet(CACHE / "paired_comparisons.parquet")
-assert results["variant"].nunique() == 14
-assert stored_report["prompt_audit_passed"] == stored_report["prompt_audit_total"] == 339
+order = ["RealMemory", "NoMemory", "ShuffledMemory", "Hedge", "LSTM_fixed"]
+labels = {"RealMemory": "Real memory", "NoMemory": "No memory", "ShuffledMemory": "Shuffled memory", "Hedge": "Hedge", "LSTM_fixed": "Fixed LSTM"}
+model_labels = ["Logistic regression", "Decision tree", "Random forest", "Linear SVM", "XGBoost", "CatBoost", "MLP", "LSTM", "GRU"]
+print(f"Verified {audit['models']} models, {audit['logical_llm_decisions']} LLM decisions and {audit['replayed_stage_arms']} stage/strategy replays.")
+print(f"Memory, timing, accounting and all three paired intervals reproduced; {audit['fallback_weeks']} fallback weeks.")
+"""), md("""
+## Forecast coverage
 
-stage_order = ["development", "h1", "forward"]
-stage_labels = {
-    "development": "Development 2021-2024",
-    "h1": "H1 2025 secondary",
-    "forward": "Jul-2025-Mar-2026 reused",
-}
-variant_labels = {
-    "static_union_only": "Union",
-    "reflection_real_memory": "Real Memory",
-    "reflection_no_memory": "No Memory",
-    "reflection_shuffled_memory": "Shuffled Memory",
-    "hedge_router": "Hedge",
-    "random_router": "Seeded Random",
-    "static_context_combined": "CONTEXT_COMBINED",
-    "static_first_only": "FIRST_ONLY",
-    "static_funding_continuation": "FUNDING_CONTINUATION",
-    "static_lstm_all": "LSTM_ALL",
-    "static_lstm_high": "LSTM_HIGH",
-    "static_third_plus_only": "THIRD_PLUS_ONLY",
-    "static_volatility_reset": "VOLATILITY_RESET",
-    "static_xgb_strong": "XGB_STRONG",
-}
-variant_order = [
-    "static_union_only", "reflection_real_memory", "reflection_no_memory",
-    "reflection_shuffled_memory", "hedge_router", "random_router",
-    "static_context_combined", "static_xgb_strong", "static_lstm_high",
-    "static_lstm_all", "static_first_only", "static_third_plus_only",
-    "static_funding_continuation", "static_volatility_reset",
-]
-assert set(variant_order) == set(results["variant"])
-print("Sealed report, 14 arms, 339 prompts, Union invariance and Q2 exclusion verified.")
-"""
-        ),
-        md(
-            """
-## 1. Frozen protocol and technical contract
+The table counts eligible M15 forecasts and weekly blocks. Forecasts use a
+prior-180-day fit for 2024, monthly H1 fits and frozen later predictions.
+"""), code("""
+coverage = []
+for stage, interval in sorted(protocol["stages"].items(), key=lambda item: pd.Timestamp(item[1][0])):
+    frame = pd.concat([pd.read_parquet(CACHE / p, columns=["timestamp"]) for p in data_manifest["predictions"][stage]["logreg:w65"]])
+    coverage.append({"Period": stage, "First forecast (UTC)": frame.timestamp.min(),
+                     "Last forecast (UTC)": frame.timestamp.max(), "Rows per model": len(frame),
+                     "Weekly blocks": audit["stage_weeks"][stage]})
+display(pd.DataFrame(coverage))
+display(Markdown(f"**Result:** the principal period contains **{coverage[-1]['Rows per model']:,} forecasts per model** across **{coverage[-1]['Weekly blocks']} weeks**. H1 selected Hedge's learning rate **eta = {protocol['hedge_eta']:g}**."))
+""", tags=("result-table",))]
+    cells.extend([md("""
+## Principal comparison: July 2025–March 2026
 
-- **Sequence:** 2021-2024 OOF development -> 2025 H1 secondary stress -> Jul-2025-Mar-2026 **secondary reused forward**; 2026 Q2 remains sealed.
-- **Execution:** immutable LSTM DZ55 + Linear SVM DZ75 Union first; add-ons use only Union-flat, side-preserving candidates with fixed TP200/SL100, one-M15 hold, M1 stop-first replay and 5+5 bps costs.
-- **Router:** one of nine host-owned policies is chosen before each UTC boundary; only fully resolved earlier policy payoffs and memory are visible.
-- **Authority:** `deepseek-v4-flash:cloud` (digest `5166728b9358990e5f6c34f87cbe48716be2f2cd2d3b98527dff27ea755bf3ba`, `think=low`) returns only `choice_index` plus supplied evidence/memory indices and cannot alter trades, sides, thresholds, costs, gates or code.
-"""
-        ),
-        code(
-            """
-assert sum(item["boundary_vetoes"] for item in stored_report["stage_counts"].values()) == 5
-assert stored_report["forward_evidence_role"] == "secondary_reused_forward"
-action_items = "".join(
-    f"<li><code>{index}: {escape(policy_id)}</code> - {escape(POLICY_DESCRIPTIONS[policy_id])}</li>"
-    for index, policy_id in enumerate(POLICY_IDS)
-)
-technical_html = f'''
-<details>
-<summary><b>Exact prompts, nine actions and reproducibility hashes</b></summary>
-<p><b>Runtime:</b> {escape(config.model)}; digest <code>{escape(config.required_model_digest)}</code>;
-<code>think={escape(config.think)}</code>; temperature 0; one bounded repair; schema <code>{RouterChoice.__name__}</code>.</p>
-<p><b>Actions:</b></p><ol>{action_items}</ol>
-<p><b>System prompt:</b></p><pre>{escape(SYSTEM_PROMPT_V4)}</pre>
-<p><b>Router task template:</b></p><pre>{escape(ROUTER_TASK_PROMPT)}</pre>
-<p><b>Prompt hashes:</b> <code>{escape(json.dumps(prompt_hashes(), sort_keys=True))}</code><br>
-<b>Implementation:</b> <code>{escape(preflight['implementation_hash'])}</code><br>
-<b>Protocol:</b> <code>{escape(preflight['protocol_hash'])}</code></p>
-</details>
-'''
-display(HTML(technical_html))
-"""
-            , tags=("technical-details",)
-        ),
-        md(
-            """
-## 2. Core comparison
+Net return and drawdown are additive percentages after costs, without compounding.
+The four adaptive variants share execution settings; fixed LSTM retains its selected policy.
+"""), code("""
+primary = summary.loc[summary.stage.eq("forward")].set_index("arm").loc[order]
+display(pd.DataFrame({
+    "Strategy": [labels[a] for a in order], "Net %": (primary.net_return * 100).round(2).to_numpy(),
+    "Sortino": primary.sortino.round(2).to_numpy(), "Sharpe": primary.sharpe.round(2).to_numpy(),
+    "Drawdown %": (primary.max_drawdown * 100).round(2).to_numpy(),
+    "Trades": primary.trades.astype(int).to_numpy(), "Long": primary.n_long.astype(int).to_numpy(),
+    "Short": primary.n_short.astype(int).to_numpy(), "Fallback weeks": primary.fallback_weeks.astype(int).to_numpy(),
+}))
+real = primary.loc["RealMemory"]
+display(Markdown(f"**Result:** real memory returns **{100 * real.net_return:+.2f}%** from **{int(real.trades)} trades**, **{100 * (primary.loc['Hedge', 'net_return'] - real.net_return):.2f} percentage points** below Hedge."))
+""", tags=("result-table",)), md("""
+## Memory contrasts and uncertainty
 
-The primary policies are immutable Union, the real-memory router, the strongest fixed context policy and guarded high-confidence XGBoost; forward checks remain descriptive.
-"""
-        ),
-        code(
-            """
-core_ids = [
-    "static_union_only", "reflection_real_memory",
-    "static_context_combined", "static_xgb_strong",
-]
-union_reference = results.loc[
-    results["variant"].eq("static_union_only"), ["stage", "selected_trades", "net_return"]
-].rename(columns={"selected_trades": "union_trades", "net_return": "union_net"})
-core = results.loc[results["variant"].isin(core_ids)].merge(union_reference, on="stage")
-core["_stage"] = core["stage"].map({name: index for index, name in enumerate(stage_order)})
-core["_policy"] = core["variant"].map({name: index for index, name in enumerate(core_ids)})
-core = core.sort_values(["_stage", "_policy"])
-core_comparison_table = pd.DataFrame({
-    "Stage": core["stage"].map(stage_labels),
-    "Policy": core["variant"].map(variant_labels),
-    "Trades": core["selected_trades"].astype(int),
-    "Growth %": (100 * (core["selected_trades"] / core["union_trades"] - 1)).round(1),
-    "LONG": core["selected_long_trades"].astype(int),
-    "SHORT": core["selected_short_trades"].astype(int),
-    "Net %": (100 * core["net_return"]).round(2),
-    "Delta net pp": (100 * (core["net_return"] - core["union_net"])).round(2),
-    "Sortino": core["sortino"].round(2),
-    "Checks": core["gate_count"].astype(int).astype(str) + "/10",
-})
-display(core_comparison_table.reset_index(drop=True))
-"""
-            , tags=("result-table",)
-        ),
-        md(
-            "Takeaway: Real Memory adds trades in every period, but its development net falls by 12.97 percentage points, so Union remains frozen.",
-            tags=("result-conclusion",),
-        ),
-        md(
-            """
-## 3. All 14 registered variants
+Paired four-week circular block bootstrap: 10,000 samples, seed 42.
+Family-adjusted intervals cover three comparisons; differences are percentage points.
+"""), code("""
+contrast_rows = []
+for row in comparisons.itertuples():
+    contrast_rows.append({"Contrast": row.contrast, "Difference (pp)": round(100 * row.net_difference, 2),
+                          "95% interval (pp)": f"[{100 * row.ci95_low:+.2f}, {100 * row.ci95_high:+.2f}]",
+                          "Family-adjusted interval (pp)": f"[{100 * row.familywise95_low:+.2f}, {100 * row.familywise95_high:+.2f}]"})
+display(pd.DataFrame(contrast_rows))
+lower = comparisons.set_index("contrast").familywise95_low
+memory_supported = all(lower.loc["RealMemory - " + arm] > 0 for arm in ("NoMemory", "ShuffledMemory"))
+hedge_supported = lower.loc["RealMemory - Hedge"] > 0
+memory_text = "support a memory benefit against both LLM controls" if memory_supported else "do not establish a memory benefit against both LLM controls"
+hedge_text = "also favour real memory over Hedge" if hedge_supported else "do not establish an advantage over Hedge"
+display(Markdown(f"**Result:** adjusted intervals **{memory_text}** and **{hedge_text}**."))
+""", tags=("result-table",)), md("""
+## Average model weights
 
-Each cell reports the frozen selected-trade count, incremental net percentage points versus Union and, for decision stages, passed checks.
-"""
-        ),
-        code(
-            """
-all_joined = results.merge(
-    comparisons[["stage", "variant", "delta_net"]], on=["stage", "variant"], validate="one_to_one"
-)
-all_rows = []
-for variant in variant_order:
-    row = {"Policy": variant_labels[variant]}
-    for stage, prefix in (("development", "Dev"), ("h1", "H1"), ("forward", "Forward")):
-        item = all_joined.loc[
-            all_joined["variant"].eq(variant) & all_joined["stage"].eq(stage)
-        ].iloc[0]
-        row[f"{prefix} trades"] = int(item["selected_trades"])
-        row[f"{prefix} dNet pp"] = round(100 * item["delta_net"], 2)
-        if stage != "forward":
-            row[f"{prefix} checks"] = f"{int(item['gate_count'])}/10"
-    all_rows.append(row)
-all_variants_table = pd.DataFrame(all_rows)
-display(all_variants_table)
-"""
-            , tags=("result-table",)
-        ),
-        md(
-            "Takeaway: CONTEXT_COMBINED is the best fixed secondary policy, whereas XGB_STRONG adds many H1 and forward trades but makes both periods negative.",
-            tags=("result-conclusion",),
-        ),
-        md(
-            """
-## 4. Memory controls, uncertainty and gates
+Bars average weekly weights in July 2025–March 2026, excluding fallback weeks.
+"""), code("""
+FIGURES = CACHE / "figures"
+FIGURES.mkdir(exist_ok=True)
+colours = ["#3767a0", "#78838d", "#c58b35", "#31877b", "#8265a5"]
+weight_columns = ["w_" + name for name in protocol["model_names"]]
+mean_weights = (decisions.loc[decisions.stage.eq("forward") & ~decisions.fallback]
+                .groupby("arm")[weight_columns].mean().loc[order[:4]] * 100)
+def plot_model_weights(arm):
+    fig, ax = plt.subplots(figsize=(8, 3.3))
+    bars = ax.barh(np.arange(9), mean_weights.loc[arm], color=colours[order.index(arm)], height=.65)
+    ax.bar_label(bars, fmt="%.1f%%", padding=3, fontsize=9)
+    ax.set_yticks(range(9), model_labels)
+    ax.set(title=labels[arm], xlabel="Mean model weight (%)", xlim=(0, 75), ylim=(8.6, -.6))
+    ax.set_xticks([0, 25, 50, 75])
+    ax.spines[["top", "right"]].set_visible(False)
+    fig.tight_layout()
+    fig.savefig(FIGURES / f"rq4_mean_weights_{arm}.png", dpi=180, bbox_inches="tight")
+    plt.show()
 
-The registered lexicographic objective requires both development and H1 success before Real Memory may beat no memory, shuffled policy-label memory and deterministic Hedge; paired block-bootstrap intervals are descriptive.
-"""
-        ),
-        code(
-            """
-control_ids = [
-    "reflection_real_memory", "reflection_no_memory",
-    "reflection_shuffled_memory", "hedge_router",
-]
-objective_order = sorted(
-    stored_report["memory_objectives"],
-    key=lambda variant: tuple(stored_report["memory_objectives"][variant]),
-    reverse=True,
-)
-objective_rank = {variant: index + 1 for index, variant in enumerate(objective_order)}
+plot_model_weights("RealMemory")
+""", tags=("result-figure",)), code("""
+plot_model_weights("NoMemory")
+""", tags=("result-figure",)), code("""
+plot_model_weights("ShuffledMemory")
+""", tags=("result-figure",)), code("""
+plot_model_weights("Hedge")
+display(Markdown(f"**Result:** real memory and Hedge favour Linear SVM (**{mean_weights.loc['RealMemory', 'w_svm_linear']:.1f}%** and **{mean_weights.loc['Hedge', 'w_svm_linear']:.1f}%**); the two LLM controls spread weights more evenly."))
+""", tags=("result-figure",)), md("""
+## Net return by strategy
 
-def comparison_cell(variant, stage):
-    item = comparisons.loc[
-        comparisons["variant"].eq(variant) & comparisons["stage"].eq(stage)
-    ].iloc[0]
-    return (
-        int(item["delta_trades"]),
-        f"{100 * item['delta_net']:+.2f} [{100 * item['delta_net_ci95_low']:+.2f}, "
-        f"{100 * item['delta_net_ci95_high']:+.2f}]",
-    )
-
-control_rows = []
-for variant in control_ids:
-    dev_trades, dev_ci = comparison_cell(variant, "development")
-    h1_trades, h1_ci = comparison_cell(variant, "h1")
-    counts = stored_report["choice_counts"][variant]
-    dominant_policy, dominant_blocks = max(counts.items(), key=lambda item: (item[1], item[0]))
-    stage_results = results.loc[results["variant"].eq(variant)].set_index("stage")
-    control_rows.append({
-        "Control": variant_labels[variant],
-        "Main choice": f"{dominant_policy} ({dominant_blocks}/113)",
-        "Dev dTrades": dev_trades,
-        "Dev dNet pp [95% CI]": dev_ci,
-        "Dev checks": f"{int(stage_results.loc['development', 'gate_count'])}/10",
-        "H1 dTrades": h1_trades,
-        "H1 dNet pp [95% CI]": h1_ci,
-        "H1 checks": f"{int(stage_results.loc['h1', 'gate_count'])}/10",
-        "Objective rank": f"{objective_rank[variant]}/14",
-    })
-memory_controls_table = pd.DataFrame(control_rows)
-display(memory_controls_table)
-"""
-            , tags=("result-table",)
-        ),
-        md(
-            "Takeaway: Real Memory is the strongest memory control but passes only 4/10 development checks, so its H1 improvement cannot establish a memory benefit.",
-            tags=("result-conclusion",),
-        ),
-        md(
-            """
-## 5. One quantity-quality graph
-
-This figure shows the four primary policies only; the vertical and horizontal dashed lines mark the +25% trade-growth and -0.5 percentage-point net non-inferiority thresholds, while the full gate test also includes side, Sortino, drawdown, distribution and audit checks.
-"""
-        ),
-        code(
-            """
-chart = core.copy()
-chart["trade_growth_pct"] = 100 * (chart["selected_trades"] / chart["union_trades"] - 1)
-chart["delta_net_pp"] = 100 * (chart["net_return"] - chart["union_net"])
-stage_codes = {"development": "D", "h1": "H1", "forward": "F"}
-colors = {
-    "static_union_only": "#4c566a",
-    "reflection_real_memory": "#5e81ac",
-    "static_context_combined": "#2e8b57",
-    "static_xgb_strong": "#bf616a",
-}
-fig, ax = plt.subplots(figsize=(9, 5.5))
-for variant in core_ids:
-    rows = chart.loc[chart["variant"].eq(variant)].sort_values("_stage")
-    ax.plot(
-        rows["trade_growth_pct"], rows["delta_net_pp"], marker="o", linewidth=1.8,
-        color=colors[variant], label=variant_labels[variant],
-    )
-    if variant == "static_union_only":
-        ax.annotate("D/H1/F", (0, 0), xytext=(5, 5), textcoords="offset points", fontsize=8)
-    else:
-        for _, item in rows.iterrows():
-            ax.annotate(
-                stage_codes[item["stage"]],
-                (item["trade_growth_pct"], item["delta_net_pp"]),
-                xytext=(4, 4), textcoords="offset points", fontsize=8,
-            )
-ax.axvline(25, color="black", linestyle="--", linewidth=1)
-ax.axhline(-0.5, color="black", linestyle="--", linewidth=1)
-ax.axhline(0, color="grey", linewidth=0.8)
-ax.set_title("Trade growth versus incremental net return")
-ax.set_xlabel("Trade growth versus Union (%)")
-ax.set_ylabel("Incremental net return (percentage points)")
-ax.grid(alpha=0.25)
-ax.legend(loc="best", fontsize=8)
-plt.tight_layout()
+Bars show the same cost-adjusted totals as the principal comparison table.
+"""), code("""
+fig, ax = plt.subplots(figsize=(9, 3.6))
+bars = ax.barh([labels[arm] for arm in order], primary.net_return * 100, color=colours, height=.65)
+ax.bar_label(bars, fmt="%+.2f%%", padding=4, fontsize=10)
+ax.invert_yaxis()
+ax.axvline(0, color="#454545", linewidth=.8)
+ax.set(xlabel="Additive net return after costs (%)", xlim=(-95, 18), title="July 2025–March 2026")
+ax.spines[["top", "right"]].set_visible(False)
+fig.tight_layout()
+fig.savefig(FIGURES / "rq4_net_return_bar.png", dpi=180, bbox_inches="tight")
 plt.show()
-"""
-            , tags=("result-figure",)
-        ),
-        md(
-            "Takeaway: only CONTEXT_COMBINED stays above Union's net line in all three periods, but it misses the +25% development volume gate.",
-            tags=("result-conclusion",),
-        ),
-        md(
-            """
-## 6. Reproducibility, leakage and terminal decision
+display(Markdown("**Result:** fixed LSTM is the only positive strategy; all four adaptive variants lose after costs."))
+""", tags=("result-figure",))])
+    cells.extend([md("""
+## Development and calibration
 
-The independent reconciler rehashes all artifacts, rebuilds choices and economics, checks causal memory and Union non-overlap, reproduces deterministic controls and audits every anonymous prompt.
-"""
-        ),
-        code(
-            """
-assert stored_report["all_prompt_audits_passed"] is True
-assert stored_report["continuous_stage_state_verified"] is True
-assert stored_report["controls_called_llm"] is False
-audit_table = pd.DataFrame([
-    {"Check": "Cloud contract", "Evidence": f"{preflight['model']}; think={config.think}; temp=0; one repair", "Status": "VERIFIED"},
-    {"Check": "Model digest", "Evidence": preflight["model_digest"][:16] + "... verified", "Status": "VERIFIED"},
-    {"Check": "Implementation / protocol", "Evidence": preflight["implementation_hash"][:12] + "... / " + preflight["protocol_hash"][:12] + "...", "Status": "VERIFIED"},
-    {"Check": "Registered arms / blocks", "Evidence": f"{results['variant'].nunique()} arms / {sum(x['blocks'] for x in stored_report['stage_counts'].values())} blocks", "Status": "VERIFIED"},
-    {"Check": "Prompt audits", "Evidence": f"{stored_report['prompt_audit_passed']}/{stored_report['prompt_audit_total']}", "Status": "VERIFIED"},
-    {"Check": "memory_benefit_established", "Evidence": str(stored_report["memory_benefit_established"]), "Status": "NOT ESTABLISHED"},
-    {"Check": "Artifact hashes", "Evidence": "all registered hashes reproduced", "Status": "VERIFIED"},
-    {"Check": "Union invariant / non-overlap", "Evidence": str(stored_report["union_invariant_across_variants"]), "Status": "VERIFIED"},
-    {"Check": "Continuous causal memory", "Evidence": str(stored_report["continuous_stage_state_verified"]), "Status": "VERIFIED"},
-    {"Check": "Deterministic controls called LLM", "Evidence": str(stored_report["controls_called_llm"]), "Status": "ZERO CALLS"},
-    {"Check": "2026-Q2 used", "Evidence": str(stored_report["lockbox_2026_q2_used"]), "Status": "SEALED"},
-    {"Check": "Best registered objective", "Evidence": stored_report["best_variant_by_registered_objective"], "Status": "SECONDARY"},
-    {"Check": "Frozen policy", "Evidence": stored_report["recommended_frozen_policy"], "Status": "FINAL"},
-])
-display(audit_table)
-"""
-            , tags=("result-table",)
-        ),
-        md(
-            "Takeaway: all 339 prompt and artifact checks pass, Q2 remains unused, and the final frozen policy is Union only.",
-            tags=("result-conclusion",),
-        ),
-        md(
-            """
-## 7. What follows
+2024 and H1 results use the H1-selected trading rule. These periods are
+descriptive and do not provide independent validation.
+"""), code("""
+secondary_rows = []
+for stage in ("development", "h1"):
+    frame = summary.loc[summary.stage.eq(stage)].set_index("arm").loc[order]
+    for arm, row in frame.iterrows():
+        secondary_rows.append({"Period": "2024 diagnostic" if stage == "development" else "H1-2025 calibration",
+                               "Strategy": labels[arm], "Net %": round(100 * row.net_return, 2),
+                               "Sortino": round(row.sortino, 2), "Drawdown %": round(100 * row.max_drawdown, 2),
+                               "Trades": int(row.trades), "Fallback weeks": int(row.fallback_weeks)})
+display(pd.DataFrame(secondary_rows))
+hedge_secondary = summary.loc[summary.arm.eq("Hedge")].set_index("stage")
+display(Markdown(f"**Result:** real memory loses in both periods. Hedge returns **{100 * hedge_secondary.loc['development', 'net_return']:+.2f}%** in 2024 and **{100 * hedge_secondary.loc['h1', 'net_return']:+.2f}%** in H1."))
+""", tags=("result-table",)), md("""
+## Reproducibility
 
-- Stop ensemble and Reflection-policy search: 05C is the terminal controlled experiment; retain immutable Union v1.
-- Report Real Memory as increased coverage without established benefit, CONTEXT_COMBINED as a positive secondary diagnostic and XGB_STRONG as rejected.
-- Move to the evidence matrix and dissertation chapters, then run one separately frozen Notebook 06/Q2 lockbox evaluation only after the written protocol is final.
-"""
-        ),
-    ]
-    notebook = nbf.v4.new_notebook()
-    notebook.cells = cells
+Saved forecasts and LLM replies are independently checked against every reported result.
+"""), code(r'''
+display(pd.DataFrame([
+    {"Check": "Forecast models / reconstructed stage-strategies", "Result": f"{audit['models']} / {audit['replayed_stage_arms']}"},
+    {"Check": "LLM decisions / unique recorded calls", "Result": f"{audit['logical_llm_decisions']} / {audit['unique_llm_calls']}"},
+    {"Check": "Memory and current-state audits", "Result": str(audit["memory_and_current_state_audits"])},
+    {"Check": "Failed-decision fallback weeks", "Result": str(audit["fallback_weeks"])},
+    {"Check": "Replies revalidated at the decimal sum boundary", "Result": str(audit["decimal_boundary_revalidations"])},
+    {"Check": "Old forward LSTM reproduced", "Result": str(audit["old_forward_lstm_exact"])},
+    {"Check": "Q2 rows read", "Result": str(audit["q2_rows_read"])},
+]))
+display(Markdown(f"**Result:** all checks pass; **{audit['logical_llm_decisions']} decisions** are reconstructed, with **{audit['fallback_weeks']} fallback weeks** across all periods."))
+calls = pd.read_parquet(CACHE / "llm_call_audit.parquet")
+record = json.loads(calls.iloc[0].record_json)
+details = "<details><summary>Exact prompt, model settings and fresh-run commands</summary>"
+details += "<pre>" + escape(record["request"]["messages"][0]["content"]) + "</pre>"
+details += "<pre>" + escape(json.dumps(protocol["transport"], indent=2)) + "</pre>"
+details += "<p>Model digest: <code>" + escape(protocol["model_digest"]) + "</code></p>"
+details += "<p>The versioned project code includes the forecast producer and cloud runner. A fresh cloud run requires access to the same Ollama model.</p>"
+details += "<pre>python -m experiments.rq4_nine_model_data\npython -m experiments.run_reflection_ensemble\npython -m experiments.rq4_ensemble_reader --seal</pre></details>"
+display(HTML(details))
+''', tags=("technical-details",)), md("""
+## Results
+
+Real memory returns **−28.80%** from 247 trades, compared with −73.73% without
+memory and −76.19% with shuffled memory. Hedge returns −0.79%; fixed LSTM +3.58%.
+All three adjusted intervals include zero.
+
+Takeaway: Real memory reduces observed losses against the LLM controls, but
+does not establish a profitable strategy or an advantage over Hedge.
+""")])
+    notebook = nbf.v4.new_notebook(cells=cells)
     notebook.metadata.kernelspec = KERNEL
-    notebook.metadata.language_info = {"name": "python", "version": "3.12"}
+    notebook.metadata.language_info = {"name": "python"}
     nbf.validate(notebook)
     return notebook
 
 
-def execute_notebook(notebook=None, path: Path = NOTEBOOK_PATH) -> Path:
-    notebook = notebook or build_notebook()
-    executed = NotebookClient(
-        notebook,
-        timeout=1800,
-        kernel_name="msc-code",
-        resources={"metadata": {"path": str(CODE_ROOT)}},
-    ).execute()
+def execute_notebook(notebook=None, path=NOTEBOOK_PATH):
+    executed = NotebookClient(notebook or build_notebook(), timeout=1800, kernel_name="msc-code",
+                              resources={"metadata": {"path": str(CODE_ROOT)}}).execute()
     nbf.validate(executed)
     path.parent.mkdir(parents=True, exist_ok=True)
     nbf.write(executed, path)
     return path
 
 
-def main() -> int:
+def main():
     print(execute_notebook())
     return 0
 
 
 if __name__ == "__main__":
     raise SystemExit(main())
-
-
-__all__ = ["NOTEBOOK_PATH", "build_notebook", "execute_notebook"]

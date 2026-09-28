@@ -4,13 +4,15 @@ The primary comparison changes only the candidate universe.  One pair of
 channel-free opportunity/direction models is trained on all completed 5-minute
 decisions.  The channel arm may rank only decisions that belong to the frozen
 Notebook J channel windows; the channel-blind arm may rank every decision.
-Both arms receive the exact frozen Notebook V activation count in every scored
-half-year before identical native one-minute economic replay.
+Both arms receive the same timing activation count in every scored half-year
+before identical native one-minute economic replay. The reference counts remain
+fixed by default; compact Rebuild obtains them from the recomputed U timing ledger.
 """
 from __future__ import annotations
 
 import argparse
 from bisect import bisect_left, insort
+from collections.abc import Mapping
 from dataclasses import asdict, dataclass
 import hashlib
 import json
@@ -28,6 +30,7 @@ from sklearn.metrics import (
 )
 from sklearn.preprocessing import StandardScaler
 
+from experiments.channel_rebuild_contract import recomputed_handoffs
 from experiments.event_window_direction_oof import SCORED_FOLDS
 from experiments.run_event_window_cost_aware_entry import _Store, _sha256, _sha_payload
 from experiments.run_event_window_direction_head import (
@@ -71,6 +74,78 @@ EXPECTED_MATCHED_ACTIVATIONS = sum(MATCHED_FOLD_COUNTS.values())
 TARGET_ACTIVATIONS_PER_DAY = EXPECTED_MATCHED_ACTIVATIONS / SCORED_CALENDAR_DAYS
 MODELS = ("logreg", "xgboost")
 WINDOW_SOURCES = ("channel", "channel_blind")
+
+
+def _validated_matched_fold_counts(
+    matched_fold_counts: Mapping[str, int] | None,
+) -> dict[str, int]:
+    """Return ordered, positive per-fold targets without changing the constants."""
+    if matched_fold_counts is None:
+        return dict(MATCHED_FOLD_COUNTS)
+    if not isinstance(matched_fold_counts, Mapping):
+        raise TypeError("matched fold counts must be a mapping")
+    expected_folds = set(SCORED_FOLDS)
+    actual_folds = set(matched_fold_counts)
+    if actual_folds != expected_folds:
+        missing = sorted(expected_folds.difference(actual_folds))
+        unexpected = sorted(actual_folds.difference(expected_folds))
+        raise ValueError(
+            f"matched fold counts must cover SCORED_FOLDS exactly; "
+            f"missing={missing}, unexpected={unexpected}"
+        )
+    result: dict[str, int] = {}
+    for fold_id in SCORED_FOLDS:
+        value = matched_fold_counts[fold_id]
+        if isinstance(value, bool):
+            raise ValueError(f"matched fold count is not a positive integer: {fold_id}")
+        try:
+            integer = int(value)
+        except (TypeError, ValueError, OverflowError) as error:
+            raise ValueError(
+                f"matched fold count is not a positive integer: {fold_id}"
+            ) from error
+        if integer <= 0 or integer != value:
+            raise ValueError(f"matched fold count is not a positive integer: {fold_id}")
+        result[fold_id] = integer
+    return result
+
+
+def _matched_frequency_source(
+    matched_fold_counts: Mapping[str, int] | None,
+    target_counts: Mapping[str, int],
+) -> str:
+    if recomputed_handoffs() and matched_fold_counts is not None:
+        return "recomputed_u_scored_timing_ledger"
+    if matched_fold_counts is None or dict(target_counts) == MATCHED_FOLD_COUNTS:
+        return "canonical_frozen_v_fold_counts"
+    return "explicit_matched_fold_counts"
+
+
+def derive_matched_fold_counts(ledger: pd.DataFrame) -> dict[str, int]:
+    """Derive positive scored-fold targets from a validated U timing ledger."""
+    if "fold_id" not in ledger.columns:
+        raise ValueError("U timing ledger must contain fold_id")
+    if ledger["fold_id"].isna().any():
+        raise ValueError("U timing ledger contains missing fold_id")
+    unexpected = set(ledger["fold_id"]) - set(SCORED_FOLDS) - {"2022H1"}
+    if unexpected:
+        raise ValueError(f"U timing ledger contains unexpected folds: {sorted(unexpected)}")
+    counts = ledger.loc[ledger["fold_id"].isin(SCORED_FOLDS)].groupby("fold_id").size()
+    result = {
+        fold_id: int(counts.get(fold_id, 0))
+        for fold_id in SCORED_FOLDS
+    }
+    if any(value <= 0 for value in result.values()):
+        raise ValueError(f"U timing ledger has an empty scored fold: {result}")
+    return result
+
+
+def effective_matched_fold_counts(ledger: pd.DataFrame) -> dict[str, int]:
+    """Use U's runtime fold counts only for an explicit compact-Rebuild opt-in."""
+    if recomputed_handoffs():
+        return derive_matched_fold_counts(ledger)
+    return dict(MATCHED_FOLD_COUNTS)
+
 
 OPPORTUNITY_FEATURES = (
     "adaptive_barrier_bps",
@@ -174,7 +249,11 @@ class ChannelAblationResult:
 
 def protocol_dict(
     config: ChannelAblationConfig = ChannelAblationConfig(),
+    *,
+    matched_fold_counts: Mapping[str, int] | None = None,
 ) -> dict[str, object]:
+    target_counts = _validated_matched_fold_counts(matched_fold_counts)
+    target_activations = sum(target_counts.values())
     return {
         "study": "notebook_w_channel_vs_volatility_ablation",
         "stage": "dev",
@@ -183,10 +262,13 @@ def protocol_dict(
         "window_sources": list(WINDOW_SOURCES),
         "opportunity_features": list(OPPORTUNITY_FEATURES),
         "direction_features": list(DIRECTION_FEATURES),
-        "matched_fold_counts": dict(MATCHED_FOLD_COUNTS),
-        "matched_total_activations": EXPECTED_MATCHED_ACTIVATIONS,
+        "matched_fold_counts": target_counts,
+        "matched_total_activations": target_activations,
+        "matching_target_source": _matched_frequency_source(
+            matched_fold_counts, target_counts
+        ),
         "scored_calendar_days": SCORED_CALENDAR_DAYS,
-        "target_activations_per_day": TARGET_ACTIVATIONS_PER_DAY,
+        "target_activations_per_day": target_activations / SCORED_CALENDAR_DAYS,
         "matching_policy": "foldwise label-blind matched top-k with global 60m refractory period",
         "matching_is_online_policy": False,
         "channel_blind_definition": "all completed 5m decisions; no channel feature or gate",
@@ -742,13 +824,16 @@ def select_matched_activations(
     predictions: pd.DataFrame,
     *,
     config: ChannelAblationConfig = ChannelAblationConfig(),
+    matched_fold_counts: Mapping[str, int] | None = None,
 ) -> pd.DataFrame:
-    """Apply the frozen fold counts to both candidate universes and model families."""
+    """Apply the selected per-fold targets to both universes and model families."""
+    target_counts = _validated_matched_fold_counts(matched_fold_counts)
+    target_activations = sum(target_counts.values())
     rows: list[pd.DataFrame] = []
     for model_name in MODELS:
         model_rows = predictions.loc[predictions["model"].eq(model_name)]
         for fold_id in SCORED_FOLDS:
-            target = MATCHED_FOLD_COUNTS[fold_id]
+            target = target_counts[fold_id]
             fold_rows = model_rows.loc[
                 model_rows["fold_id"].eq(fold_id)
                 & model_rows["path_complete"].astype(bool)
@@ -785,7 +870,7 @@ def select_matched_activations(
     if result.duplicated(["model", "window_source", "decision_time"]).any():
         raise AssertionError("matched activation ledger contains duplicate times")
     counts = result.groupby(["model", "window_source"]).size()
-    if not counts.eq(EXPECTED_MATCHED_ACTIVATIONS).all():
+    if not counts.eq(target_activations).all():
         raise AssertionError(f"matched activation totals changed: {counts.to_dict()}")
     return result
 
@@ -1045,22 +1130,46 @@ def _economic_tables(
     return economic, pd.concat(comparison_rows, ignore_index=True)
 
 
-def _frequency_audit(selected: pd.DataFrame) -> pd.DataFrame:
+def _frequency_audit(
+    selected: pd.DataFrame,
+    *,
+    matched_fold_counts: Mapping[str, int] | None = None,
+) -> pd.DataFrame:
+    target_counts = _validated_matched_fold_counts(matched_fold_counts)
+    target_activations = sum(target_counts.values())
+    target_source = _matched_frequency_source(matched_fold_counts, target_counts)
     rows: list[dict[str, object]] = []
     for (model_name, source), group in selected.groupby(
         ["model", "window_source"], sort=False
     ):
         ordered = group.sort_values("decision_time")
         minimum_gap = ordered["decision_time"].diff().dropna().min()
-        fold_counts = ordered.groupby("fold_id").size().to_dict()
+        observed_series = (
+            ordered.groupby("fold_id")
+            .size()
+            .reindex(SCORED_FOLDS, fill_value=0)
+            .astype(int)
+        )
+        observed_counts = {
+            fold_id: int(observed_series[fold_id]) for fold_id in SCORED_FOLDS
+        }
         rows.append(
             {
                 "model": model_name,
                 "window_source": source,
                 "activations": len(group),
+                "matched_total_activations": target_activations,
                 "calendar_days": SCORED_CALENDAR_DAYS,
                 "activations_per_day": len(group) / SCORED_CALENDAR_DAYS,
-                "fold_counts_exact": fold_counts == MATCHED_FOLD_COUNTS,
+                "target_activations_per_day": target_activations / SCORED_CALENDAR_DAYS,
+                "matching_target_source": target_source,
+                "matched_fold_counts": json.dumps(
+                    target_counts, separators=(",", ":")
+                ),
+                "observed_fold_counts": json.dumps(
+                    observed_counts, separators=(",", ":")
+                ),
+                "fold_counts_exact": observed_counts == target_counts,
                 "minimum_global_gap_minutes": (
                     float(minimum_gap.total_seconds() / 60.0)
                     if minimum_gap is not pd.NaT
@@ -1224,13 +1333,20 @@ def run_channel_vs_volatility_ablation(
         raise ValueError("Notebook W permits development only; forward and Q2 are sealed")
     if config != ChannelAblationConfig():
         raise ValueError("Notebook W complete registered configuration is frozen")
-    protocol = protocol_dict(config)
     frozen_u = load_frozen_u_artifacts(FROZEN_U_ROOT)
     frozen_j = load_frozen_j_artifacts(FROZEN_J_ROOT)
     scored_u = frozen_u.ledger.loc[frozen_u.ledger["fold_id"].isin(SCORED_FOLDS)]
-    frozen_counts = scored_u.groupby("fold_id").size().to_dict()
-    if frozen_counts != MATCHED_FOLD_COUNTS:
+    frozen_counts = derive_matched_fold_counts(scored_u)
+    matched_fold_counts = effective_matched_fold_counts(scored_u)
+    if not recomputed_handoffs() and frozen_counts != MATCHED_FOLD_COUNTS:
         raise AssertionError(f"frozen V fold counts changed: {frozen_counts}")
+    target_activations = sum(matched_fold_counts.values())
+    target_activations_per_day = target_activations / SCORED_CALENDAR_DAYS
+    protocol = protocol_dict(
+        config,
+        matched_fold_counts=matched_fold_counts,
+    )
+    protocol["frozen_u_scored_fold_counts"] = frozen_counts
 
     minute, five, positioning, bounded_identity = _load_inputs(
         Path(data_root), config=config
@@ -1284,7 +1400,11 @@ def run_channel_vs_volatility_ablation(
             config=config,
         )
         predictions, fold_audit = run_expanding_oof(decisions, config=config)
-        selected = select_matched_activations(predictions, config=config)
+        selected = select_matched_activations(
+            predictions,
+            config=config,
+            matched_fold_counts=matched_fold_counts,
+        )
         predictive = _predictive_metrics(predictions)
         opportunity, opportunity_comparisons = _opportunity_tables(
             selected,
@@ -1300,12 +1420,15 @@ def run_channel_vs_volatility_ablation(
             draws=config.bootstrap_draws,
             seed=config.random_seed,
         )
-        frequency = _frequency_audit(selected)
+        frequency = _frequency_audit(
+            selected,
+            matched_fold_counts=matched_fold_counts,
+        )
         feature_audit = _feature_audit()
 
         development_end = pd.Timestamp(config.development_end_exclusive, tz="UTC")
         frequency_matched = bool(
-            frequency["activations"].eq(EXPECTED_MATCHED_ACTIVATIONS).all()
+            frequency["activations"].eq(target_activations).all()
             and frequency["fold_counts_exact"].astype(bool).all()
             and frequency["global_60m_refractory_passed"].astype(bool).all()
         )
@@ -1320,8 +1443,8 @@ def run_channel_vs_volatility_ablation(
                     "detail": bounded_identity["aggregate_sha256"],
                 },
                 {
-                    "check": "frozen V foldwise activation counts",
-                    "passed": frozen_counts == MATCHED_FOLD_COUNTS,
+                    "check": "recomputed U foldwise activation counts" if recomputed_handoffs() else "frozen V foldwise activation counts",
+                    "passed": frozen_counts == matched_fold_counts,
                     "detail": str(frozen_counts),
                 },
                 {
@@ -1351,7 +1474,7 @@ def run_channel_vs_volatility_ablation(
                 {
                     "check": "exact matched frequency and global cooldown",
                     "passed": frequency_matched,
-                    "detail": f"{EXPECTED_MATCHED_ACTIVATIONS} per arm/model; {TARGET_ACTIVATIONS_PER_DAY:.6f}/day",
+                    "detail": f"{target_activations} per arm/model; {target_activations_per_day:.6f}/day",
                 },
                 {
                     "check": "label-blind matched top-k",
@@ -1433,7 +1556,11 @@ def run_channel_vs_volatility_ablation(
                 "frozen_j_labels_rr2_sha256": input_payload[
                     "frozen_j_labels_rr2_sha256"
                 ],
-                "matched_fold_counts": MATCHED_FOLD_COUNTS,
+                "matched_fold_counts": matched_fold_counts,
+                "matched_total_activations": target_activations,
+                "target_activations_per_day": target_activations_per_day,
+                "frozen_u_scored_fold_counts": frozen_counts,
+                "matching_target_source": protocol["matching_target_source"],
                 "bounded_development_input_identity": bounded_identity,
                 "forward_or_lockbox_loaded": False,
             },
@@ -1443,8 +1570,13 @@ def run_channel_vs_volatility_ablation(
             "research_claim": "development_matched_frequency_ablation",
             "decision_rows": len(decisions),
             "oof_rows": len(predictions),
-            "selected_activations_per_arm_model": EXPECTED_MATCHED_ACTIVATIONS,
-            "activations_per_day": TARGET_ACTIVATIONS_PER_DAY,
+            "matched_fold_counts": matched_fold_counts,
+            "matched_total_activations": target_activations,
+            "selected_activations_per_arm_model": target_activations,
+            "target_activations_per_day": target_activations_per_day,
+            "activations_per_day": target_activations_per_day,
+            "frozen_u_scored_fold_counts": frozen_counts,
+            "matching_target_source": protocol["matching_target_source"],
             "models": list(MODELS),
             "window_sources": list(WINDOW_SOURCES),
             "opportunity_feature_count": len(OPPORTUNITY_FEATURES),
@@ -1521,6 +1653,8 @@ __all__ = [
     "RUN_ROOT",
     "build_channel_free_decisions",
     "channel_retention_decision",
+    "derive_matched_fold_counts",
+    "effective_matched_fold_counts",
     "first_touch_labels",
     "matched_topk_refractory",
     "protocol_dict",

@@ -7,8 +7,8 @@ import nbformat as nbf
 
 
 CODE_ROOT = Path(__file__).resolve().parents[1]
-NOTEBOOK_03 = CODE_ROOT / "notebooks" / "03_all_model_stacking.ipynb"
-NOTEBOOK_03A = CODE_ROOT / "notebooks" / "03a_stacking_forward.ipynb"
+NOTEBOOK_03 = CODE_ROOT / "notebooks" / "06_RQ2_A_BTC_all_model_stacking.ipynb"
+NOTEBOOK_03A = CODE_ROOT / "notebooks" / "07_RQ2_B_BTC_stacking_forward_validation.ipynb"
 KERNEL = {"display_name": "MSC Code", "language": "python", "name": "msc-code"}
 
 

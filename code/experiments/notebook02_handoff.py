@@ -101,7 +101,7 @@ def write_pipeline_handoff(
     columns = _validate_feature_columns(BASE_FEATURE_COLUMNS)
     payload: dict[str, Any] = {
         "schema_version": 2,
-        "upstream_notebook": "01_data_labels_and_baseline.ipynb",
+        "upstream_notebook": "01_RQ1_A_BTC_data_labels_baseline.ipynb",
         "widths": list(WIDTHS),
         "training_histories_days": {
             str(width): TRAINING_HISTORY_DAYS for width in WIDTHS
